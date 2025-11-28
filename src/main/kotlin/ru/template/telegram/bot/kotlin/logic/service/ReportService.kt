@@ -54,7 +54,7 @@ class ReportService(
     ): PeriodReport {
 
         val transactions = txService.getUserTransactions(userId)
-            .filter { it.createdAt.isAfter(from) && it.createdAt.isBefore(to) } // todo move to db lvl
+            .filter { it.createdAt!!.isAfter(from) && it.createdAt.isBefore(to) } // todo move to db lvl
 
         var totalIncome = BigDecimal.ZERO
         var totalExpense = BigDecimal.ZERO
