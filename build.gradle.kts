@@ -5,12 +5,13 @@ val postgresVersion = "42.7.2"
 val telegramBotVersion = "8.3.0"
 
 plugins {
-    id("nu.studer.jooq") version("9.0")
-    id("org.flywaydb.flyway") version("9.22.3")
+    id("nu.studer.jooq") version ("9.0")
+    id("org.flywaydb.flyway") version ("9.22.3")
     id("org.springframework.boot") version "3.3.2"
     id("io.spring.dependency-management") version "1.1.6"
     kotlin("jvm") version "1.9.23"
     kotlin("plugin.spring") version "1.9.23"
+    kotlin("plugin.jpa") version "1.9.23"
 }
 
 group = "ru.template.telegram.bot.kotlin"
@@ -51,17 +52,26 @@ flyway {
 }
 
 dependencies {
+    //data
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    runtimeOnly("org.postgresql:postgresql")
+    implementation("org.flywaydb:flyway-database-postgresql")
     flywayMigration("org.postgresql:postgresql:$postgresVersion")
     jooqGenerator("org.postgresql:postgresql:$postgresVersion")
     runtimeOnly("org.postgresql:postgresql")
+    implementation("org.hibernate.orm:hibernate-core:6.4.0.Final")// For @CreationTimestamp и @UpdateTimestamp (Hibernate)
 
-    implementation("org.flywaydb:flyway-database-postgresql")
+    // Kotlin JPA support
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib")
 
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-jooq")
     implementation("org.springframework.boot:spring-boot-starter-freemarker")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-web")
+
+
 
     implementation("org.telegram:telegrambots-springboot-longpolling-starter:$telegramBotVersion")
     implementation("org.telegram:telegrambots-extensions:$telegramBotVersion")
