@@ -1,8 +1,8 @@
 package ru.template.telegram.bot.kotlin.logic.service
 
 import org.springframework.stereotype.Service
-import ru.template.telegram.bot.kotlin.logic.model.Balance
-import ru.template.telegram.bot.kotlin.logic.model.TransactionType
+import ru.template.telegram.bot.kotlin.logic.model.report.Balance
+import ru.template.telegram.bot.kotlin.logic.model.transaction.TransactionType
 import java.math.BigDecimal
 
 @Service

@@ -3,7 +3,7 @@ package ru.template.telegram.bot.kotlin.logic.service
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ru.template.telegram.bot.kotlin.logic.exception.NotFoundException
-import ru.template.telegram.bot.kotlin.logic.model.TransactionRq
+import ru.template.telegram.bot.kotlin.logic.model.transaction.TransactionRq
 import ru.template.telegram.bot.kotlin.logic.model.entity.TransactionEntity
 import ru.template.telegram.bot.kotlin.logic.repository.TransactionRepository
 import java.util.*

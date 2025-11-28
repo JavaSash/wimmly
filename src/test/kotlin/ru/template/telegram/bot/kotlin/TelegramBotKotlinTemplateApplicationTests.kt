@@ -1,8 +1,6 @@
-package ru.temlate.telegram.bot.kotlin.telegrambotkotlintemplate
+package ru.template.telegram.bot.kotlin
 
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
-
 
 class TelegramBotKotlinTemplateApplicationTests {
 

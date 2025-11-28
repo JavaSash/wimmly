@@ -1,7 +1,7 @@
 package ru.template.telegram.bot.kotlin.logic.model.entity
 
-import ru.template.telegram.bot.kotlin.logic.model.TransactionCategory
-import ru.template.telegram.bot.kotlin.logic.model.TransactionType
+import ru.template.telegram.bot.kotlin.logic.model.transaction.TransactionCategory
+import ru.template.telegram.bot.kotlin.logic.model.transaction.TransactionType
 import java.util.*
 import jakarta.persistence.*
 import java.math.BigDecimal

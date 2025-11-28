@@ -1,4 +1,4 @@
-package ru.template.telegram.bot.kotlin.logic.model
+package ru.template.telegram.bot.kotlin.logic.model.report
 
 import java.math.BigDecimal
 

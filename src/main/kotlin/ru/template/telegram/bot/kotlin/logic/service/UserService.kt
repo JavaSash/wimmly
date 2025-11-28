@@ -5,6 +5,8 @@ import ru.template.telegram.bot.kotlin.logic.model.entity.UserEntity
 import ru.template.telegram.bot.kotlin.logic.repository.UserRepository
 import org.springframework.transaction.annotation.Transactional
 import ru.template.telegram.bot.kotlin.logic.exception.NotFoundException
+import ru.template.telegram.bot.kotlin.logic.model.user.UserRegistrationRq
+import ru.template.telegram.bot.kotlin.logic.model.user.UserRegistrationRs
 
 @Service
 class UserService(
@@ -15,10 +17,18 @@ class UserService(
         userRepository.existsById(userId)
 
     @Transactional
-    fun register(userId: String): UserEntity {
-        if (isRegistered(userId)) return userRepository.getReferenceById(userId)
+    fun register(rq: UserRegistrationRq): UserRegistrationRs {
+        if (isRegistered(rq.telegramUserId)) return UserRegistrationRs(userRepository.getReferenceById(rq.telegramUserId).tgId)
 
-        return userRepository.save(UserEntity(telegramId = userId))
+        return UserRegistrationRs(
+            userRepository.save(
+                UserEntity(
+                    tgId = rq.telegramUserId,
+                    name = rq.name
+                )
+            ).tgId
+        )
+
     }
 
     fun getUser(userId: String): UserEntity =

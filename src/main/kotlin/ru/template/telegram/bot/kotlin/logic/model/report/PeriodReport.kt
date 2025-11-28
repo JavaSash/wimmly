@@ -1,5 +1,6 @@
-package ru.template.telegram.bot.kotlin.logic.model
+package ru.template.telegram.bot.kotlin.logic.model.report
 
+import ru.template.telegram.bot.kotlin.logic.model.transaction.TransactionCategory
 import java.math.BigDecimal
 
 data class PeriodReport(

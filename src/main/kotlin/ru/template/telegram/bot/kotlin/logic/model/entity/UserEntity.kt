@@ -10,9 +10,7 @@ import jakarta.persistence.Table
 data class UserEntity(
     @Id
     @Column(name = "tg_id", nullable = false, updatable = false)
-    val telegramId: String,
-    @Column(name = "username")
-    val username: String? = null,
-    @Column(name = "language")
-    val languageCode: String? = null,
+    val tgId: String,
+    @Column(name = "name")
+    val name: String? = null
 ) : BaseEntity()

@@ -1,10 +1,10 @@
 package ru.template.telegram.bot.kotlin.logic.service
 
 import org.springframework.stereotype.Service
-import ru.template.telegram.bot.kotlin.logic.model.PeriodReport
-import ru.template.telegram.bot.kotlin.logic.model.ReportItem
-import ru.template.telegram.bot.kotlin.logic.model.TransactionCategory
-import ru.template.telegram.bot.kotlin.logic.model.TransactionType
+import ru.template.telegram.bot.kotlin.logic.model.report.PeriodReport
+import ru.template.telegram.bot.kotlin.logic.model.report.ReportItem
+import ru.template.telegram.bot.kotlin.logic.model.transaction.TransactionCategory
+import ru.template.telegram.bot.kotlin.logic.model.transaction.TransactionType
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime

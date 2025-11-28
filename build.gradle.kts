@@ -71,19 +71,18 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-web")
 
-
-
     implementation("org.telegram:telegrambots-springboot-longpolling-starter:$telegramBotVersion")
     implementation("org.telegram:telegrambots-extensions:$telegramBotVersion")
     implementation("org.telegram:telegrambots-client:$telegramBotVersion")
 
-
     compileOnly("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    // test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:postgresql")
+
 }
 
 dependencyManagement {
@@ -144,5 +143,15 @@ jooq {
             .withPathSensitivity(PathSensitivity.RELATIVE)
         allInputsDeclared.set(true)
         outputs.upToDateWhen { false }
+    }
+
+    kotlin {
+        jvmToolchain(17)
+    }
+
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = "17"
+        }
     }
 }
