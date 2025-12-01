@@ -83,7 +83,7 @@ class ReportService(
             periodName = label,
             totalIncome = totalIncome,
             totalExpense = totalExpense,
-            breakdown = sumByCategories
+            details = sumByCategories
         )
     }
 }

@@ -20,7 +20,7 @@ class TransactionService(
             type = request.type,
             userId = request.userId,
             category = request.category,
-            amount = request.amount,
+            amount = request.amount, // todo set scale 2
             comment = request.comment
         )
     )

@@ -3,44 +3,52 @@ package ru.wimmly.logic
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import ru.wimmly.logic.TestConstants.User.USER_ID
+import ru.wimmly.logic.TestConstants.User.USER_NAME
 import ru.wimmly.logic.model.entity.TransactionEntity
 import ru.wimmly.logic.model.entity.UserEntity
 import ru.wimmly.logic.model.transaction.TransactionCategory
 import ru.wimmly.logic.model.transaction.TransactionType
 import ru.wimmly.logic.repository.TransactionRepository
 import ru.wimmly.logic.repository.UserRepository
-import java.math.BigDecimal
 import java.util.*
 
 @SpringBootTest
-class BasicTest: TestConfig() {
+class BasicTest : TestConfig() {
     @Autowired
-    lateinit var userRepository: UserRepository
+    lateinit var userRepo: UserRepository
 
     @Autowired
-    lateinit var transactionRepository: TransactionRepository
+    lateinit var txRepo: TransactionRepository
 
     @BeforeEach
     fun setup() {
-        transactionRepository.deleteAll()
-        userRepository.deleteAll()
+        txRepo.deleteAll()
+        userRepo.deleteAll()
     }
 
-    protected fun initUser(): UserEntity = userRepository.save(
-            UserEntity(
-                tgId = "test_user_123",
-                name = "Test User"
-            )
+    protected fun initUser(
+        userId: String = USER_ID,
+        name: String = USER_NAME
+    ): UserEntity = userRepo.save(
+        UserEntity(
+            tgId = userId,
+            name = "Test User"
         )
+    )
 
-    protected fun initTransaction(): TransactionEntity = transactionRepository.save(
-            TransactionEntity(
-                id = UUID.randomUUID(),
-                type = TransactionType.INCOME,
-                userId = "test_user",
-                category = TransactionCategory.EDUCATION,
-                amount = BigDecimal("1500.00"),
-                comment = "Salary part"
-            )
+    protected fun initTransaction(
+        userId: String = USER_ID,
+        type: TransactionType = TransactionType.INCOME,
+        amount: Double = 1500.00
+    ): TransactionEntity = txRepo.save(
+        TransactionEntity(
+            id = UUID.randomUUID(),
+            type = type,
+            userId = userId,
+            category = TransactionCategory.EDUCATION,
+            amount = amount.money(),
+            comment = "Salary part"
         )
+    )
 }

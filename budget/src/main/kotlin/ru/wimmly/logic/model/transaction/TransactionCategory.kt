@@ -15,5 +15,6 @@ enum class TransactionCategory(
     PETS("Питомцы"),
     COMMUNICATION("Связь"),
     SPORT("Спорт"),
-    ENTERTAINMENT("Развлечения");
+    ENTERTAINMENT("Развлечения"),
+    OTHER("Прочее");
 }

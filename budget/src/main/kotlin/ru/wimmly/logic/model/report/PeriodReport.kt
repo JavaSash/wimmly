@@ -7,7 +7,7 @@ data class PeriodReport(
     val periodName: String,
     val totalIncome: BigDecimal,
     val totalExpense: BigDecimal,
-    val breakdown: List<ReportItem>
+    val details: List<ReportItem>
 )
 
 data class ReportItem(
