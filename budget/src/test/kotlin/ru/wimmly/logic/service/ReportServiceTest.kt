@@ -18,13 +18,12 @@ import ru.wimmly.logic.TestConstants.User.USER_NAME_2
 import ru.wimmly.logic.model.entity.TransactionEntity
 import ru.wimmly.logic.model.transaction.TransactionType
 import java.math.BigDecimal
+import java.time.LocalDate
 
 class ReportServiceTest : BasicTest() {
 
     @Autowired
     lateinit var reportService: ReportService
-    @Autowired
-    lateinit var txService: TransactionService
 
     lateinit var tx1: TransactionEntity
     lateinit var tx2: TransactionEntity
@@ -58,6 +57,12 @@ class ReportServiceTest : BasicTest() {
 
     @Test
     fun `formTodayReport calculates totals correctly`() {
+        initTransactionWithCreatedAt(
+            userId = USER_ID,
+            type = TransactionType.INCOME,
+            amount = AMOUNT_50,
+            createdAt = LocalDate.now().minusDays(2).atStartOfDay()
+        )
         val report = reportService.formTodayReport(USER_ID)
         assertAll(
             { assertEquals("Сегодня", report.periodName) },
@@ -68,6 +73,12 @@ class ReportServiceTest : BasicTest() {
 
     @Test
     fun `formThisWeekReport calculates totals correctly`() {
+        initTransactionWithCreatedAt(
+            userId = USER_ID,
+            type = TransactionType.INCOME,
+            amount = AMOUNT_50,
+            createdAt = LocalDate.now().minusDays(10).atStartOfDay()
+        )
         val report = reportService.formThisWeekReport(USER_ID)
         assertAll(
             { assertEquals("Эта неделя", report.periodName) },
@@ -77,6 +88,12 @@ class ReportServiceTest : BasicTest() {
 
     @Test
     fun `formThisMonthReport calculates totals correctly`() {
+        initTransactionWithCreatedAt(
+            userId = USER_ID,
+            type = TransactionType.INCOME,
+            amount = AMOUNT_50,
+            createdAt = LocalDate.now().minusDays(35).atStartOfDay()
+        )
         val report = reportService.formThisMonthReport(USER_ID)
         assertAll(
             { assertEquals("Этот месяц", report.periodName) },
@@ -86,6 +103,13 @@ class ReportServiceTest : BasicTest() {
 
     @Test
     fun `formThisYearReport calculates totals correctly`() {
+        initTransactionWithCreatedAt(
+            userId = USER_ID,
+            type = TransactionType.INCOME,
+            amount = AMOUNT_50,
+            createdAt = LocalDate.now().minusYears(1).atStartOfDay()
+        )
+
         val report = reportService.formThisYearReport(USER_ID)
         assertAll(
             { assertEquals("Этот год", report.periodName) },
@@ -116,7 +140,19 @@ class ReportServiceTest : BasicTest() {
 
     @Test
     fun `reportForPeriod ignores transactions outside period`() {
-        //todo impl
+        initTransactionWithCreatedAt(
+            userId = USER_ID,
+            type = TransactionType.INCOME,
+            amount = AMOUNT_50,
+            createdAt = LocalDate.now().minusDays(10).atStartOfDay()
+        )
+
+        val report = reportService.formTodayReport(USER_ID)
+
+        assertAll(
+            { assertEquals(incomeAmount, report.totalIncome) },
+            { assertEquals(expenseAmount, report.totalExpense) }
+        )
     }
 
     @Test
