@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/wimmly
+    username: postgres
+    password: postgres
+logging:
+  level:
+    root: info

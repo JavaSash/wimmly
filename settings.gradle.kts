@@ -1,1 +1,3 @@
-rootProject.name = "telegram-bot-kotlin-template"
+rootProject.name = "wimmly"
+include("budget")
+include("tg-bot")

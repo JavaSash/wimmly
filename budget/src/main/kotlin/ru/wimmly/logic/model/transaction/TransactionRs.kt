@@ -1,0 +1,25 @@
+package ru.wimmly.logic.model.transaction
+
+import java.math.BigDecimal
+import java.util.*
+
+data class TransactionRs(
+    val id: UUID,
+    val type: TransactionType,
+    val userId: String,
+    val category: TransactionCategory,
+    val amount: BigDecimal,
+    val comment: String?
+) {
+    companion object {
+        fun fromEntity(e: ru.wimmly.logic.model.entity.TransactionEntity) =
+            TransactionRs(
+                id = e.id!!,
+                type = e.type,
+                userId = e.userId,
+                category = e.category,
+                amount = e.amount,
+                comment = e.comment
+            )
+    }
+}
