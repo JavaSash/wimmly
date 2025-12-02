@@ -8,7 +8,7 @@ plugins {
     kotlin("plugin.jpa") version "1.9.23"
 }
 
-group = "ru.wimmly.logic"
+group = "ru.wimme.logic"
 version = "1.0.0"
 
 repositories {

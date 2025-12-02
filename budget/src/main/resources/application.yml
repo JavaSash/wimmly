@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/wimmly
-    username: postgres
-    password: postgres
+    url: {DB_URL:jdbc:postgresql://localhost:5432/wimmly}
+    username: ${DB_USER:postgres}
+    password: ${DB_PSWRD:postgres}
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.xml

@@ -14,6 +14,11 @@ spring:
     password: postgres
 ```
 
+Check bot token:
+```
+https://api.telegram.org/bot{token}/getMe
+```
+
 Before use this example bot try to create database and run command
 
 ```bash
