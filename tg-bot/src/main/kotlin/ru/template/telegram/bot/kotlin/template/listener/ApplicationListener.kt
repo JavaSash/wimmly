@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Lazy
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
-import ru.template.telegram.bot.kotlin.template.enums.ExecuteStatus
+import ru.template.telegram.bot.kotlin.template.dto.enums.ExecuteStatus
 import ru.template.telegram.bot.kotlin.template.event.TelegramReceivedCallbackEvent
 import ru.template.telegram.bot.kotlin.template.event.TelegramReceivedMessageEvent
 import ru.template.telegram.bot.kotlin.template.event.TelegramStepMessageEvent

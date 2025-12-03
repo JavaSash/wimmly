@@ -9,7 +9,7 @@ import org.telegram.telegrambots.longpolling.starter.SpringLongPollingBot
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.generics.TelegramClient
 import ru.template.telegram.bot.kotlin.template.strategy.command.AbstractCommand
-import ru.template.telegram.bot.kotlin.template.properties.BotProperty
+import ru.template.telegram.bot.kotlin.template.config.BotProperty
 import ru.template.telegram.bot.kotlin.template.service.ReceiverService
 
 

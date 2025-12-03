@@ -19,7 +19,7 @@ version = "1.0.0"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21) // gradle 8.8
+        languageVersion = JavaLanguageVersion.of(17) // gradle 8.8
     }
 }
 
@@ -63,11 +63,13 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
 
     implementation("org.springframework.boot:spring-boot-starter")
+    // mechanism that helps to generate sql queries in a DSL-like language
     implementation("org.springframework.boot:spring-boot-starter-jooq")
+    // template engine for creating dynamic texts
     implementation("org.springframework.boot:spring-boot-starter-freemarker")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-web")
-
+    // Telegram Api libs
     implementation("org.telegram:telegrambots-springboot-longpolling-starter:$telegramBotVersion")
     implementation("org.telegram:telegrambots-extensions:$telegramBotVersion")
     implementation("org.telegram:telegrambots-client:$telegramBotVersion")
@@ -90,7 +92,7 @@ dependencyManagement {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
-
+// ./gradlew generateJooq to generate POJO from db scheme
 jooq {
     edition.set(JooqEdition.OSS)
 

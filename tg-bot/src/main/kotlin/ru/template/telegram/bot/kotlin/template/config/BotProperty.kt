@@ -1,4 +1,4 @@
-package ru.template.telegram.bot.kotlin.template.properties
+package ru.template.telegram.bot.kotlin.template.config
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component

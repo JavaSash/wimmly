@@ -26,3 +26,19 @@ Before use this example bot try to create database and run command
 ```
 
 Don't forget change your properties in [build.gradle.kts](build.gradle.kts)
+
+## Code packages guide
+api — Классы, которые относятся к непосредственному взаимодействию с Телеграм API (отправка и получение данных)
+command — Список команд телеграм бота
+component — Прочие бины.
+config — Конфигурация приложения
+dto — DTO классы, енамы
+event — Список классов для формирования ивентов Application Publisher
+listener — Приём событий Application Publisher
+repository — Слой взаимодействия с СУБД
+service — Сервисы приложения
+strategy — Стратегии. Это те компоненты, которые нужно менять, добавлять и удалять по ходу изменения бизнес процессов
+
+[This tg-bot template doc](https://habr.com/ru/articles/588474/)
+[Tg-bot official doc](https://tlgrm.ru/docs/bots)
+[Tg-bot API guide](https://tlgrm.ru/docs/bots/api)

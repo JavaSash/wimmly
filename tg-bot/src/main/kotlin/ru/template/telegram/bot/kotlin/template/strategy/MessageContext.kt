@@ -2,7 +2,7 @@ package ru.template.telegram.bot.kotlin.template.strategy
 
 import org.springframework.stereotype.Component
 import ru.template.telegram.bot.kotlin.template.dto.MessageModelDto
-import ru.template.telegram.bot.kotlin.template.enums.StepCode
+import ru.template.telegram.bot.kotlin.template.dto.enums.StepCode
 import ru.template.telegram.bot.kotlin.template.strategy.data.AbstractRepository
 import ru.template.telegram.bot.kotlin.template.strategy.dto.DataModel
 import ru.template.telegram.bot.kotlin.template.strategy.message.AbstractSendMessage

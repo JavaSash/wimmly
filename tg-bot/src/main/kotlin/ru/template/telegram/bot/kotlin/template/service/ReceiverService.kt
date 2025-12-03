@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.message.Message
-import ru.template.telegram.bot.kotlin.template.enums.StepCode
+import ru.template.telegram.bot.kotlin.template.dto.enums.StepCode
 import ru.template.telegram.bot.kotlin.template.event.TelegramReceivedCallbackEvent
 import ru.template.telegram.bot.kotlin.template.event.TelegramReceivedMessageEvent
 import ru.template.telegram.bot.kotlin.template.repository.UsersRepository

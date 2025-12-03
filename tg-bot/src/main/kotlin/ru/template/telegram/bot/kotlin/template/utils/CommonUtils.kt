@@ -1,6 +1,6 @@
 package ru.template.telegram.bot.kotlin.template.utils
 
-import ru.template.telegram.bot.kotlin.template.enums.StepCode
+import ru.template.telegram.bot.kotlin.template.dto.enums.StepCode
 
 object CommonUtils {
 

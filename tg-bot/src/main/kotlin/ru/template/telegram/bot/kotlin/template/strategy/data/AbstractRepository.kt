@@ -2,7 +2,7 @@ package ru.template.telegram.bot.kotlin.template.strategy.data
 
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository
-import ru.template.telegram.bot.kotlin.template.enums.StepCode
+import ru.template.telegram.bot.kotlin.template.dto.enums.StepCode
 import ru.template.telegram.bot.kotlin.template.strategy.dto.DataModel
 import ru.template.telegram.bot.kotlin.template.utils.CommonUtils.currentStepCode
 

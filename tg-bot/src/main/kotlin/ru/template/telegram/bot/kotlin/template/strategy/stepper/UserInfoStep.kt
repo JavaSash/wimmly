@@ -1,7 +1,7 @@
 package ru.template.telegram.bot.kotlin.template.strategy.stepper
 
 import org.springframework.stereotype.Component
-import ru.template.telegram.bot.kotlin.template.enums.StepCode
+import ru.template.telegram.bot.kotlin.template.dto.enums.StepCode
 
 @Component
 class UserInfoStep : Step {

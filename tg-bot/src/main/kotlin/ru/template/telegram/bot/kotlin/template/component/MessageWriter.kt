@@ -3,7 +3,7 @@ package ru.template.telegram.bot.kotlin.template.component
 import java.io.StringWriter
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer
-import ru.template.telegram.bot.kotlin.template.enums.StepCode
+import ru.template.telegram.bot.kotlin.template.dto.enums.StepCode
 
 @Component
 class MessageWriter(

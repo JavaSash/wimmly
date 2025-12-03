@@ -1,4 +1,4 @@
-package ru.template.telegram.bot.kotlin.template.enums
+package ru.template.telegram.bot.kotlin.template.dto.enums
 
 enum class StepCode(val type: StepType, val botPause: Boolean) {
     START(StepType.SEND_MESSAGE, false),
