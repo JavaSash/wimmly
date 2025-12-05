@@ -3,6 +3,7 @@ import nu.studer.gradle.jooq.JooqGenerate
 
 val postgresVersion = "42.7.2"
 val telegramBotVersion = "8.3.0"
+val jooqVersion = "3.19.3"
 
 plugins {
     id("nu.studer.jooq") version ("9.0")
@@ -14,7 +15,7 @@ plugins {
     kotlin("plugin.jpa") version "1.9.23"
 }
 
-group = "ru.template.telegram.bot.kotlin"
+group = "ru.telegram.bot.adapter"
 version = "1.0.0"
 
 java {
@@ -44,7 +45,7 @@ val flywayMigration = configurations.create("flywayMigration")
 flyway {
     validateOnMigrate = false
     configurations = arrayOf("flywayMigration")
-    url = (System.getenv("SPRING_DATASOURCE_URL") ?: "jdbc:postgresql://localhost:5432/kotlin_template")
+    url = (System.getenv("SPRING_DATASOURCE_URL") ?: "jdbc:postgresql://localhost:5432/bot")
     user = (System.getenv("SPRING_DATASOURCE_USERNAME") ?: "postgres")
     password = (System.getenv("SPRING_DATASOURCE_PASSWORD") ?: "postgres")
     cleanDisabled = false
@@ -95,6 +96,7 @@ tasks.withType<Test> {
 // ./gradlew generateJooq to generate POJO from db scheme
 jooq {
     edition.set(JooqEdition.OSS)
+    version.set(jooqVersion)
 
     configurations {
         create("main") {
@@ -115,11 +117,8 @@ jooq {
                         withPojosEqualsAndHashCode(true)
                         withFluentSetters(true)
                         withJavaTimeTypes(true)
-                        withKotlinSetterJvmNameAnnotationsOnIsPrefix(true)
-                        withPojosAsKotlinDataClasses(true)
-                        withKotlinNotNullPojoAttributes(true)
-                        withKotlinNotNullInterfaceAttributes(true)
-                        withKotlinNotNullRecordAttributes(true)
+                        isPojos = true
+                        isPojosEqualsAndHashCode = true
                     }
                     database.apply {
                         name = "org.jooq.meta.postgres.PostgresDatabase"
@@ -127,7 +126,7 @@ jooq {
                         excludes = "flyway_schema_history|spatial_ref_sys|st_.*|_st.*"
                     }
                     target.apply {
-                        packageName = "ru.template.telegram.bot.kotlin.template.domain"
+                        packageName = "ru.telegram.bot.adapter.domain"
                     }
                     strategy.name = "org.jooq.codegen.DefaultGeneratorStrategy"
                 }

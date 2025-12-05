@@ -1,0 +1,11 @@
+package ru.telegram.bot.adapter.strategy.message
+
+import ru.telegram.bot.adapter.component.MessageWriter
+import ru.telegram.bot.adapter.strategy.dto.DataModel
+import java.io.ByteArrayInputStream
+
+abstract class AbstractSendPhoto<T: DataModel>(messageWriter: MessageWriter): AbstractSendMessage<T>(messageWriter) {
+
+    abstract fun file(data: T?): ByteArrayInputStream?
+
+}
