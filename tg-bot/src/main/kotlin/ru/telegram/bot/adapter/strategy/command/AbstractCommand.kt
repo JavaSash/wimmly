@@ -10,7 +10,7 @@ import ru.telegram.bot.adapter.repository.UsersRepository
 import ru.telegram.bot.adapter.utils.CommonUtils.currentStepCode
 
 /**
- * 1 class for 1 tg-bot command
+ * One class for one tg-bot command
  * To create new command extend from this class
  */
 abstract class AbstractCommand(
@@ -32,6 +32,4 @@ abstract class AbstractCommand(
             TgStepMessageEvent(chatId = chatId, stepCode = classStepCode())
         )
     }
-
-
 }

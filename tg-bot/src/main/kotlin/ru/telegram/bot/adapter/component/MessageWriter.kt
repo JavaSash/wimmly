@@ -1,10 +1,13 @@
 package ru.telegram.bot.adapter.component
 
-import java.io.StringWriter
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer
 import ru.telegram.bot.adapter.dto.enums.StepCode
+import java.io.StringWriter
 
+/**
+ * Map response message class to .ftl file
+ */
 @Component
 class MessageWriter(
     private val freeMarkerConfigurer: FreeMarkerConfigurer

@@ -1,4 +1,10 @@
 # telegram-bot-kotlin
+Adapter for Telegram API
+
+1. Receive messages from Tg
+2. Convert them into internal events/commands
+3. Send to backend (REST API, events)
+4. Receive responses from back and send it to Tg
 
 ## Preparation
 ### Create Telegram bot
@@ -61,7 +67,20 @@ strategy — Стратегии. Это те компоненты, которы�
 7. Стратегия выполняет бизнес-логику 
 8. Отправляется ответ через [TelegramConsumer.kt](src%2Fmain%2Fkotlin%2Fru%2Ftemplate%2Ftelegram%2Fbot%2Fkotlin%2Ftemplate%2Fapi%2FTelegramConsumer.kt)
 
-TODO start from here
+### Create new command
+1. Create new class NewCommand extended from [AbstractCommand.kt](src%2Fmain%2Fkotlin%2Fru%2Ftelegram%2Fbot%2Fadapter%2Fstrategy%2Fcommand%2FAbstractCommand.kt)
+2. Add value for new command in [BotCommand.kt](src%2Fmain%2Fkotlin%2Fru%2Ftelegram%2Fbot%2Fadapter%2Fdto%2Fenums%2FBotCommand.kt)
+3. Pass new enum value to NewCommand class as first param
+4. Create class for new message in package [message](src%2Fmain%2Fkotlin%2Fru%2Ftelegram%2Fbot%2Fadapter%2Fstrategy%2Fmessage) 
+5. Create .ftl file with response txt
+
+## TODO
+1. Упростить/удалить стратегии - они переедут в бэкенд
+2. Добавить клиент REST API для связи с бэкендом
+3. Модифицировать слушателей для отправки запросов в бэкенд
+4. Оставить только преобразование Telegram → внутренний формат
+
+
 ### Links
 [This tg-bot template doc](https://habr.com/ru/articles/588474/)
 [Tg-bot official doc](https://tlgrm.ru/docs/bots)

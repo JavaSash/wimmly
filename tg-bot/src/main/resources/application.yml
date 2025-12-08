@@ -10,4 +10,5 @@ spring:
     password: ${DB_PSWRD:postgres}
 logging:
   level:
-    root: info
+    ru.telegram.bot.adapter: DEBUG
+    org.springframework.web: DEBUG

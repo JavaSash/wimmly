@@ -75,6 +75,9 @@ dependencies {
     implementation("org.telegram:telegrambots-extensions:$telegramBotVersion")
     implementation("org.telegram:telegrambots-client:$telegramBotVersion")
 
+    // logging
+    implementation("io.github.microutils:kotlin-logging-jvm:3.0.2")
+
     compileOnly("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 

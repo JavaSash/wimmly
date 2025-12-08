@@ -1,5 +1,6 @@
 package ru.telegram.bot.adapter.listener
 
+import mu.KLogging
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Lazy
 import org.springframework.context.event.EventListener
@@ -20,10 +21,14 @@ class ApplicationListener(
     private val usersRepository: UsersRepository, // Слой СУБД
     private val messageService: MessageService // Сервис, который формирует объект для отправки сообщения в бота
 ) {
+
+    companion object: KLogging()
+
     // Слушаем событие TelegramReceivedMessageEvent
     inner class Message {
         @EventListener
         fun onApplicationEvent(event: TgReceivedMessageEvent) {
+            logger.info { "$$$ ApplicationListener TgReceivedMessageEvent: $event" }
             logicContext.execute(chatId = event.chatId, message = event.message, stepCode = event.stepCode)
             val nextStepCode = stepContext.next(event.chatId, event.stepCode)
             if (nextStepCode != null) {
@@ -40,6 +45,7 @@ class ApplicationListener(
     inner class StepMessage {
         @EventListener
         fun onApplicationEvent(event: TgStepMessageEvent) {
+            logger.info { "$$$ ApplicationListener.StepMessage TgStepMessageEvent: $event" }
             // Обновляем шаг
             usersRepository.updateUserStep(event.chatId, event.stepCode)
             // Отправляем сообщение в бота (и формируем)
@@ -50,6 +56,7 @@ class ApplicationListener(
     inner class CallbackMessage {
         @EventListener
         fun onApplicationEvent(event: TgReceivedCallbackEvent) {
+            logger.info { "$$$ ApplicationListener.CallbackMessage TgReceivedCallbackEvent: $event" }
             val nextStepCode = when (logicContext.execute(event.chatId, event.callback, event.stepCode)) {
                 ExecuteStatus.FINAL -> { // Если бизнес процесс одобрил переход на новый этап
                     stepContext.next(event.chatId, event.stepCode)

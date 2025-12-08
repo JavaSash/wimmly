@@ -32,7 +32,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     compileOnly("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-
+    // logging
+    implementation("io.github.microutils:kotlin-logging-jvm:3.0.2")
     // test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.testcontainers:postgresql")
