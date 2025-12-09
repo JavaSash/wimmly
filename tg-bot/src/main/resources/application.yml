@@ -12,3 +12,15 @@ logging:
   level:
     ru.telegram.bot.adapter: DEBUG
     org.springframework.web: DEBUG
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic
+
+clients:
+  budget:
+    url: ${BUDGET_URL:http://localhost:8181}

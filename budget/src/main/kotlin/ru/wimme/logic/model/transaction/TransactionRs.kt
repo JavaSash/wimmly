@@ -8,7 +8,7 @@ data class TransactionRs(
     val id: UUID,
     val type: TransactionType,
     val userId: String,
-    val category: TransactionCategory,
+    val category: String,
     val amount: BigDecimal,
     val comment: String?
 ) {

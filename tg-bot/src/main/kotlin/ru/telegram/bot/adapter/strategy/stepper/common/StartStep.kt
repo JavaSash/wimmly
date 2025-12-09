@@ -1,4 +1,4 @@
-package ru.telegram.bot.adapter.strategy.stepper
+package ru.telegram.bot.adapter.strategy.stepper.common
 
 import org.springframework.stereotype.Component
 import ru.telegram.bot.adapter.dto.enums.StepCode
@@ -7,7 +7,7 @@ import ru.telegram.bot.adapter.dto.enums.StepCode
 class StartStep : Step {
 
     override fun getNextStep(chatId: Long): StepCode {
-        return StepCode.USER_INFO
+        return StepCode.HELP
     }
 
 }

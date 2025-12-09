@@ -5,7 +5,7 @@ import ru.telegram.bot.adapter.dto.MessageModelDto
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.strategy.data.AbstractRepository
 import ru.telegram.bot.adapter.strategy.dto.DataModel
-import ru.telegram.bot.adapter.strategy.message.AbstractSendMessage
+import ru.telegram.bot.adapter.strategy.message.common.AbstractSendMessage
 import ru.telegram.bot.adapter.strategy.message.AbstractSendPhoto
 
 @Component

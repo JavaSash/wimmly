@@ -39,11 +39,13 @@ class MessageService(
         stepCode: StepCode
     ) {
         when (stepCode.type) {
-            StepType.SEND_MESSAGE, StepType.INLINE_KEYBOARD_MARKUP -> telegramClient.execute(sendMessage(chatId, stepCode))
+            StepType.SEND_MESSAGE,
+            StepType.INLINE_KEYBOARD_MARKUP,
+            StepType.REPLY_KEYBOARD_MARKUP -> telegramClient.execute(sendMessage(chatId, stepCode))
             StepType.SEND_PHOTO -> telegramClient.execute(sendPhoto(chatId, stepCode))
         }
 
-        if (!stepCode.botPause) { // если нет паузы, то формируем следующее сообщение
+        if (!stepCode.botPause && stepCode != StepCode.FINAL) { // если нет паузы, то формируем следующее сообщение
             applicationEventPublisher.publishEvent(
                 TgStepMessageEvent(
                     chatId = chatId,

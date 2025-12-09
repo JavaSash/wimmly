@@ -73,6 +73,11 @@ strategy — Стратегии. Это те компоненты, которы�
 3. Pass new enum value to NewCommand class as first param
 4. Create class for new message in package [message](src%2Fmain%2Fkotlin%2Fru%2Ftelegram%2Fbot%2Fadapter%2Fstrategy%2Fmessage) 
 5. Create .ftl file with response txt
+6. Create new class extended from [MessageChooser.kt](src%2Fmain%2Fkotlin%2Fru%2Ftelegram%2Fbot%2Fadapter%2Fstrategy%2Flogic%2Fcommon%2FMessageChooser.kt)
+Name should be with prefix StepCode.value and postfix Chooser
+For example: StepCode.BALANCE and BalanceChooser
+7. Add new class extended from [Step.kt](src%2Fmain%2Fkotlin%2Fru%2Ftelegram%2Fbot%2Fadapter%2Fstrategy%2Fstepper%2Fcommon%2FStep.kt) and implement method getNextStep()
+8. 
 
 ## TODO
 1. сделать все нужные операции (под апи бэка)

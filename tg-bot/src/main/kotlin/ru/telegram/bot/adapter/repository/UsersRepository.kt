@@ -1,9 +1,9 @@
 package ru.telegram.bot.adapter.repository
 
-import ru.telegram.bot.adapter.domain.tables.pojos.Users
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository
 import ru.telegram.bot.adapter.domain.tables.Users.Companion.USERS
+import ru.telegram.bot.adapter.domain.tables.pojos.Users
 import ru.telegram.bot.adapter.dto.enums.StepCode
 
 @Repository
@@ -45,6 +45,12 @@ class UsersRepository(private val dslContext: DSLContext) {
     fun updateAccept(chatId: Long, accept: String) {
         dslContext.update(USERS)
             .set(USERS.ACCEPT, accept)
+            .where(USERS.ID.eq(chatId)).execute()
+    }
+
+    fun updateTransactionType(chatId: Long, txType: String) {
+        dslContext.update(USERS)
+            .set(USERS.TRANSACTION_TYPE, txType)
             .where(USERS.ID.eq(chatId)).execute()
     }
 }

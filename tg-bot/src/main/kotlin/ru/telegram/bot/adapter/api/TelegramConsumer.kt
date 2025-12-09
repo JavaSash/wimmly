@@ -10,7 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.generics.TelegramClient
 import ru.telegram.bot.adapter.config.BotProperty
 import ru.telegram.bot.adapter.service.ReceiverService
-import ru.telegram.bot.adapter.strategy.command.AbstractCommand
+import ru.telegram.bot.adapter.strategy.command.common.AbstractCommand
 
 /*
 Базовый класс Телеграм АПИ, который отправляет и принимает сообщения.

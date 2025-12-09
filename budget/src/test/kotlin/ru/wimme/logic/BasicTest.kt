@@ -8,7 +8,7 @@ import ru.wimme.logic.TestConstants.User.USER_ID
 import ru.wimme.logic.TestConstants.User.USER_NAME
 import ru.wimme.logic.model.entity.TransactionEntity
 import ru.wimme.logic.model.entity.UserEntity
-import ru.wimme.logic.model.transaction.TransactionCategory
+import ru.wimme.logic.model.transaction.ExpenseCategory
 import ru.wimme.logic.model.transaction.TransactionType
 import ru.wimme.logic.repository.TransactionRepository
 import ru.wimme.logic.repository.UserRepository
@@ -52,7 +52,7 @@ class BasicTest : TestConfig() {
             id = UUID.randomUUID(),
             type = type,
             userId = userId,
-            category = TransactionCategory.EDUCATION,
+            category = ExpenseCategory.EDUCATION.name,
             amount = amount.money(),
             comment = "Salary part"
         )
@@ -63,7 +63,7 @@ class BasicTest : TestConfig() {
         type: TransactionType,
         amount: Double,
         createdAt: LocalDateTime,
-        category: TransactionCategory = TransactionCategory.EDUCATION
+        category: ExpenseCategory = ExpenseCategory.EDUCATION
     ) {
         val id = UUID.randomUUID()
         jdbcTemplate.update(

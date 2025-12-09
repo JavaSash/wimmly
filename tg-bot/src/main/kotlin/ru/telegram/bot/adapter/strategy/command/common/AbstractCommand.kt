@@ -1,4 +1,4 @@
-package ru.telegram.bot.adapter.strategy.command
+package ru.telegram.bot.adapter.strategy.command.common
 
 import org.springframework.context.ApplicationEventPublisher
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand

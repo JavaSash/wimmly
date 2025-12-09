@@ -3,7 +3,7 @@ package ru.wimme.logic.service
 import org.springframework.stereotype.Service
 import ru.wimme.logic.model.report.PeriodReport
 import ru.wimme.logic.model.report.ReportItem
-import ru.wimme.logic.model.transaction.TransactionCategory
+import ru.wimme.logic.model.transaction.ExpenseCategory
 import ru.wimme.logic.model.transaction.TransactionType
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -59,7 +59,7 @@ class ReportService(
         var totalIncome = BigDecimal.ZERO
         var totalExpense = BigDecimal.ZERO
 
-        val groupedByCategory = mutableMapOf<Enum<*>, BigDecimal>()
+        val groupedByCategory = mutableMapOf<String, BigDecimal>()
 
         transactions.forEach { tx ->
             when (tx.type) {
@@ -74,7 +74,7 @@ class ReportService(
 
         val sumByCategories = groupedByCategory.map { (cat, sum) ->
             ReportItem(
-                category = cat as TransactionCategory,
+                category = ExpenseCategory.valueOf(cat),
                 total = sum
             )
         }.sortedByDescending { it.total }

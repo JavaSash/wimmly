@@ -5,6 +5,7 @@ import ru.telegram.bot.adapter.component.MessageWriter
 import ru.telegram.bot.adapter.dto.MarkupDataDto
 import ru.telegram.bot.adapter.strategy.dto.ButtonRequestDto
 import ru.telegram.bot.adapter.strategy.dto.DataModel
+import ru.telegram.bot.adapter.strategy.message.common.AbstractSendMessage
 
 @Component
 class ButtonRequestMessage<T : DataModel>(messageWriter: MessageWriter) : AbstractSendMessage<ButtonRequestDto>(messageWriter) {

@@ -2,5 +2,7 @@
 
 /start - Запустить бота
 /help - Помощь
-/register - Регистрация
-/status - Статус
+/add_income - Добавить доход
+/add_expense - Добавить расход
+/balance - Показать баланс
+<#--/show_transactions - Показать транзакции-->

@@ -11,6 +11,12 @@ plugins {
 group = "ru.wimme.logic"
 version = "1.0.0"
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
 repositories {
     mavenCentral()
 }
@@ -54,4 +60,5 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions {
         jvmTarget = "17"
     }
+
 }

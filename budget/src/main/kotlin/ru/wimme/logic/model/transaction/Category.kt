@@ -1,6 +1,6 @@
 package ru.wimme.logic.model.transaction
 
-enum class TransactionCategory(
+enum class ExpenseCategory(
     val description: String
 ) {
     HYGIENE("Гигиена"),
@@ -17,4 +17,13 @@ enum class TransactionCategory(
     SPORT("Спорт"),
     ENTERTAINMENT("Развлечения"),
     OTHER("Прочее");
+}
+
+enum class IncomeCategory(
+    val description: String
+) {
+    SALARY("Заработная плата"),
+    INVESTMENT("Инвестиции"),
+    SAVINGS("Сбережения"),
+    OTHER("Прочее")
 }

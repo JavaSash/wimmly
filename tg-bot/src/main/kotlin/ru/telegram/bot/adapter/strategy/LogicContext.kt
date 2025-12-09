@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.message.Message
 import ru.telegram.bot.adapter.dto.enums.ExecuteStatus
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.strategy.logic.CallbackChooser
-import ru.telegram.bot.adapter.strategy.logic.MessageChooser
+import ru.telegram.bot.adapter.strategy.logic.common.MessageChooser
 
 // Основная бизнес логика
 @Component

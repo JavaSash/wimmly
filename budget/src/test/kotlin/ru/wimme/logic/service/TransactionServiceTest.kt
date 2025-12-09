@@ -12,7 +12,7 @@ import ru.wimme.logic.TestConstants.Tx.AMOUNT_50
 import ru.wimme.logic.TestConstants.User.USER_ID
 import ru.wimme.logic.TestConstants.User.USER_ID_2
 import ru.wimme.logic.exception.NotFoundException
-import ru.wimme.logic.model.transaction.TransactionCategory
+import ru.wimme.logic.model.transaction.ExpenseCategory
 import ru.wimme.logic.model.transaction.TransactionRq
 import ru.wimme.logic.model.transaction.TransactionType
 import ru.wimme.logic.money
@@ -29,7 +29,7 @@ class TransactionServiceTest : BasicTest() {
         val rq = TransactionRq(
             type = TransactionType.INCOME,
             userId = user.tgId,
-            category = TransactionCategory.EDUCATION,
+            category = ExpenseCategory.EDUCATION.name,
             amount = AMOUNT_100.money(),
             comment = "Test create"
         )
@@ -108,7 +108,7 @@ class TransactionServiceTest : BasicTest() {
         val rq = TransactionRq(
             type = TransactionType.EXPENSE,
             userId = USER_ID,
-            category = TransactionCategory.FOOD,
+            category = ExpenseCategory.FOOD.name,
             amount = AMOUNT_250.money(),
             comment = "Updated"
         )
@@ -118,7 +118,7 @@ class TransactionServiceTest : BasicTest() {
         assertAll(
             { assertEquals(tx.id, updated.id) },
             { assertEquals(TransactionType.EXPENSE, updated.type) },
-            { assertEquals(TransactionCategory.FOOD, updated.category) },
+            { assertEquals(ExpenseCategory.FOOD.name, updated.category) },
             { assertEquals(AMOUNT_250.money(), updated.amount) },
             { assertEquals("Updated", updated.comment) }
         )
@@ -129,7 +129,7 @@ class TransactionServiceTest : BasicTest() {
         val rq = TransactionRq(
             type = TransactionType.EXPENSE,
             userId = USER_ID,
-            category = TransactionCategory.FOOD,
+            category = ExpenseCategory.FOOD.name,
             amount = AMOUNT_100.money(),
             comment = "X"
         )

@@ -1,6 +1,6 @@
 package ru.wimme.logic.model.report
 
-import ru.wimme.logic.model.transaction.TransactionCategory
+import ru.wimme.logic.model.transaction.ExpenseCategory
 import java.math.BigDecimal
 
 data class PeriodReport(
@@ -11,6 +11,6 @@ data class PeriodReport(
 )
 
 data class ReportItem(
-    val category: TransactionCategory,
+    val category: ExpenseCategory,
     val total: BigDecimal
 )

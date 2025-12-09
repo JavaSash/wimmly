@@ -1,4 +1,4 @@
-package ru.telegram.bot.adapter.strategy.message
+package ru.telegram.bot.adapter.strategy.message.common
 
 import org.springframework.stereotype.Component
 import ru.telegram.bot.adapter.component.MessageWriter

@@ -7,9 +7,9 @@ import org.telegram.telegrambots.meta.generics.TelegramClient
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.strategy.dto.DataModel
 import ru.telegram.bot.adapter.strategy.logic.CallbackChooser
-import ru.telegram.bot.adapter.strategy.logic.MessageChooser
-import ru.telegram.bot.adapter.strategy.message.AbstractSendMessage
+import ru.telegram.bot.adapter.strategy.logic.common.MessageChooser
 import ru.telegram.bot.adapter.strategy.message.AbstractSendPhoto
+import ru.telegram.bot.adapter.strategy.message.common.AbstractSendMessage
 
 @Configuration
 class TelegramConfig<T : DataModel>(

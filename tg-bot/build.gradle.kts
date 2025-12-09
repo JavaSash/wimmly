@@ -58,11 +58,13 @@ dependencies {
     implementation("org.flywaydb:flyway-database-postgresql")
     flywayMigration("org.postgresql:postgresql:$postgresVersion")
     jooqGenerator("org.postgresql:postgresql:$postgresVersion")
-
     // Kotlin JPA support
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
 
+    // Integration
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+    // Spring
     implementation("org.springframework.boot:spring-boot-starter")
     // mechanism that helps to generate sql queries in a DSL-like language
     implementation("org.springframework.boot:spring-boot-starter-jooq")
