@@ -1,4 +1,4 @@
-package ru.wimme.logic.model.user
+package ru.telegram.bot.adapter.dto.budget.user
 
 data class UserRegistrationRq(
     val telegramUserId: String,

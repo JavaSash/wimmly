@@ -10,6 +10,7 @@ import ru.telegram.bot.adapter.dto.enums.BotCommand
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.event.TgStepMessageEvent
 import ru.telegram.bot.adapter.repository.UsersRepository
+import ru.telegram.bot.adapter.service.UserService
 import ru.telegram.bot.adapter.strategy.command.report.BalanceCommand
 
 /**
@@ -19,7 +20,8 @@ import ru.telegram.bot.adapter.strategy.command.report.BalanceCommand
 class StartCommand(
     private val usersRepository: UsersRepository,
     private val balanceCommand: BalanceCommand,
-    private val applicationEventPublisher: ApplicationEventPublisher
+    private val applicationEventPublisher: ApplicationEventPublisher,
+    private val userService: UserService
 ) : AbstractCommand(BotCommand.START, usersRepository, applicationEventPublisher) {
 
     companion object : KLogging()
@@ -32,6 +34,7 @@ class StartCommand(
         if (usersRepository.isUserExist(chatId)) {
             // Для существующего пользователя - показываем баланс
             balanceCommand.execute(telegramClient, user, chat, arguments)
+            usersRepository.updateUserStep(chatId, StepCode.BALANCE)
         } else {
             // Для нового пользователя - стандартный START
             prepare(user, chat, arguments)
@@ -49,8 +52,7 @@ class StartCommand(
         logger.info { "$$$ StartCommand.prepare for user: $user and chat: $chat with arguments: $arguments" }
 
         val chatId = chat.id
-        if (usersRepository.isUserExist(chatId)) {
-            usersRepository.updateUserStep(chatId, StepCode.START)
-        } else usersRepository.createUser(chatId)
+        usersRepository.createUser(chatId)
+        userService.syncUserToBackend(chatId, user)
     }
 }

@@ -15,7 +15,7 @@ class UserApi(
     private val userService: UserService
 ) {
     @PostMapping("/check")
-    fun checkUser(@RequestBody request: UserCheckRq): Boolean = userService.isRegistered(request.telegramUserId)
+    fun isUserExist(@RequestBody request: UserCheckRq): Boolean = userService.isRegistered(request.telegramUserId)
 
 
     @PostMapping("/register")

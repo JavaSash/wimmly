@@ -24,7 +24,8 @@ class UserService(
             userRepository.save(
                 UserEntity(
                     tgId = rq.telegramUserId,
-                    name = rq.name
+                    firstName = rq.firstName,
+                    name = rq.userName,
                 )
             ).tgId
         )

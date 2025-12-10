@@ -1,5 +1,6 @@
 package ru.telegram.bot.adapter.api
 
+import mu.KLogging
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.extensions.bots.commandbot.CommandLongPollingTelegramBot
 import org.telegram.telegrambots.longpolling.BotSession
@@ -24,6 +25,7 @@ class TelegramConsumer(
     telegramClient: TelegramClient
 ) : SpringLongPollingBot, CommandLongPollingTelegramBot(telegramClient, true, { botProperty.username }) {
 
+    companion object : KLogging()
 
     init {
         registerAll(*commands.toTypedArray())
@@ -41,7 +43,7 @@ class TelegramConsumer(
 
     @AfterBotRegistration
     fun afterRegistration(botSession: BotSession) {
-        println("Registered bot running state is: " + botSession.isRunning)
+        logger.info { "$$$ Registered bot running state is: " + botSession.isRunning }
     }
 
 }

@@ -39,6 +39,7 @@ class BasicTest : TestConfig() {
     ): UserEntity = userRepo.save(
         UserEntity(
             tgId = userId,
+            firstName = "Ali Baba",
             name = "Test User"
         )
     )

@@ -2,6 +2,13 @@ bot:
   username: wimmly_bot
   token: ${BOT_TOKEN}
 spring:
+  task:
+    execution:
+      pool:
+        core-size: 2
+        max-size: 5
+        queue-capacity: 100
+      thread-name-prefix: "Async-"
   flyway:
     baseline-on-migrate: true
   datasource:

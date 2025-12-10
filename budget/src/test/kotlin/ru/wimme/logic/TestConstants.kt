@@ -12,7 +12,9 @@ object TestConstants {
     object User {
         const val USER_ID = "test_user"
         const val USER_ID_2 = "another_user"
-        const val USER_NAME = "Rupert Pips"
-        const val USER_NAME_2 = "Bilbo Baggins"
+        const val FIRST_NAME = "Rupert"
+        const val FIRST_NAME_2 = "Bilbo"
+        const val USER_NAME = "User name"
+        const val USER_NAME_2 = "name of user"
     }
 }

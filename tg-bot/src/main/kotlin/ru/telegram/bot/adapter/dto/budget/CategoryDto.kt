@@ -1,4 +1,4 @@
-package ru.telegram.bot.adapter.dto.business
+package ru.telegram.bot.adapter.dto.budget
 
 data class CategoryDto(
     val code: String,
