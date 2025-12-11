@@ -31,20 +31,25 @@ class StartCommand(
 
         val chatId = chat.id
 
-        if (usersRepository.isUserExist(chatId)) {
-            // Для существующего пользователя - показываем баланс
-            balanceCommand.execute(telegramClient, user, chat, arguments)
-            usersRepository.updateUserStep(chatId, StepCode.BALANCE)
-        } else {
-            // Для нового пользователя - стандартный START
-            prepare(user, chat, arguments)
+// todo        if (chatId < 0) usersRepository.updateUserStep(chatId, StepCode.NOT_SUPPORTED)
+        if (chatId > 0) {
+            if (usersRepository.isUserExist(chatId)) {
+                // Для существующего пользователя - показываем баланс
+                balanceCommand.execute(telegramClient, user, chat, arguments)
+                usersRepository.updateUserStep(chatId, StepCode.BALANCE)
+            } else {
+                // Для нового пользователя - стандартный START
+                prepare(user, chat, arguments)
 
-            applicationEventPublisher.publishEvent(
-                TgStepMessageEvent(
-                    chatId = chatId,
-                    stepCode = StepCode.START
+                applicationEventPublisher.publishEvent(
+                    TgStepMessageEvent(
+                        chatId = chatId,
+                        stepCode = StepCode.START
+                    )
                 )
-            )
+            }
+        } else {
+            logger.warn { "$$$ Negative chatId: $chatId not supported yet" }
         }
     }
 
@@ -53,6 +58,7 @@ class StartCommand(
 
         val chatId = chat.id
         usersRepository.createUser(chatId)
+        usersRepository.updateUserStep(chatId, StepCode.START)
         userService.syncUserToBackend(chatId, user)
     }
 }

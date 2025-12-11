@@ -74,7 +74,7 @@ class MessageService(
     private fun sendMessage(chatId: Long, stepCode: StepCode): SendMessage {
         val message = messageContext.getMessage(chatId, stepCode)
             ?: throw IllegalStateException("message is null")
-// Отправляем в бота сообщение с кнопками
+        // Отправляем в бота сообщение с кнопками
         val markup = message.inlineButtons.getInlineKeyboardMarkup()
             .takeIf { it.keyboard.isNotEmpty() }
             ?: message.replyButtons.takeIf { it.isNotEmpty() }?.getReplyMarkup()
@@ -90,6 +90,7 @@ class MessageService(
 
         return sendMessage
     }
+
     // Формируем модель кнопок
     private fun List<MarkupDataDto>.getInlineKeyboardMarkup(): InlineKeyboardMarkup {
 

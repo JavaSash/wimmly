@@ -12,6 +12,7 @@ enum class StepCode(val type: StepType, val botPause: Boolean) {
     START(StepType.SEND_MESSAGE, false),
     HELP(StepType.SEND_MESSAGE, false),
     FINAL(StepType.SEND_MESSAGE, false),
+//    NOT_SUPPORTED(StepType.SEND_MESSAGE, false), // todo impl
     // Команды
 //    ADD_EXPENSE(StepType.SEND_MESSAGE, false),
 //    ADD_INCOME(StepType.SEND_MESSAGE, false),

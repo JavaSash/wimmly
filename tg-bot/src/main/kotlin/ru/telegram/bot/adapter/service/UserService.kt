@@ -15,7 +15,7 @@ class UserService(
 
     @Async("taskExecutor")
     fun syncUserToBackend(chatId: Long, tgUser: User) {
-        try {
+        runCatching {
             userClient.registerUser(
                 UserRegistrationRq(
                     telegramUserId = tgUser.id.toString(),
@@ -23,8 +23,8 @@ class UserService(
                     userName = tgUser.userName
                 )
             ).also { logger.info { "$$$ User ${it.userId} registered" } }
-        } catch (e: Exception) {
-            logger.error("$$$ Failed to sync user $chatId: ${e.message}")
+        }.onFailure {
+            logger.error("$$$ Failed to sync user $chatId: ${it.message}")
         }
     }
 }

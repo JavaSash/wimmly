@@ -14,7 +14,9 @@ class MessageContext<T : DataModel>(
     private val sendPhotos: Map<StepCode, AbstractSendPhoto<T>>,
     private val abstractRepository: List<AbstractRepository<T>>
 ) {
-
+    /**
+     * Form message from Data Repository
+     */
     fun getMessage(chatId: Long, stepCode: StepCode): MessageModelDto? {
         return sendMessages[stepCode]
             ?.takeIf { it.isPermitted(chatId) }
@@ -41,6 +43,9 @@ class MessageContext<T : DataModel>(
             }
     }
 
+    /**
+     * Get T: DataModel from DataRepository: AbstractRepository
+     */
     private fun getData(chatId: Long, stepCode: StepCode): T? {
         return abstractRepository.firstOrNull { it.isAvailableForCurrentStep(stepCode) }?.getData(chatId)
     }

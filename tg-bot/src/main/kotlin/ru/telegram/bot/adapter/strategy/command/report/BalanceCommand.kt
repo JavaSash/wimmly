@@ -21,6 +21,7 @@ class BalanceCommand(
             usersRepository.updateUserStep(chatId, StepCode.BALANCE)
         } else {
             usersRepository.createUser(chatId)
+            usersRepository.updateUserStep(chatId, StepCode.START)
         }
     }
 }
