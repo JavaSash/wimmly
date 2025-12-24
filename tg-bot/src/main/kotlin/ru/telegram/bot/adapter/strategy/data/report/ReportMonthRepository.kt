@@ -1,8 +1,9 @@
-package ru.telegram.bot.adapter.strategy.data
+package ru.telegram.bot.adapter.strategy.data.report
 
 import mu.KLogging
 import org.springframework.stereotype.Repository
 import ru.telegram.bot.adapter.client.ReportClient
+import ru.telegram.bot.adapter.strategy.data.AbstractRepository
 import ru.telegram.bot.adapter.strategy.dto.BalanceDto
 import java.math.BigDecimal
 
@@ -12,21 +13,21 @@ import java.math.BigDecimal
  * T should extend from DataModel
  */
 @Repository
-class ReportTodayRepository(
+class ReportMonthRepository(
     private val reportClient: ReportClient
 ) : AbstractRepository<BalanceDto>() {
     companion object : KLogging()
 
     /**
-     * @return today's report from budget-service or stub
+     * @return report from budget-service or stub
      */
     override fun getData(chatId: Long): BalanceDto {
-        logger.info { "$$$ Try to get today's report for chat: $chatId" }
+        logger.info { "$$$ Try to get month report for chat: $chatId" }
         return runCatching {
-            val monthReport = reportClient.getTodayReport(chatId.toString())
-            BalanceDto(balance = monthReport.currentBalance, income = monthReport.totalIncome, expense = monthReport.totalExpense)
+            val report = reportClient.getThisMonthReport(chatId.toString())
+            BalanceDto(balance = report.balance, income = report.totalIncome, expense = report.totalExpense)
         }
-            .onFailure { logger.error { "$$$ Can't receive today's report for user: $chatId. Cause: ${it.message}. Return stub" } }
+            .onFailure { logger.error { "$$$ Can't receive month report for user: $chatId. Cause: ${it.message}. Return stub" } }
             .getOrDefault(getBalanceStub())
     }
 

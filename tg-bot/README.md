@@ -77,6 +77,7 @@ strategy — Стратегии. Это те компоненты, которы�
 Name should be with prefix StepCode.value and postfix Chooser
 For example: StepCode.BALANCE and BalanceChooser
 7. Add new class extended from Step and implement method getNextStep()
+8. Add repository class extended from AbstractRepository<T> (type is DTO class) to provide data if needed
 
 ### Create step
 1. Create new value in StepCode enum
@@ -101,7 +102,7 @@ For example: StepCode.BALANCE and BalanceChooser
 3. Модифицировать слушателей для отправки запросов в бэкенд 
 4. Оставить только преобразование Telegram → внутренний формат
 5. сделать кнопки категорий в UI на русском, хранение в бд на англ
-6. отчёты: неделя, месяц, год
+
 
 ### UI
 

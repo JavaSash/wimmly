@@ -4,7 +4,7 @@ import ru.wimme.logic.model.transaction.TransactionCategory
 import java.math.BigDecimal
 
 data class PeriodReport(
-    val currentBalance: BigDecimal,
+    val balance: BigDecimal,
     val periodName: String,
     val totalIncome: BigDecimal,
     val totalExpense: BigDecimal,

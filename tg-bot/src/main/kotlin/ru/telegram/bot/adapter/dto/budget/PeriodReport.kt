@@ -5,7 +5,7 @@ import java.math.BigDecimal
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class PeriodReport(
-    val currentBalance: BigDecimal,
+    val balance: BigDecimal,
     val periodName: String,
     val totalIncome: BigDecimal,
     val totalExpense: BigDecimal

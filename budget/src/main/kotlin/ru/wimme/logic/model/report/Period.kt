@@ -2,8 +2,7 @@ package ru.wimme.logic.model.report
 
 import java.time.Instant
 
-data class CustomPeriodRq(
-    val userId: String,
+data class Period(
     val from: Instant,
-    val to: Instant
+    val to: Instant,
 )

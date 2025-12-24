@@ -18,6 +18,9 @@ enum class StepCode(val type: StepType, val botPause: Boolean) {
     // Report
     BALANCE(StepType.SEND_MESSAGE, false),
     REPORT_TODAY(StepType.SEND_MESSAGE, false),
+    REPORT_WEEK(StepType.SEND_MESSAGE, false),
+    REPORT_MONTH(StepType.SEND_MESSAGE, false),
+    REPORT_YEAR(StepType.SEND_MESSAGE, false),
 
     // Transaction
     ADD_INCOME(StepType.SEND_MESSAGE, false),

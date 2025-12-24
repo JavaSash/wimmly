@@ -1,13 +1,16 @@
 package ru.wimme.logic.service
 
 import org.springframework.stereotype.Service
+import ru.wimme.logic.model.report.Period
 import ru.wimme.logic.model.report.PeriodReport
 import ru.wimme.logic.model.report.ReportItem
 import ru.wimme.logic.model.transaction.TransactionCategory
 import ru.wimme.logic.model.transaction.TransactionType
 import java.math.BigDecimal
+import java.time.Duration
+import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.temporal.WeekFields
 import java.util.*
 
@@ -20,37 +23,37 @@ class ReportService(
     fun formTodayReport(userId: String): PeriodReport =
         reportForPeriod(
             userId = userId,
-            from = LocalDate.now().atStartOfDay(),
-            to = LocalDate.now().plusDays(1).atStartOfDay(),
+            from = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant(),
+            to = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant(),
             label = "Сегодня" // todo date
         )
 
     fun formThisWeekReport(userId: String): PeriodReport {
         val week = WeekFields.of(Locale.getDefault())
         val now = LocalDate.now()
-        val start = now.with(week.dayOfWeek(), 1).atStartOfDay()
-        val end = start.plusWeeks(1)
+        val start = now.with(week.dayOfWeek(), 1).atStartOfDay(ZoneId.systemDefault()).toInstant()
+        val end = start.plus(Duration.ofDays(7))
         return reportForPeriod(userId, start, end, "Эта неделя") // todo period
     }
 
     fun formThisMonthReport(userId: String): PeriodReport {
         val now = LocalDate.now()
-        val start = now.withDayOfMonth(1).atStartOfDay()
-        val end = start.plusMonths(1)
+        val start = now.withDayOfMonth(1).atStartOfDay(ZoneId.systemDefault()).toInstant()
+        val end = start.plus(Duration.ofDays(now.lengthOfMonth().toLong()))
         return reportForPeriod(userId, start, end, "Этот месяц") // todo period
     }
 
     fun formThisYearReport(userId: String): PeriodReport {
         val now = LocalDate.now()
-        val start = now.withDayOfYear(1).atStartOfDay()
-        val end = start.plusYears(1)
+        val start = now.withDayOfYear(1).atStartOfDay(ZoneId.systemDefault()).toInstant()
+        val end = start.plus(Duration.ofDays(now.lengthOfYear().toLong()))
         return reportForPeriod(userId, start, end, "Этот год") // todo current year
     }
 
     fun reportForPeriod(
         userId: String,
-        from: LocalDateTime,
-        to: LocalDateTime,
+        from: Instant,
+        to: Instant,
         label: String
     ): PeriodReport {
 
@@ -81,7 +84,7 @@ class ReportService(
         }.sortedByDescending { it.total }
 
         return PeriodReport(
-            currentBalance = balanceService.getBalance(userId).balance,
+            balance = balanceService.getBalance(userId=userId, period = Period(from = from, to = to)).balance,
             periodName = label,
             totalIncome = totalIncome,
             totalExpense = totalExpense,
