@@ -68,15 +68,15 @@ strategy — Стратегии. Это те компоненты, которы�
 8. Отправляется ответ через [TelegramConsumer.kt](src%2Fmain%2Fkotlin%2Fru%2Ftemplate%2Ftelegram%2Fbot%2Fkotlin%2Ftemplate%2Fapi%2FTelegramConsumer.kt)
 
 ### Create new command
-1. Create new class NewCommand extended from [AbstractCommand.kt](src%2Fmain%2Fkotlin%2Fru%2Ftelegram%2Fbot%2Fadapter%2Fstrategy%2Fcommand%2FAbstractCommand.kt)
-2. Add value for new command in [BotCommand.kt](src%2Fmain%2Fkotlin%2Fru%2Ftelegram%2Fbot%2Fadapter%2Fdto%2Fenums%2FBotCommand.kt)
+1. Create new class NewCommand extended from AbstractCommand
+2. Add value for new command in BotCommand
 3. Pass new enum value to NewCommand class as first param
-4. Create class for new message in package [message](src%2Fmain%2Fkotlin%2Fru%2Ftelegram%2Fbot%2Fadapter%2Fstrategy%2Fmessage) 
+4. Create class for new message in package message
 5. Create .ftl file with response txt
-6. Create new class extended from [MessageChooser.kt](src%2Fmain%2Fkotlin%2Fru%2Ftelegram%2Fbot%2Fadapter%2Fstrategy%2Flogic%2Fcommon%2FMessageChooser.kt)
+6. Create new class extended from MessageChooser
 Name should be with prefix StepCode.value and postfix Chooser
 For example: StepCode.BALANCE and BalanceChooser
-7. Add new class extended from [Step.kt](src%2Fmain%2Fkotlin%2Fru%2Ftelegram%2Fbot%2Fadapter%2Fstrategy%2Fstepper%2Fcommon%2FStep.kt) and implement method getNextStep()
+7. Add new class extended from Step and implement method getNextStep()
 
 ### Create step
 1. Create new value in StepCode enum
@@ -101,39 +101,9 @@ For example: StepCode.BALANCE and BalanceChooser
 3. Модифицировать слушателей для отправки запросов в бэкенд 
 4. Оставить только преобразование Telegram → внутренний формат
 5. сделать кнопки категорий в UI на русском, хранение в бд на англ
-6. отчёты: сегодня, неделя, месяц, год
+6. отчёты: неделя, месяц, год
 
 ### UI
-Просмотр статистики
-Пользователь: Нажимает "📊 Статистика"
-Бот: "Выберите период:"
-[📅 Сегодня] [📆 Неделя] [🗓️ Месяц] [📊 Год]
-
-Пользователь: Нажимает "🗓️ Месяц"
-Бот: Отправляет график/таблицу
-
-fun formatBalanceResponse(balanceData: BalanceData): String {
-return """
-*💰 БАЛАНС: ${formatCurrency(balanceData.total)}*
-━━━━━━━━━━━━━━━━━━━━
-📊 *${balanceData.period}*
-📈 Доходы: *+${formatCurrency(balanceData.income)}*
-📉 Расходы: *-${formatCurrency(balanceData.expense)}*
-━━━━━━━━━━━━━━━━━━━━
-💳 Наличные: ${formatCurrency(balanceData.cash)}
-🏦 Карта: ${formatCurrency(balanceData.card)}
-📱 МБ: ${formatCurrency(balanceData.mobile)}
-
-    📈 Изменение за день: ${formatCurrency(balanceData.dailyChange)} (${balanceData.dailyChangePercent}%)
-    """.trimIndent()
-}
-
-// Пример вывода:
-// 💰 БАЛАНС: 25 430 ₽
-// ━━━━━━━━━━━━━━━━━━━━
-// 📊 Сегодня
-// 📈 Доходы: +5 000 ₽
-// 📉 Расходы: -2 300 ₽
 
 
 ### Links

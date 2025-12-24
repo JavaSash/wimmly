@@ -13,6 +13,7 @@ enum class BotCommand(val command: String, val desc: String) {
 
     //Report
     BALANCE("balance", "Текущий баланс"),
+    REPORT_TODAY("report_today", "Баланс на сегодня"),
 
     // Transaction
     ADD_INCOME("add_income", "Добавить доход"),

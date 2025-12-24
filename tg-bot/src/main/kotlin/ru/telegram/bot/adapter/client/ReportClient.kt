@@ -12,7 +12,15 @@ interface ReportClient {
     @GetMapping("/api/report/balance/{userId}")
     fun getBalance(@PathVariable userId: String): BalanceDto
 
+    @GetMapping("/api/report/today/{userId}")
+    fun getTodayReport(@PathVariable userId: String): PeriodReport
+
+    @GetMapping("/api/report/week/{userId}")
+    fun getThisWeekReport(@PathVariable userId: String): PeriodReport
+
     @GetMapping("/api/report/month/{userId}")
     fun getThisMonthReport(@PathVariable userId: String): PeriodReport
 
+    @GetMapping("/api/report/year/{userId}")
+    fun getThisYearReport(@PathVariable userId: String): PeriodReport
 }
