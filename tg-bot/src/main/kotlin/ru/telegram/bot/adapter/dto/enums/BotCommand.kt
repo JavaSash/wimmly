@@ -20,8 +20,6 @@ enum class BotCommand(val command: String, val desc: String) {
 //    TRANSACTIONS("transactions", "Последние транзакции"),
 
     // not used
-    USER_INFO("user_info", "user info"),
-    BUTTON("button", "button yes no"),
     ACCESS("access", "access check"),
     CONTACT("contact", "contact check"),
     PHOTO("photo", "photo test"),
