@@ -14,7 +14,7 @@ import java.math.BigDecimal
 @Repository
 class BalanceRepository(
     private val reportClient: ReportClient
-): AbstractRepository<BalanceDto>() {
+) : AbstractRepository<BalanceDto>() {
     companion object : KLogging()
 
     /**
@@ -22,8 +22,11 @@ class BalanceRepository(
      */
     override fun getData(chatId: Long): BalanceDto {
         logger.info { "$$$ Try to get balance for chat: $chatId" }
-        return runCatching { reportClient.getBalance(chatId.toString()) }
-            .onFailure { logger.error { "$$$ Can't receive balance for user: $chatId. Cause: ${it.message}. Return stub" }}
+        return runCatching {
+            val monthReport = reportClient.getThisMonthReport(chatId.toString())
+            BalanceDto(balance = monthReport.currentBalance, income = monthReport.totalIncome, expense = monthReport.totalExpense)
+        }
+            .onFailure { logger.error { "$$$ Can't receive balance for user: $chatId. Cause: ${it.message}. Return stub" } }
             .getOrDefault(getBalanceStub())
     }
 

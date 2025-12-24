@@ -3,7 +3,7 @@ package ru.wimme.logic.service
 import org.springframework.stereotype.Service
 import ru.wimme.logic.model.report.PeriodReport
 import ru.wimme.logic.model.report.ReportItem
-import ru.wimme.logic.model.transaction.ExpenseCategory
+import ru.wimme.logic.model.transaction.TransactionCategory
 import ru.wimme.logic.model.transaction.TransactionType
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -13,7 +13,8 @@ import java.util.*
 
 @Service
 class ReportService(
-    private val txService: TransactionService
+    private val txService: TransactionService,
+    private val balanceService: BalanceService
 ) {
 
     fun formTodayReport(userId: String): PeriodReport =
@@ -59,27 +60,28 @@ class ReportService(
         var totalIncome = BigDecimal.ZERO
         var totalExpense = BigDecimal.ZERO
 
-        val groupedByCategory = mutableMapOf<String, BigDecimal>()
+        val groupedByCategory = mutableMapOf<TransactionCategory, BigDecimal>()
 
         transactions.forEach { tx ->
             when (tx.type) {
                 TransactionType.INCOME -> totalIncome = totalIncome.add(tx.amount)
                 TransactionType.EXPENSE -> totalExpense = totalExpense.add(tx.amount)
             }
-
-            groupedByCategory[tx.category] =
-                groupedByCategory.getOrDefault(tx.category, BigDecimal.ZERO)
+            val category = TransactionCategory.fromCode(tx.category, tx.type)
+            groupedByCategory[category] =
+                groupedByCategory.getOrDefault(category, BigDecimal.ZERO)
                     .add(tx.amount)
         }
 
-        val sumByCategories = groupedByCategory.map { (cat, sum) ->
+        val sumByCategories = groupedByCategory.map { (category, sum) ->
             ReportItem(
-                category = ExpenseCategory.valueOf(cat),
+                category = category,
                 total = sum
             )
         }.sortedByDescending { it.total }
 
         return PeriodReport(
+            currentBalance = balanceService.getBalance(userId).balance,
             periodName = label,
             totalIncome = totalIncome,
             totalExpense = totalExpense,
