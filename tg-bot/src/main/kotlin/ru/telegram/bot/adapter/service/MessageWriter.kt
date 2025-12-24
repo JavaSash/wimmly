@@ -1,4 +1,4 @@
-package ru.telegram.bot.adapter.component
+package ru.telegram.bot.adapter.service
 
 import mu.KLogging
 import org.springframework.stereotype.Component

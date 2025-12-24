@@ -34,6 +34,9 @@ class StartCommand(
 // todo        if (chatId < 0) usersRepository.updateUserStep(chatId, StepCode.NOT_SUPPORTED)
         if (chatId > 0) {
             if (usersRepository.isUserExist(chatId)) {
+                if (!userService.isExist(chatId)) {
+                    userService.syncUserToBackend(chatId, user)
+                }
                 // Для существующего пользователя - показываем баланс
                 balanceCommand.execute(telegramClient, user, chat, arguments)
                 usersRepository.updateUserStep(chatId, StepCode.BALANCE)

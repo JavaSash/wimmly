@@ -1,4 +1,4 @@
-package ru.telegram.bot.adapter.listener
+package ru.telegram.bot.adapter.service
 
 import mu.KLogging
 import org.springframework.context.annotation.Bean
@@ -10,7 +10,6 @@ import ru.telegram.bot.adapter.event.TgReceivedCallbackEvent
 import ru.telegram.bot.adapter.event.TgReceivedMessageEvent
 import ru.telegram.bot.adapter.event.TgStepMessageEvent
 import ru.telegram.bot.adapter.repository.UsersRepository
-import ru.telegram.bot.adapter.service.MessageService
 import ru.telegram.bot.adapter.strategy.LogicContext
 import ru.telegram.bot.adapter.strategy.StepContext
 

@@ -5,6 +5,7 @@ import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.telegram.telegrambots.meta.api.objects.User
 import ru.telegram.bot.adapter.client.UserClient
+import ru.telegram.bot.adapter.dto.budget.user.UserCheckRq
 import ru.telegram.bot.adapter.dto.budget.user.UserRegistrationRq
 
 @Service
@@ -27,4 +28,6 @@ class UserService(
             logger.error("$$$ Failed to sync user $chatId: ${it.message}")
         }
     }
+
+    fun isExist(chatId: Long): Boolean = userClient.isUserExist(UserCheckRq(chatId.toString()))
 }

@@ -1,7 +1,7 @@
 package ru.telegram.bot.adapter.strategy.message
 
 import org.springframework.stereotype.Component
-import ru.telegram.bot.adapter.component.MessageWriter
+import ru.telegram.bot.adapter.service.MessageWriter
 import ru.telegram.bot.adapter.service.FileService
 import ru.telegram.bot.adapter.strategy.dto.PhotoDto
 import java.io.ByteArrayInputStream

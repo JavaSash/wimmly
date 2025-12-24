@@ -2,7 +2,7 @@ package ru.telegram.bot.adapter.strategy.message.report
 
 import mu.KLogging
 import org.springframework.stereotype.Component
-import ru.telegram.bot.adapter.component.MessageWriter
+import ru.telegram.bot.adapter.service.MessageWriter
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.strategy.dto.BalanceDto
 import ru.telegram.bot.adapter.strategy.message.common.AbstractSendMessage
