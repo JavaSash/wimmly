@@ -1,1 +1,0 @@
-Say YES or NO

@@ -7,12 +7,14 @@ import org.telegram.telegrambots.meta.api.objects.chat.Chat
 import ru.telegram.bot.adapter.dto.enums.BotCommand
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.repository.UsersRepository
+import ru.telegram.bot.adapter.service.UserService
 import ru.telegram.bot.adapter.strategy.command.common.AbstractCommand
 import ru.telegram.bot.adapter.utils.Constants.Transaction.INCOME
 
 @Component
 class AddIncomeCommand(
     private val usersRepository: UsersRepository,
+    private val userService: UserService,
     private val applicationEventPublisher: ApplicationEventPublisher
 ) : AbstractCommand(BotCommand.ADD_INCOME, usersRepository, applicationEventPublisher) {
 
@@ -22,6 +24,7 @@ class AddIncomeCommand(
             updateIncome(chatId)
         } else {
             usersRepository.createUser(chatId)
+            userService.syncUserToBackend(chatId, user)
             updateIncome(chatId)
         }
     }

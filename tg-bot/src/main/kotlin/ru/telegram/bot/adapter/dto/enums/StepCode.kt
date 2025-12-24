@@ -20,7 +20,7 @@ enum class StepCode(val type: StepType, val botPause: Boolean) {
 
     // Transaction
     ADD_INCOME(StepType.SEND_MESSAGE, false),
-    //    ADD_EXPENSE(StepType.SEND_MESSAGE, false),
+    ADD_EXPENSE(StepType.SEND_MESSAGE, false),
     SELECT_CATEGORY(StepType.SEND_MESSAGE, true), // с кнопками для выбора категории
     ENTER_AMOUNT(StepType.SEND_MESSAGE, true), // ожидаем ввода суммы
 //    ENTER_COMMENT(StepType.SEND_MESSAGE, true), // ожидаем ввода комментария
@@ -37,8 +37,6 @@ enum class StepCode(val type: StepType, val botPause: Boolean) {
 //    DELETE_TRANSACTION(StepType.INLINE_KEYBOARD_MARKUP, true),
 
     // not used
-    USER_INFO(StepType.SEND_MESSAGE, true),
-    BUTTON_REQUEST(StepType.SEND_MESSAGE, true),
     BUTTON_RESPONSE(StepType.SEND_MESSAGE, true),
     ACCESS(StepType.SEND_MESSAGE, true),
     PHOTO(StepType.SEND_PHOTO, true),

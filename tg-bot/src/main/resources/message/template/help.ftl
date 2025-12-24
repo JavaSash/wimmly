@@ -5,4 +5,3 @@
 /add_income - Добавить доход
 /add_expense - Добавить расход
 /balance - Показать баланс
-<#--/show_transactions - Показать транзакции-->
