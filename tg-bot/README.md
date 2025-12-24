@@ -77,14 +77,30 @@ strategy — Стратегии. Это те компоненты, которы�
 Name should be with prefix StepCode.value and postfix Chooser
 For example: StepCode.BALANCE and BalanceChooser
 7. Add new class extended from [Step.kt](src%2Fmain%2Fkotlin%2Fru%2Ftelegram%2Fbot%2Fadapter%2Fstrategy%2Fstepper%2Fcommon%2FStep.kt) and implement method getNextStep()
-8. 
+
+### Create step
+1. Create new value in StepCode enum
+2. Create step class and override getNextStep
+3. Create dto extended from DataModel (if custom DTO needed)
+4. Create message class extended from AbstractSendMessage<T> with type from 3.
+5. Create .ftl file with response txt
+6. Create chooser class extended from MessageChooser
+
+### Create step with button
+1. Create repository extended from AbstractRepository<T> (SelectCategoryRepository, type SelectCategoryDto)
+2. Create DTO extended from DataModel for repository (SelectCategoryDto)
+3. Create message class extended from AbstractSendMessage<T> (SelectCategoryMessage, type SelectCategoryDto)
+4. Override in message class methods: message(), inlineButtons(), replyButtons()
+5. Create .ftl template file with same name (as message class without postfix Message)
+6. Create chooser class extended from CallbackChooser (SelectCategoryChooser)
+7. Create step class and override getNextStep
 
 ## TODO
 1. сделать все нужные операции (под апи бэка)
-2. Упростить/удалить стратегии - они переедут в бэкенд
-3. Добавить клиент REST API для связи с бэкендом
-4. Модифицировать слушателей для отправки запросов в бэкенд
-5. Оставить только преобразование Telegram → внутренний формат
+2. Упростить/удалить стратегии - они переедут в бэкенд 
+3. Модифицировать слушателей для отправки запросов в бэкенд 
+4. Оставить только преобразование Telegram → внутренний формат
+5. сделать кнопки категорий в UI на русском, хранение в бд на англ
 
 ### UI
 [💰 БАЛАНС: 25 430 ₽]

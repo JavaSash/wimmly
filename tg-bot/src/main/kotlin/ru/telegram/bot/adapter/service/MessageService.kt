@@ -24,7 +24,7 @@ import ru.telegram.bot.adapter.strategy.StepContext
 import ru.telegram.bot.adapter.strategy.dto.DataModel
 
 /**
- * Формирует объект Телеграм АПИ сообщения и делает запрос на отправку в бота
+ * Forms Tg API msg object and do rq to send in tg-bot
  */
 @Service
 class MessageService(

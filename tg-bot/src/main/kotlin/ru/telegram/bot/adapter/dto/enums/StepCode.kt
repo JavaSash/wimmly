@@ -9,22 +9,23 @@ package ru.telegram.bot.adapter.dto.enums
  * Некоторые сообщения приходят с кнопками. Для этого и нужен енум StepType
  */
 enum class StepCode(val type: StepType, val botPause: Boolean) {
+    // Common
     START(StepType.SEND_MESSAGE, false),
     HELP(StepType.SEND_MESSAGE, false),
     FINAL(StepType.SEND_MESSAGE, false),
 //    NOT_SUPPORTED(StepType.SEND_MESSAGE, false), // todo impl
-    // Команды
-//    ADD_EXPENSE(StepType.SEND_MESSAGE, false),
-//    ADD_INCOME(StepType.SEND_MESSAGE, false),
-    BALANCE(StepType.SEND_MESSAGE, false),
-    AWAIT(StepType.SEND_MESSAGE, false),
-//    SHOW_TRANSACTIONS(StepType.SEND_MESSAGE, false),
 
-    // Процесс добавления транзакции
-    SELECT_CATEGORY(StepType.INLINE_KEYBOARD_MARKUP, true), // с кнопками для выбора категории
+    // Report
+    BALANCE(StepType.SEND_MESSAGE, false),
+
+    // Transaction
+    ADD_INCOME(StepType.SEND_MESSAGE, false),
+    //    ADD_EXPENSE(StepType.SEND_MESSAGE, false),
+    SELECT_CATEGORY(StepType.SEND_MESSAGE, true), // с кнопками для выбора категории
     ENTER_AMOUNT(StepType.SEND_MESSAGE, true), // ожидаем ввода суммы
-    ENTER_COMMENT(StepType.SEND_MESSAGE, true), // ожидаем ввода комментария
-    CONFIRM_TRANSACTION(StepType.INLINE_KEYBOARD_MARKUP, true), // подтверждение с кнопками да/нет
+//    ENTER_COMMENT(StepType.SEND_MESSAGE, true), // ожидаем ввода комментария
+//    CONFIRM_TRANSACTION(StepType.SEND_MESSAGE, false), // подтверждение с кнопками да/нет
+//    SHOW_TRANSACTIONS(StepType.SEND_MESSAGE, false),
 
     // Просмотр
 //    VIEW_TRANSACTIONS(StepType.INLINE_KEYBOARD_MARKUP, true), // просмотр с навигацией
@@ -42,6 +43,7 @@ enum class StepCode(val type: StepType, val botPause: Boolean) {
     ACCESS(StepType.SEND_MESSAGE, true),
     PHOTO(StepType.SEND_PHOTO, true),
     PHOTO_BUTTON(StepType.SEND_PHOTO, true),
+    AWAIT(StepType.SEND_MESSAGE, false),
     CONTACT(StepType.SEND_MESSAGE, true)
 }
 

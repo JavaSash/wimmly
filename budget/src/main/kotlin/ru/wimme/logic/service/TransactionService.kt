@@ -14,16 +14,18 @@ class TransactionService(
 ) {
 
     @Transactional
-    fun create(request: TransactionRq): TransactionEntity = txRepo.save(
-        TransactionEntity(
-            id = UUID.randomUUID(),
-            type = request.type,
-            userId = request.userId,
-            category = request.category,
-            amount = request.amount, // todo set scale 2
-            comment = request.comment
+    fun create(request: TransactionRq): TransactionEntity {
+        return txRepo.save(
+            TransactionEntity(
+                id = UUID.randomUUID(),
+                type = request.type,
+                userId = request.userId,
+                category = request.category,
+                amount = request.amount, // todo set scale 2
+                comment = request.comment
+            )
         )
-    )
+    }
 
     fun getById(id: UUID): TransactionEntity =
         txRepo.findById(id)

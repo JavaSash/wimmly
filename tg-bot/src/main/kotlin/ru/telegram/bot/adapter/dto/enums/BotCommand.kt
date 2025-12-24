@@ -7,11 +7,16 @@ package ru.telegram.bot.adapter.dto.enums
  * "Start work" - text description
  */
 enum class BotCommand(val command: String, val desc: String) {
+    // Common
     START("start", "Start work"),
     HELP("help", "Help"),
-//    ADD_EXPENSE("add_expense", "Добавить расход"),
-//    ADD_INCOME("add_income", "Добавить доход"),
+
+    //Report
     BALANCE("balance", "Текущий баланс"),
+
+    // Transaction
+    ADD_INCOME("add_income", "Добавить доход"),
+//    ADD_EXPENSE("add_expense", "Добавить расход"),
 //    TRANSACTIONS("transactions", "Последние транзакции"),
 
     // not used

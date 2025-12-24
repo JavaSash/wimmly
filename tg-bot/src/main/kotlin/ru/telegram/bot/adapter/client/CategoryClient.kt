@@ -8,6 +8,6 @@ import ru.telegram.bot.adapter.dto.budget.CategoryDto
 @FeignClient(name = "budget-category", url = "\${clients.budget.url}")
 interface CategoryClient {
 
-    @GetMapping("/api/v1/category/{tx-type}")
+    @GetMapping("/api/category/{tx-type}")
     fun getCategories(@PathVariable("tx-type") type: String): List<CategoryDto>
 }

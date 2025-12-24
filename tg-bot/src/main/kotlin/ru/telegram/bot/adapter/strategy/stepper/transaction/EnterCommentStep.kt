@@ -8,6 +8,6 @@
 //class EnterCommentStep : Step {
 //
 //    override fun getNextStep(chatId: Long): StepCode? {
-//        return StepCode.CONFIRM_TRANSACTION
+//        return StepCode.BALANCE
 //    }
 //}

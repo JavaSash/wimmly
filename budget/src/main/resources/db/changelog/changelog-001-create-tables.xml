@@ -27,7 +27,7 @@
             <column name="user_id" type="VARCHAR(255)" />
             <column name="category" type="VARCHAR(255)" />
             <column name="amount" type="NUMERIC(19,2)" />
-            <column name="comment" type="TEXT"/>
+            <column name="comment" type="VARCHAR(255)"/>
             <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="updated_at" type="TIMESTAMP"/>
         </createTable>

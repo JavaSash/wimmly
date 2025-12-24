@@ -22,7 +22,7 @@ enum class ExpenseCategory(
 enum class IncomeCategory(
     val description: String
 ) {
-    SALARY("Заработная плата"),
+    SALARY("Зарплата"),
     INVESTMENT("Инвестиции"),
     SAVINGS("Сбережения"),
     OTHER("Прочее")
