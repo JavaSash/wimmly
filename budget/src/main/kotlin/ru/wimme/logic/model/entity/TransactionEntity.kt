@@ -3,6 +3,7 @@ package ru.wimme.logic.model.entity
 import jakarta.persistence.*
 import ru.wimme.logic.model.transaction.TransactionType
 import java.math.BigDecimal
+import java.time.Instant
 import java.util.*
 
 @Entity
@@ -21,5 +22,7 @@ data class TransactionEntity(
     @Column(nullable = false)
     val amount: BigDecimal,
     @Column(nullable = true)
-    val comment: String?
+    val comment: String?,
+    @Column(name = "created_at", nullable = false)
+    val createdAt: Instant = Instant.now(),
 ) : BaseEntity()

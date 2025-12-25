@@ -5,14 +5,12 @@ import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.message.Message
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.repository.UsersRepository
-import ru.telegram.bot.adapter.service.TransactionService
 import ru.telegram.bot.adapter.strategy.logic.common.MessageChooser
 
 @Component
 class EnterAmountChooser(
-    private val usersRepository: UsersRepository,
-    private val txService: TransactionService
-    ) : MessageChooser {
+    private val usersRepository: UsersRepository
+) : MessageChooser {
 
     companion object : KLogging()
 
@@ -22,8 +20,7 @@ class EnterAmountChooser(
 
         if (isValidAmount(amountText)) {
             usersRepository.updateAmount(chatId, amountText!!)
-            usersRepository.updateUserStep(chatId, StepCode.BALANCE)
-            txService.addTransaction(usersRepository.getUser(chatId)!!) // todo runCatching + onFailure async addTx
+            usersRepository.updateUserStep(chatId, StepCode.ASK_DATE)
         } else {
             usersRepository.updateUserStep(chatId, StepCode.ENTER_AMOUNT)
         }

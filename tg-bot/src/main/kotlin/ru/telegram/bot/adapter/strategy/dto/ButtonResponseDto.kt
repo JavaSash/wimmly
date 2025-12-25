@@ -1,5 +1,5 @@
 package ru.telegram.bot.adapter.strategy.dto
 
 data class ButtonResponseDto(
-    val chatId: Long, val text: String?, val accept: String?
+    val chatId: Long, val text: String?, val accept: Boolean?
 ): DataModel

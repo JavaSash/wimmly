@@ -15,7 +15,9 @@ class TransactionService(
                 type = user.transactionType!!,
                 userId = user.id.toString(),
                 category = user.category!!,
-                amount = user.amount!!
+                amount = user.amount!!,
+                comment = user.comment,
+                date = user.transactionDate
             )
         )
 }

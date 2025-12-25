@@ -79,7 +79,7 @@ For example: StepCode.BALANCE and BalanceChooser
 7. Add new class extended from Step and implement method getNextStep()
 8. Add repository class extended from AbstractRepository<T> (type is DTO class) to provide data if needed
 
-### Create step
+### Create step without button
 1. Create new value in StepCode enum
 2. Create step class and override getNextStep
 3. Create dto extended from DataModel (if custom DTO needed)
@@ -101,12 +101,12 @@ For example: StepCode.BALANCE and BalanceChooser
 2. Упростить/удалить стратегии? - они переедут в бэкенд 
 3. Модифицировать слушателей для отправки запросов в бэкенд 
 4. Оставить только преобразование Telegram → внутренний формат
-5. сделать кнопки категорий в UI на русском, хранение в бд на англ
-6. Добавить транзакцию за дату (доход/расход)
-7. Детализация доходов за период (день, неделя, мес)
-8. Детализация расходов за период (день, неделя, мес)
-9. Детализация по категории за период (день, неделя, мес)
-10. Редактировать транзакцию
+5. сделать кнопки категорий в UI на русском, хранение в бд на англ 
+6. Детализация доходов за период (день, неделя, мес)
+7. Детализация расходов за период (день, неделя, мес)
+8. Детализация по категории за период (день, неделя, мес)
+9. Редактировать транзакцию 
+10. fix bug с регистрацией пользователя
 
 
 ### UI

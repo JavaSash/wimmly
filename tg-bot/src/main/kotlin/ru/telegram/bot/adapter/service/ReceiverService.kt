@@ -1,5 +1,6 @@
 package ru.telegram.bot.adapter.service
 
+import mu.KLogging
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery
@@ -9,6 +10,7 @@ import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.event.TgReceivedCallbackEvent
 import ru.telegram.bot.adapter.event.TgReceivedMessageEvent
 import ru.telegram.bot.adapter.repository.UsersRepository
+
 /**
  * Принимает текст, введенный пользователем или мета информацию по кнопке
  * если Кнопка, то событие для кнопки,
@@ -19,8 +21,12 @@ class ReceiverService(
     private val applicationEventPublisher: ApplicationEventPublisher,
     private val usersRepository: UsersRepository
 ) {
+
+    companion object : KLogging()
+
     // выходной метод сервиса
     fun execute(update: Update) {
+        logger.info { ">>> ReceiverService.execute with update: $update" }
         if (update.hasCallbackQuery()) { // Выполнить, если это действие по кнопке
             callbackExecute(update.callbackQuery)
         } else if (update.hasMessage()) { // Выполнить, если это сообщение пользователя
@@ -31,6 +37,7 @@ class ReceiverService(
     }
 
     private fun messageExecute(message: Message) {
+        logger.info { ">>> ReceiverService.messageExecute with msg: $message" }
         val chatId = message.chatId
         val stepCode = usersRepository.getUser(chatId)!!.stepCode!! // Выбор текущего шага
         applicationEventPublisher.publishEvent( // Формируем событие TelegramReceivedMessageEvent

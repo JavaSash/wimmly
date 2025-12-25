@@ -2,9 +2,8 @@ package ru.telegram.bot.adapter.strategy.message.transaction
 
 import mu.KLogging
 import org.springframework.stereotype.Component
-import ru.telegram.bot.adapter.service.MessageWriter
 import ru.telegram.bot.adapter.dto.MarkupDataDto
-import ru.telegram.bot.adapter.dto.ReplyMarkupDto
+import ru.telegram.bot.adapter.service.MessageWriter
 import ru.telegram.bot.adapter.strategy.dto.SelectCategoryDto
 import ru.telegram.bot.adapter.strategy.message.common.AbstractSendMessage
 import ru.telegram.bot.adapter.utils.Constants.Transaction.INCOME
@@ -39,6 +38,4 @@ class SelectCategoryMessage(messageWriter: MessageWriter) : AbstractSendMessage<
             ).also { logger.info { "$$$ Created MarkupDataDto: text=${it.text}" } }
         }
     }
-
-    override fun replyButtons(chatId: Long, data: SelectCategoryDto?) = emptyList<ReplyMarkupDto>()
 }

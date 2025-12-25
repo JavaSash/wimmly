@@ -8,6 +8,6 @@ import ru.telegram.bot.adapter.strategy.stepper.common.Step
 class EnterAmountStep : Step {
 
     override fun getNextStep(chatId: Long): StepCode? {
-        return StepCode.BALANCE
+        return StepCode.ASK_DATE
     }
 }

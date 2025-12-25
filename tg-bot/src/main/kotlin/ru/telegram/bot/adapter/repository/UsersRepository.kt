@@ -7,6 +7,7 @@ import ru.telegram.bot.adapter.domain.tables.Users.Companion.USERS
 import ru.telegram.bot.adapter.domain.tables.pojos.Users
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import java.math.BigDecimal
+import java.time.LocalDate
 
 @Repository
 class UsersRepository(private val dslContext: DSLContext) {
@@ -46,8 +47,8 @@ class UsersRepository(private val dslContext: DSLContext) {
             .where(USERS.ID.eq(chatId)).execute()
     }
 
-    // Обновление данных пришедших от кнопок в команде /button
-    fun updateAccept(chatId: Long, accept: String) {
+    // Обновление данных пришедших от кнопок
+    fun updateAccept(chatId: Long, accept: Boolean) {
         dslContext.update(USERS)
             .set(USERS.ACCEPT, accept)
             .where(USERS.ID.eq(chatId)).execute()
@@ -56,6 +57,12 @@ class UsersRepository(private val dslContext: DSLContext) {
     fun updateTransactionType(chatId: Long, txType: String) {
         dslContext.update(USERS)
             .set(USERS.TRANSACTION_TYPE, txType)
+            .where(USERS.ID.eq(chatId)).execute()
+    }
+
+    fun updateTransactionDate(chatId: Long, date: LocalDate) {
+        dslContext.update(USERS)
+            .set(USERS.TRANSACTION_DATE, date)
             .where(USERS.ID.eq(chatId)).execute()
     }
 
@@ -76,6 +83,12 @@ class UsersRepository(private val dslContext: DSLContext) {
     fun updateComment(chatId: Long, comment: String) {
         dslContext.update(USERS)
             .set(USERS.COMMENT, comment)
+            .where(USERS.ID.eq(chatId)).execute()
+    }
+
+    fun updateText(chatId: Long, txt: String) {
+        dslContext.update(USERS)
+            .set(USERS.TEXT, txt)
             .where(USERS.ID.eq(chatId)).execute()
     }
 }

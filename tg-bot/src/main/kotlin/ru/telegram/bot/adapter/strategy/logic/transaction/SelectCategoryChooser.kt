@@ -6,8 +6,8 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery
 import ru.telegram.bot.adapter.dto.enums.ExecuteStatus
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.repository.UsersRepository
-import ru.telegram.bot.adapter.strategy.data.SelectCategoryRepository
-import ru.telegram.bot.adapter.strategy.logic.CallbackChooser
+import ru.telegram.bot.adapter.strategy.data.transaction.SelectCategoryRepository
+import ru.telegram.bot.adapter.strategy.logic.common.CallbackChooser
 
 @Component
 class SelectCategoryChooser(

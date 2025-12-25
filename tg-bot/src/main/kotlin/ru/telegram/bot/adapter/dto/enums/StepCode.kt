@@ -27,8 +27,11 @@ enum class StepCode(val type: StepType, val botPause: Boolean) {
     ADD_EXPENSE(StepType.SEND_MESSAGE, false),
     SELECT_CATEGORY(StepType.SEND_MESSAGE, true), // с кнопками для выбора категории
     ENTER_AMOUNT(StepType.SEND_MESSAGE, true), // ожидаем ввода суммы
-//    ENTER_COMMENT(StepType.SEND_MESSAGE, true), // ожидаем ввода комментария
-//    CONFIRM_TRANSACTION(StepType.SEND_MESSAGE, false), // подтверждение с кнопками да/нет
+    ASK_DATE(StepType.SEND_MESSAGE, true),
+    ENTER_DATE(StepType.SEND_MESSAGE, true),
+    ASK_COMMENT(StepType.SEND_MESSAGE, true),
+    ENTER_COMMENT(StepType.SEND_MESSAGE, true), // ожидаем ввода комментария
+    CREATE_TRANSACTION(StepType.SEND_MESSAGE, false),
 //    SHOW_TRANSACTIONS(StepType.SEND_MESSAGE, false),
 
     // Просмотр
