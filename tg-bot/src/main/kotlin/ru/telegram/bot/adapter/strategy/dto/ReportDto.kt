@@ -6,7 +6,8 @@ import java.math.BigDecimal
 data class ReportDto(
     val balance: BigDecimal,
     val income: ReportDetail,
-    val expense: ReportDetail
+    val expense: ReportDetail,
+    val periodName: String
 ): DataModel
 
 data class ReportDetail(
@@ -19,7 +20,7 @@ data class ReportDetail(
 )
 
 fun getReportStub(): ReportDto =
-    ReportDto(income = formEmptyReportDetail(), expense = formEmptyReportDetail(), balance = BigDecimal.ZERO)
+    ReportDto(income = formEmptyReportDetail(), expense = formEmptyReportDetail(), balance = BigDecimal.ZERO, periodName = "default")
 
 private fun formEmptyReportDetail() = ReportDetail(amount = BigDecimal.ZERO)
 
@@ -33,5 +34,6 @@ fun mapToReportDto(periodReport: PeriodReport) =
         expense = ReportDetail(
             amount = periodReport.expense.txTypeAmount,
             amountByCategory = periodReport.expense.amountByCategory
-        )
+        ),
+        periodName = periodReport.periodName
     )
