@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.repository.UsersRepository
 import ru.telegram.bot.adapter.strategy.stepper.common.Step
+import java.time.LocalDate
 
 @Component
 class AskDateStep(
@@ -14,6 +15,7 @@ class AskDateStep(
         return if (user?.accept == true) {
             StepCode.ENTER_DATE
         } else {
+            usersRepository.updateTransactionDate(chatId, LocalDate.now())
             StepCode.ASK_COMMENT
         }
     }

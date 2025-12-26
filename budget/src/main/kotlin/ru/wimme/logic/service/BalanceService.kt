@@ -12,12 +12,7 @@ class BalanceService(
 ) {
 
     fun getBalance(userId: String, period: Period? = null): Balance {
-        val transactions = if (period != null) {
-            txService.getUserTransactions(userId)
-                .filter { it.createdAt!!.isAfter(period.from) && it.createdAt.isBefore(period.to) }
-        } else {
-            txService.getUserTransactions(userId)
-        }
+        val transactions = txService.getUserTransactions(userId =  userId, from = period?.from, to = period?.to)
 
         var income = BigDecimal.ZERO
         var expense = BigDecimal.ZERO

@@ -31,7 +31,8 @@ class TransactionServiceTest : BasicTest() {
             userId = user.tgId,
             category = ExpenseCategory.EDUCATION.name,
             amount = AMOUNT_100.money(),
-            comment = "Test create"
+            comment = "Test create",
+            date = null
         )
 
         val tx = txService.create(rq)
@@ -110,7 +111,8 @@ class TransactionServiceTest : BasicTest() {
             userId = USER_ID,
             category = ExpenseCategory.FOOD.name,
             amount = AMOUNT_250.money(),
-            comment = "Updated"
+            comment = "Updated",
+            date = null
         )
 
         val updated = txService.update(tx.id!!, rq)
@@ -131,7 +133,8 @@ class TransactionServiceTest : BasicTest() {
             userId = USER_ID,
             category = ExpenseCategory.FOOD.name,
             amount = AMOUNT_100.money(),
-            comment = "X"
+            comment = "X",
+            date = null
         )
 
         assertThrows<NotFoundException> {

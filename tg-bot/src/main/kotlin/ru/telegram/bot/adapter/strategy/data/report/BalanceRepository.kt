@@ -25,7 +25,7 @@ class BalanceRepository(
         logger.info { "$$$ Try to get balance for chat: $chatId" }
         return runCatching {
             val report = reportClient.getThisMonthReport(chatId.toString())
-            BalanceDto(balance = report.balance, income = report.totalIncome, expense = report.totalExpense)
+            BalanceDto(balance = report.balance, income = report.income.txTypeAmount, expense = report.expense.txTypeAmount)
         }
             .onFailure { logger.error { "$$$ Can't receive balance for user: $chatId. Cause: ${it.message}. Return stub" } }
             .getOrDefault(getBalanceStub())

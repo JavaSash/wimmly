@@ -1,9 +1,10 @@
 package ru.wimme.logic.service
 
+import mu.KLogging
 import org.springframework.stereotype.Service
 import ru.wimme.logic.model.report.Period
 import ru.wimme.logic.model.report.PeriodReport
-import ru.wimme.logic.model.report.ReportItem
+import ru.wimme.logic.model.report.TxTypeDetail
 import ru.wimme.logic.model.transaction.TransactionCategory
 import ru.wimme.logic.model.transaction.TransactionType
 import java.math.BigDecimal
@@ -19,6 +20,7 @@ class ReportService(
     private val txService: TransactionService,
     private val balanceService: BalanceService
 ) {
+    companion object : KLogging()
 
     fun formTodayReport(userId: String): PeriodReport =
         reportForPeriod(
@@ -56,39 +58,48 @@ class ReportService(
         to: Instant,
         label: String
     ): PeriodReport {
-
-        val transactions = txService.getUserTransactions(userId)
-            .filter { it.createdAt!!.isAfter(from) && it.createdAt.isBefore(to) } // todo move to db lvl
+        val transactions = txService.getUserTransactions(userId = userId, from = from, to = to)
+        logger.info { "$$$ ${transactions.size} found for period $from - $to" }
 
         var totalIncome = BigDecimal.ZERO
         var totalExpense = BigDecimal.ZERO
 
-        val groupedByCategory = mutableMapOf<TransactionCategory, BigDecimal>()
+        val incomeByCategory = mutableMapOf<TransactionCategory, BigDecimal>()
+        val expenseByCategory = mutableMapOf<TransactionCategory, BigDecimal>()
 
         transactions.forEach { tx ->
             when (tx.type) {
-                TransactionType.INCOME -> totalIncome = totalIncome.add(tx.amount)
-                TransactionType.EXPENSE -> totalExpense = totalExpense.add(tx.amount)
+                TransactionType.INCOME -> {
+                    totalIncome = totalIncome.add(tx.amount)
+                    val category = TransactionCategory.fromCode(tx.category, TransactionType.INCOME)
+                    incomeByCategory[category] = incomeByCategory.getOrDefault(category, BigDecimal.ZERO).add(tx.amount)
+                }
+
+                TransactionType.EXPENSE -> {
+                    totalExpense = totalExpense.add(tx.amount)
+                    val category = TransactionCategory.fromCode(tx.category, TransactionType.EXPENSE)
+                    expenseByCategory[category] =
+                        expenseByCategory.getOrDefault(category, BigDecimal.ZERO).add(tx.amount)
+                }
             }
-            val category = TransactionCategory.fromCode(tx.category, tx.type)
-            groupedByCategory[category] =
-                groupedByCategory.getOrDefault(category, BigDecimal.ZERO)
-                    .add(tx.amount)
         }
 
-        val sumByCategories = groupedByCategory.map { (category, sum) ->
-            ReportItem(
-                category = category,
-                total = sum
-            )
-        }.sortedByDescending { it.total }
-
         return PeriodReport(
-            balance = balanceService.getBalance(userId=userId, period = Period(from = from, to = to)).balance,
+            balance = balanceService.getBalance(
+                userId = userId,
+                period = Period(from = from, to = to)
+            ).balance,
             periodName = label,
-            totalIncome = totalIncome,
-            totalExpense = totalExpense,
-            details = sumByCategories
-        )
+            income = TxTypeDetail(
+                txTypeAmount = totalIncome,
+                amountByCategory = incomeByCategory
+            ),
+            expense = TxTypeDetail(
+                txTypeAmount = totalExpense,
+                amountByCategory = expenseByCategory
+            )
+        ).also {
+            logger.info { "$$$ For period ${it.periodName} report formed: $it" }
+        }
     }
 }

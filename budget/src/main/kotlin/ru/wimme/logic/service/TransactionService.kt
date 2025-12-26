@@ -38,7 +38,9 @@ class TransactionService(
         txRepo.findById(id)
             .orElseThrow { NotFoundException("Transaction not found: $id") }
 
-    fun getUserTransactions(userId: String): List<TransactionEntity> = txRepo.findAllByUserId(userId)
+    fun getUserTransactions(userId: String, from: Instant? = null, to: Instant? = null): List<TransactionEntity> =
+        if (from != null && to != null) txRepo.findAllByUserIdAndCreatedAtBetween(userId =  userId, from = from, to = to)
+            else txRepo.findAllByUserId(userId)
 
     @Transactional
     fun delete(id: UUID) {

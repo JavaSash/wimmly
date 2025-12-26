@@ -14,6 +14,7 @@ class AskCommentStep(
         return if (user?.accept == true) {
             StepCode.ENTER_COMMENT
         } else {
+            usersRepository.updateComment(chatId, comment = null)
             StepCode.CREATE_TRANSACTION
         }
     }

@@ -66,8 +66,8 @@ class ReportServiceTest : BasicTest() {
         val report = reportService.formTodayReport(USER_ID)
         assertAll(
             { assertEquals("Сегодня", report.periodName) },
-            { assertEquals(incomeAmount, report.totalIncome) },
-            { assertEquals(expenseAmount, report.totalExpense) }
+            { assertEquals(incomeAmount, report.income.txTypeAmount) },
+            { assertEquals(expenseAmount, report.expense.txTypeAmount) }
         )
     }
 
@@ -82,8 +82,8 @@ class ReportServiceTest : BasicTest() {
         val report = reportService.formThisWeekReport(USER_ID)
         assertAll(
             { assertEquals("Эта неделя", report.periodName) },
-            { assertEquals(incomeAmount, report.totalIncome) },
-            { assertEquals(expenseAmount, report.totalExpense) })
+            { assertEquals(incomeAmount, report.income.txTypeAmount) },
+            { assertEquals(expenseAmount, report.expense.txTypeAmount) })
     }
 
     @Test
@@ -97,8 +97,8 @@ class ReportServiceTest : BasicTest() {
         val report = reportService.formThisMonthReport(USER_ID)
         assertAll(
             { assertEquals("Этот месяц", report.periodName) },
-            { assertEquals(incomeAmount, report.totalIncome) },
-            { assertEquals(expenseAmount, report.totalExpense) })
+            { assertEquals(incomeAmount, report.income.txTypeAmount) },
+            { assertEquals(expenseAmount, report.expense.txTypeAmount) })
     }
 
     @Test
@@ -113,8 +113,8 @@ class ReportServiceTest : BasicTest() {
         val report = reportService.formThisYearReport(USER_ID)
         assertAll(
             { assertEquals("Этот год", report.periodName) },
-            { assertEquals(incomeAmount, report.totalIncome) },
-            { assertEquals(expenseAmount, report.totalExpense) })
+            { assertEquals(incomeAmount, report.income.txTypeAmount) },
+            { assertEquals(expenseAmount, report.expense.txTypeAmount) })
     }
 
     @Test
@@ -122,9 +122,10 @@ class ReportServiceTest : BasicTest() {
         val report = reportService.formTodayReport(USER_ID_2)
         assertAll(
             { assertEquals("Сегодня", report.periodName) },
-            { assertEquals(BigDecimal.ZERO, report.totalIncome) },
-            { assertEquals(BigDecimal.ZERO, report.totalExpense) },
-            { assertTrue(report.details.isEmpty()) }
+            { assertEquals(BigDecimal.ZERO, report.income.txTypeAmount) },
+            { assertEquals(BigDecimal.ZERO, report.expense.txTypeAmount) },
+            { assertTrue(report.income.amountByCategory.isEmpty()) },
+            { assertTrue(report.expense.amountByCategory.isEmpty()) }
         )
     }
 
@@ -133,8 +134,8 @@ class ReportServiceTest : BasicTest() {
         val tx4 = initTransaction(userId = USER_ID, type = TransactionType.EXPENSE, amount = AMOUNT_0)
         val report = reportService.formTodayReport(USER_ID)
         assertAll(
-            { assertEquals(incomeAmount, report.totalIncome) },
-            { assertEquals(expenseAmount + tx4.amount, report.totalExpense) }
+            { assertEquals(incomeAmount, report.income.txTypeAmount) },
+            { assertEquals(expenseAmount + tx4.amount, report.expense.txTypeAmount) }
         )
     }
 
@@ -150,16 +151,8 @@ class ReportServiceTest : BasicTest() {
         val report = reportService.formTodayReport(USER_ID)
 
         assertAll(
-            { assertEquals(incomeAmount, report.totalIncome) },
-            { assertEquals(expenseAmount, report.totalExpense) }
+            { assertEquals(incomeAmount, report.income.txTypeAmount) },
+            { assertEquals(expenseAmount, report.expense.txTypeAmount) }
         )
     }
-
-    @Test
-    fun `reportForPeriod sorts details by descending total`() {
-        val report = reportService.formTodayReport(USER_ID)
-        val sorted = report.details.sortedByDescending { it.total }
-        assertEquals(sorted, report.details)
-    }
-
 }

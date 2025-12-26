@@ -80,7 +80,7 @@ class UsersRepository(private val dslContext: DSLContext) {
             .where(USERS.ID.eq(chatId)).execute()
     }
 
-    fun updateComment(chatId: Long, comment: String) {
+    fun updateComment(chatId: Long, comment: String?) {
         dslContext.update(USERS)
             .set(USERS.COMMENT, comment)
             .where(USERS.ID.eq(chatId)).execute()
