@@ -1,5 +1,7 @@
+
 import nu.studer.gradle.jooq.JooqEdition
 import nu.studer.gradle.jooq.JooqGenerate
+import org.jooq.meta.jaxb.ForcedType
 
 val postgresVersion = "42.7.2"
 val telegramBotVersion = "8.3.0"
@@ -129,6 +131,15 @@ jooq {
                         name = "org.jooq.meta.postgres.PostgresDatabase"
                         inputSchema = "public"
                         excludes = "flyway_schema_history|spatial_ref_sys|st_.*|_st.*"
+                        // timestamp SQL to java Instant (instead LDT)
+                        forcedTypes = listOf(
+                            ForcedType().apply {
+                                userType = "java.time.Instant"
+                                converter = "ru.telegram.bot.adapter.repository.InstantConverter"
+                                includeTypes = "TIMESTAMP.*"
+                                includeExpression = ".*\\.TRANSACTION_DATE|.*\\.transaction_date"
+                            }
+                        )
                     }
                     target.apply {
                         packageName = "ru.telegram.bot.adapter.domain"

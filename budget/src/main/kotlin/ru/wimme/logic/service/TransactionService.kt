@@ -8,7 +8,6 @@ import ru.wimme.logic.model.entity.TransactionEntity
 import ru.wimme.logic.model.transaction.TransactionRq
 import ru.wimme.logic.repository.TransactionRepository
 import java.time.Instant
-import java.time.ZoneId
 import java.util.*
 
 @Service
@@ -29,7 +28,7 @@ class TransactionService(
                 category = request.category,
                 amount = request.amount.setScale(2),
                 comment = request.comment,
-                createdAt = request.date?.atStartOfDay(ZoneId.systemDefault())?.toInstant() ?: Instant.now()
+                createdAt = request.date ?: Instant.now()
             )
         )
     }
@@ -59,7 +58,7 @@ class TransactionService(
                 category = request.category,
                 amount = request.amount.setScale(2),
                 comment = request.comment,
-                createdAt = request.date?.atStartOfDay(ZoneId.systemDefault())?.toInstant() ?: Instant.now()
+                createdAt = request.date ?: Instant.now()
             )
         )
     }

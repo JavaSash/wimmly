@@ -8,6 +8,6 @@ create table users
     transaction_type  varchar(7),
     category          varchar(255),
     amount            numeric(19, 2),
-    transaction_date  date,
+    transaction_date  timestamp,
     comment           varchar(255)
 );

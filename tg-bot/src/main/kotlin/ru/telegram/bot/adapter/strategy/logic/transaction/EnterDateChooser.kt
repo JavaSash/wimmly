@@ -7,6 +7,7 @@ import ru.telegram.bot.adapter.repository.UsersRepository
 import ru.telegram.bot.adapter.strategy.logic.common.MessageChooser
 import ru.telegram.bot.adapter.utils.Constants.Transaction.DATE_PATTERN
 import java.time.LocalDate
+import java.time.ZoneOffset
 
 @Component
 class EnterDateChooser(
@@ -26,7 +27,7 @@ class EnterDateChooser(
                 throw IllegalArgumentException("Дата старее 1970г.")
             }
 
-            usersRepository.updateTransactionDate(chatId, date)
+            usersRepository.updateTransactionDate(chatId, date.atStartOfDay(ZoneOffset.UTC).toInstant())
             usersRepository.updateAccept(chatId, false) // set to default to use in another buttons
             usersRepository.updateUserStep(chatId, StepCode.ASK_COMMENT)
 

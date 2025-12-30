@@ -7,7 +7,7 @@ import ru.telegram.bot.adapter.domain.tables.Users.Companion.USERS
 import ru.telegram.bot.adapter.domain.tables.pojos.Users
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import java.math.BigDecimal
-import java.time.LocalDate
+import java.time.Instant
 
 @Repository
 class UsersRepository(private val dslContext: DSLContext) {
@@ -60,7 +60,7 @@ class UsersRepository(private val dslContext: DSLContext) {
             .where(USERS.ID.eq(chatId)).execute()
     }
 
-    fun updateTransactionDate(chatId: Long, date: LocalDate) {
+    fun updateTransactionDate(chatId: Long, date: Instant) {
         dslContext.update(USERS)
             .set(USERS.TRANSACTION_DATE, date)
             .where(USERS.ID.eq(chatId)).execute()
