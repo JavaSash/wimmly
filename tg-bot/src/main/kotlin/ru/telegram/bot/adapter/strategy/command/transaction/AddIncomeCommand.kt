@@ -14,22 +14,12 @@ import ru.telegram.bot.adapter.utils.Constants.Transaction.INCOME
 @Component
 class AddIncomeCommand(
     private val usersRepository: UsersRepository,
-    private val userService: UserService,
-    private val applicationEventPublisher: ApplicationEventPublisher
-) : AbstractCommand(BotCommand.ADD_INCOME, usersRepository, applicationEventPublisher) {
+    userService: UserService,
+    applicationEventPublisher: ApplicationEventPublisher
+) : AbstractCommand(BotCommand.ADD_INCOME, usersRepository, applicationEventPublisher, userService) {
 
-    override fun prepare(user: User, chat: Chat, arguments: Array<out String>) {
+    override fun doPrepare(user: User, chat: Chat, arguments: Array<out String>) {
         val chatId = chat.id
-        if (usersRepository.isUserExist(chatId)) {
-            updateIncome(chatId)
-        } else {
-            usersRepository.createUser(chatId)
-            userService.syncUserToBackend(chatId, user)
-            updateIncome(chatId)
-        }
-    }
-
-    private fun updateIncome(chatId: Long) {
         usersRepository.updateUserStep(chatId, StepCode.ADD_INCOME)
         usersRepository.updateTransactionType(chatId, INCOME)
     }

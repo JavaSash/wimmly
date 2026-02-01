@@ -7,17 +7,16 @@ import org.telegram.telegrambots.meta.api.objects.chat.Chat
 import ru.telegram.bot.adapter.dto.enums.BotCommand
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.repository.UsersRepository
+import ru.telegram.bot.adapter.service.UserService
 
 @Component
 class HelpCommand(
     private val usersRepository: UsersRepository,
-    private val applicationEventPublisher: ApplicationEventPublisher
-) : AbstractCommand(BotCommand.HELP, usersRepository, applicationEventPublisher) {
+    applicationEventPublisher: ApplicationEventPublisher,
+    userService: UserService
+) : AbstractCommand(BotCommand.HELP, usersRepository, applicationEventPublisher, userService) {
 
-    override fun prepare(user: User, chat: Chat, arguments: Array<out String>) {
-        val chatId = chat.id
-        if (usersRepository.isUserExist(chatId)) {
-            usersRepository.updateUserStep(chatId, StepCode.HELP)
-        } else usersRepository.createUser(chatId)
+    override fun doPrepare(user: User, chat: Chat, arguments: Array<out String>) {
+        usersRepository.updateUserStep(chat.id, StepCode.HELP)
     }
 }

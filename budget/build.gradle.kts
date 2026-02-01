@@ -32,6 +32,8 @@ dependencies {
     // Kotlin JPA support
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    // Kotlin
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     // Spring
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-actuator")

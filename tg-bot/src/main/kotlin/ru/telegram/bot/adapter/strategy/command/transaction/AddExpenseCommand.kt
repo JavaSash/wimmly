@@ -14,22 +14,12 @@ import ru.telegram.bot.adapter.utils.Constants.Transaction.EXPENSE
 @Component
 class AddExpenseCommand(
     private val usersRepository: UsersRepository,
-    private val userService: UserService,
-    private val applicationEventPublisher: ApplicationEventPublisher
-) : AbstractCommand(BotCommand.ADD_EXPENSE, usersRepository, applicationEventPublisher) {
+    userService: UserService,
+    applicationEventPublisher: ApplicationEventPublisher
+) : AbstractCommand(BotCommand.ADD_EXPENSE, usersRepository, applicationEventPublisher, userService) {
 
-    override fun prepare(user: User, chat: Chat, arguments: Array<out String>) {
+    override fun doPrepare(user: User, chat: Chat, arguments: Array<out String>) {
         val chatId = chat.id
-        if (usersRepository.isUserExist(chatId)) {
-            updateExpense(chatId)
-        } else {
-            usersRepository.createUser(chatId)
-            userService.syncUserToBackend(chatId, user)
-            updateExpense(chatId)
-        }
-    }
-
-    private fun updateExpense(chatId: Long) {
         usersRepository.updateUserStep(chatId, StepCode.ADD_EXPENSE)
         usersRepository.updateTransactionType(chatId, EXPENSE)
     }

@@ -7,21 +7,17 @@ import org.telegram.telegrambots.meta.api.objects.chat.Chat
 import ru.telegram.bot.adapter.dto.enums.BotCommand
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.repository.UsersRepository
+import ru.telegram.bot.adapter.service.UserService
 import ru.telegram.bot.adapter.strategy.command.common.AbstractCommand
 
 @Component
 class ReportTodayCommand(
     private val usersRepository: UsersRepository,
-    private val applicationEventPublisher: ApplicationEventPublisher
-) : AbstractCommand(BotCommand.REPORT_TODAY, usersRepository, applicationEventPublisher) {
+    applicationEventPublisher: ApplicationEventPublisher,
+    userService: UserService
+) : AbstractCommand(BotCommand.REPORT_TODAY, usersRepository, applicationEventPublisher, userService) {
 
-    override fun prepare(user: User, chat: Chat, arguments: Array<out String>) {
-        val chatId = chat.id
-        if (usersRepository.isUserExist(chatId)) {
-            usersRepository.updateUserStep(chatId, StepCode.REPORT_TODAY)
-        } else {
-            usersRepository.createUser(chatId)
-            usersRepository.updateUserStep(chatId, StepCode.START)
-        }
+    override fun doPrepare(user: User, chat: Chat, arguments: Array<out String>) {
+        usersRepository.updateUserStep(chat.id, StepCode.REPORT_TODAY)
     }
 }

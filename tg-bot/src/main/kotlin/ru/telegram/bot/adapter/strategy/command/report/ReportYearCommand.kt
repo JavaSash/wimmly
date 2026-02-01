@@ -7,21 +7,17 @@ import org.telegram.telegrambots.meta.api.objects.chat.Chat
 import ru.telegram.bot.adapter.dto.enums.BotCommand
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.repository.UsersRepository
+import ru.telegram.bot.adapter.service.UserService
 import ru.telegram.bot.adapter.strategy.command.common.AbstractCommand
 
 @Component
 class ReportYearCommand(
     private val usersRepository: UsersRepository,
-    private val applicationEventPublisher: ApplicationEventPublisher
-) : AbstractCommand(BotCommand.REPORT_YEAR, usersRepository, applicationEventPublisher) {
+    applicationEventPublisher: ApplicationEventPublisher,
+    userService: UserService
+) : AbstractCommand(BotCommand.REPORT_YEAR, usersRepository, applicationEventPublisher, userService) {
 
-    override fun prepare(user: User, chat: Chat, arguments: Array<out String>) {
-        val chatId = chat.id
-        if (usersRepository.isUserExist(chatId)) {
-            usersRepository.updateUserStep(chatId, StepCode.REPORT_YEAR)
-        } else {
-            usersRepository.createUser(chatId)
-            usersRepository.updateUserStep(chatId, StepCode.START)
-        }
+    override fun doPrepare(user: User, chat: Chat, arguments: Array<out String>) {
+        usersRepository.updateUserStep(chat.id, StepCode.REPORT_YEAR)
     }
 }

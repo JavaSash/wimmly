@@ -17,7 +17,9 @@ class UserApi(
     @PostMapping("/check")
     fun isUserExist(@RequestBody request: UserCheckRq): Boolean = userService.isRegistered(request.telegramUserId)
 
-
+    /**
+     * Creates new user or return exist
+     */
     @PostMapping("/register")
     fun registerUser(@RequestBody request: UserRegistrationRq): UserRegistrationRs =
         userService.register(request)

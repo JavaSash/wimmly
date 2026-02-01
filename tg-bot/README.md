@@ -106,8 +106,10 @@ For example: StepCode.BALANCE and BalanceChooser
    5) форма обратной связи
    6) /commands - список команд из /help вынести
    7) /help - guide, дисклеймер по ПД, не хранит данные об оплатах, только обезличенную инфу по ведению бюджета ()
-2. fix bug с регистрацией пользователя
-3. 
+2. impl stepCode: FINAL. Ошибка в логах:
+   Caused by: org.telegram.telegrambots.meta.exceptions.TelegramApiException: Unable to execute sendmessage method
+   Caused by: org.telegram.telegrambots.meta.exceptions.TelegramApiValidationException: Text parameter can't be empty in method: SendMessage(chatId=****, messageThreadId=null, text=, parseMode=html, disableWebPagePreview=null, disableNotification=null, replyToMessageId=null, replyMarkup=ReplyKeyboardRemove(removeKeyboard=true, selective=null), entities=null, allowSendingWithoutReply=null, protectContent=null, linkPreviewOptions=null, replyParameters=null, businessConnectionId=null, messageEffectId=null, allowPaidBroadcast=null)
+3. fix bug при запросе баланса за период  $$$ 0 found for period 2025-12-31T21:00:00Z - 2026-01-31T21:00:00Z
 4. логи с путём пользователя? 
 5. альфа-тестирование (внутреннее)
    1) составить набор функций, пользовательских сценариев, потенциально проблемные места
@@ -145,6 +147,29 @@ For example: StepCode.BALANCE and BalanceChooser
 
 ### UI
 
+### QA
+Test cases
+1. Первый старт (регистрация пользователя в БД бота, бэка, показ приветственного сообщения и help сообщения)
+2. Старт существующего пользователя 
+3. Add income
+   3.1 базовый (с датой по умолчанию (сегодняшней) и без коммента)
+   3.2 с указанной датой
+   3.3 с комментом
+   3.4 с суммой без копеек
+   3.5 с суммой с копейками
+   3.6 с большой суммой 9999999999999999999999999.99
+   3.7 с маленькой суммой 0.01
+   3.8 с 0 суммой
+4. Add expense
+   4.1 базовый (с датой по умолчанию (сегодняшней) и без коммента)
+   4.2 с указанной датой
+   4.3 с комментом
+   4.4 с суммой без копеек
+   4.5 с суммой с копейками
+   4.6 с большой суммой 9999999999999999999999999.99
+   4.7 с маленькой суммой 0.01
+   4.8 с 0 суммой
+5. 
 
 ### Links
 [This tg-bot template doc](https://habr.com/ru/articles/588474/)

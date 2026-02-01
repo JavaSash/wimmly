@@ -21,47 +21,35 @@ class StartCommand(
     private val usersRepository: UsersRepository,
     private val balanceCommand: BalanceCommand,
     private val applicationEventPublisher: ApplicationEventPublisher,
-    private val userService: UserService
-) : AbstractCommand(BotCommand.START, usersRepository, applicationEventPublisher) {
+    userService: UserService
+) : AbstractCommand(BotCommand.START, usersRepository, applicationEventPublisher, userService) {
 
     companion object : KLogging()
 
     override fun execute(telegramClient: TelegramClient, user: User, chat: Chat, arguments: Array<out String>) {
         logger.info { "$$$ StartCommand.execute for user: $user and chat: $chat" }
-
         val chatId = chat.id
 
-// todo        if (chatId < 0) usersRepository.updateUserStep(chatId, StepCode.NOT_SUPPORTED)
-        if (chatId > 0) {
-            if (usersRepository.isUserExist(chatId)) {
-//                if (!userService.isExist(chatId)) {
-//                    userService.syncUserToBackend(chatId, user)
-//                }
-                // Для существующего пользователя - показываем баланс
-                balanceCommand.execute(telegramClient, user, chat, arguments)
-                usersRepository.updateUserStep(chatId, StepCode.BALANCE)
-            } else {
-                // Для нового пользователя - стандартный START
-                prepare(user, chat, arguments)
-
-                applicationEventPublisher.publishEvent(
-                    TgStepMessageEvent(
-                        chatId = chatId,
-                        stepCode = StepCode.START
-                    )
-                )
-            }
+        if (usersRepository.isUserExist(chatId)) {
+            // Для существующего пользователя - показываем баланс
+            balanceCommand.execute(telegramClient, user, chat, arguments)
         } else {
-            logger.warn { "$$$ Negative chatId: $chatId not supported yet" }
+            // Для нового пользователя - стандартный START
+            prepare(user, chat, arguments)
+
+            applicationEventPublisher.publishEvent(
+                TgStepMessageEvent(
+                    chatId = chatId,
+                    stepCode = StepCode.START
+                )
+            )
         }
+
     }
 
-    override fun prepare(user: User, chat: Chat, arguments: Array<out String>) {
+    override fun doPrepare(user: User, chat: Chat, arguments: Array<out String>) {
         logger.info { "$$$ StartCommand.prepare for user: $user and chat: $chat with arguments: $arguments" }
 
-        val chatId = chat.id
-        usersRepository.createUser(chatId)
-        usersRepository.updateUserStep(chatId, StepCode.START)
-        userService.syncUserToBackend(chatId, user)
+        usersRepository.updateUserStep(chat.id, StepCode.START)
     }
 }
