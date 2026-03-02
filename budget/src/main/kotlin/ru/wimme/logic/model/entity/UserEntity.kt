@@ -11,8 +11,6 @@ data class UserEntity(
     @Id
     @Column(name = "tg_id", nullable = false, updatable = false)
     val tgId: String,
-    @Column(name = "first_name")
-    val firstName: String?,
     @Column(name = "name")
     val name: String?
 ) : BaseEntity()

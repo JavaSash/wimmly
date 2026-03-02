@@ -12,6 +12,8 @@ data class TransactionEntity(
     @Id
     @GeneratedValue
     val id: UUID? = null,
+    @Column(name = "display_id", nullable = false)
+    val displayId : Long,
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     val type: TransactionType,

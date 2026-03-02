@@ -6,29 +6,33 @@ import org.springframework.transaction.annotation.Transactional
 import ru.wimme.logic.exception.NotFoundException
 import ru.wimme.logic.model.entity.TransactionEntity
 import ru.wimme.logic.model.transaction.TransactionRq
+import ru.wimme.logic.model.transaction.TransactionRs
+import ru.wimme.logic.model.transaction.TransactionSearchRq
 import ru.wimme.logic.repository.TransactionRepository
 import java.time.Instant
 import java.util.*
 
 @Service
 class TransactionService(
-    private val txRepo: TransactionRepository
+    private val txRepo: TransactionRepository,
+    private val userTrxSeqService: UserTransactionSeqService
 ) {
 
     companion object : KLogging()
 
     @Transactional
-    fun create(request: TransactionRq): TransactionEntity {
-        logger.info { "$$$ TransactionService.create tx for rq: $request" }
+    fun create(rq: TransactionRq): TransactionEntity {
+        logger.info { "$$$ TransactionService.create tx for rq: $rq" }
         return txRepo.save(
             TransactionEntity(
                 id = UUID.randomUUID(),
-                type = request.type,
-                userId = request.userId,
-                category = request.category,
-                amount = request.amount.setScale(2),
-                comment = request.comment,
-                createdAt = request.date ?: Instant.now()
+                displayId = userTrxSeqService.getNextSeq(rq.userId),
+                type = rq.type,
+                userId = rq.userId,
+                category = rq.category,
+                amount = rq.amount.setScale(2),
+                comment = rq.comment,
+                createdAt = rq.date ?: Instant.now()
             )
         )
     }
@@ -61,5 +65,17 @@ class TransactionService(
                 createdAt = request.date ?: Instant.now()
             )
         )
+    }
+
+    fun findTransactionsWithFilters(rq: TransactionSearchRq): List<TransactionRs> {
+        logger.info { "$$$ TransactionService.findTransactionsWithFilters tx for rq: $rq" }
+        return txRepo.findAllByUserIdAndTypeAndCategoryAndCreatedAtBetween(
+            userId = rq.userId,
+            type = rq.type,
+            category = rq.category,
+            dateFrom = rq.dateFrom,
+            dateTo = rq.dateTo
+        ).map { TransactionRs.fromEntity(it) }
+            .also { logger.info { "$$$ Found transactions: ${it}" } }
     }
 }

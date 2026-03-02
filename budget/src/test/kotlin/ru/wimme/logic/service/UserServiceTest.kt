@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import ru.wimme.logic.BasicTest
-import ru.wimme.logic.TestConstants.User.FIRST_NAME
 import ru.wimme.logic.TestConstants.User.USER_ID
 import ru.wimme.logic.TestConstants.User.USER_NAME
 import ru.wimme.logic.exception.NotFoundException
@@ -30,14 +29,13 @@ class UserServiceTest : BasicTest() {
 
     @Test
     fun `register creates new user when not registered`() {
-        val rq = UserRegistrationRq(telegramUserId = USER_ID, firstName = FIRST_NAME, userName = USER_NAME)
+        val rq = UserRegistrationRq(telegramUserId = USER_ID, userName = USER_NAME)
         val rs = userService.register(rq)
 
 
         val savedUser = userService.getUser(USER_ID)
         assertAll(
             { assertEquals(USER_ID, rs.userId) },
-            { assertEquals(rq.firstName, savedUser.firstName) },
             { assertEquals(rq.userName, savedUser.name) },
         )
     }
@@ -45,7 +43,7 @@ class UserServiceTest : BasicTest() {
     @Test
     fun `register returns existing user when already registered`() {
         val existingUser = initUser(USER_ID)
-        val rq = UserRegistrationRq(telegramUserId = USER_ID, firstName = FIRST_NAME, userName = USER_NAME)
+        val rq = UserRegistrationRq(telegramUserId = USER_ID, userName = USER_NAME)
 
         val rs = userService.register(rq)
         assertEquals(existingUser.tgId, rs.userId)
@@ -82,7 +80,7 @@ class UserServiceTest : BasicTest() {
     @Test
     fun `register with borderline tgId length`() {
         val maxLengthId = "a".repeat(255)
-        val rq = UserRegistrationRq(telegramUserId = maxLengthId, firstName = FIRST_NAME, userName = USER_NAME)
+        val rq = UserRegistrationRq(telegramUserId = maxLengthId, userName = USER_NAME)
         val rs = userService.register(rq)
         assertEquals(maxLengthId, rs.userId)
     }

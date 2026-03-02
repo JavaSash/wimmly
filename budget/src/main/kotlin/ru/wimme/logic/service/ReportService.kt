@@ -20,14 +20,19 @@ class ReportService(
     private val txService: TransactionService,
     private val balanceService: BalanceService
 ) {
-    companion object : KLogging()
+    companion object : KLogging() {
+        const val TODAY = "Сегодня"
+        const val WEEK = "Неделя"
+        const val MONTH = "Месяц"
+        const val YEAR = "Год"
+    }
 
     fun formTodayReport(userId: String): PeriodReport =
         reportForPeriod(
             userId = userId,
             from = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant(),
             to = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant(),
-            label = "Сегодня" // todo date
+            label = TODAY // todo date
         )
 
     fun formThisWeekReport(userId: String): PeriodReport {
@@ -35,21 +40,21 @@ class ReportService(
         val now = LocalDate.now()
         val start = now.with(week.dayOfWeek(), 1).atStartOfDay(ZoneId.systemDefault()).toInstant()
         val end = start.plus(Duration.ofDays(7))
-        return reportForPeriod(userId, start, end, "Эта неделя") // todo period
+        return reportForPeriod(userId, start, end, WEEK) // todo period
     }
 
     fun formThisMonthReport(userId: String): PeriodReport {
         val now = LocalDate.now()
         val start = now.withDayOfMonth(1).atStartOfDay(ZoneId.systemDefault()).toInstant()
         val end = start.plus(Duration.ofDays(now.lengthOfMonth().toLong()))
-        return reportForPeriod(userId, start, end, "Этот месяц") // todo period
+        return reportForPeriod(userId, start, end, MONTH) // todo period
     }
 
     fun formThisYearReport(userId: String): PeriodReport {
         val now = LocalDate.now()
         val start = now.withDayOfYear(1).atStartOfDay(ZoneId.systemDefault()).toInstant()
         val end = start.plus(Duration.ofDays(now.lengthOfYear().toLong()))
-        return reportForPeriod(userId, start, end, "Этот год") // todo current year
+        return reportForPeriod(userId, start, end, YEAR) // todo current year
     }
 
     fun reportForPeriod(

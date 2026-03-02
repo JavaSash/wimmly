@@ -11,7 +11,6 @@
             <column name="tg_id" type="VARCHAR(255)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="first_name" type="VARCHAR(255)"/>
             <column name="name" type="VARCHAR(255)"/>
             <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
             <column name="updated_at" type="TIMESTAMP"/>
@@ -22,6 +21,9 @@
         <createTable tableName="transactions">
             <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="display_id" type="BIGINT">
+                <constraints nullable="false"/>
             </column>
             <column name="type" type="VARCHAR(255)" />
             <column name="user_id" type="VARCHAR(255)" />
@@ -38,5 +40,39 @@
                 referencedTableName="users"
                 referencedColumnNames="tg_id"
                 constraintName="fk_transactions_user"/>
+    </changeSet>
+
+    <changeSet id="003" author="java_sash">
+        <createTable tableName="user_display_id_seq">
+            <column name="user_id" type="VARCHAR(255)">
+                <constraints primaryKey="true" nullable="false"
+                             foreignKeyName="fk_seq_user"
+                             referencedTableName="users"
+                             referencedColumnNames="tg_id"/>
+            </column>
+            <column name="current_seq" type="BIGINT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP"/>
+        </createTable>
+
+        <!-- Инициализируем счётчики для существующих пользователей максимальным display_id -->
+<!--        <sql>-->
+<!--            INSERT INTO user_display_id_seq (user_id, current_seq, updated_at)-->
+<!--            SELECT-->
+<!--                user_id,-->
+<!--                COALESCE(MAX(display_id), 0) as current_seq,-->
+<!--                CURRENT_TIMESTAMP-->
+<!--            FROM transactions-->
+<!--            GROUP BY user_id;-->
+<!--        </sql>-->
+    </changeSet>
+
+    <changeSet id="004" author="java_sash">
+        <createIndex indexName="idx_transactions_user_display" tableName="transactions">
+            <column name="user_id"/>
+            <column name="display_id"/>
+        </createIndex>
     </changeSet>
 </databaseChangeLog>

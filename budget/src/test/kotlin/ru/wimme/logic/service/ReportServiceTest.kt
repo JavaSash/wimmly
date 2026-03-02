@@ -17,6 +17,10 @@ import ru.wimme.logic.TestConstants.User.USER_NAME
 import ru.wimme.logic.TestConstants.User.USER_NAME_2
 import ru.wimme.logic.model.entity.TransactionEntity
 import ru.wimme.logic.model.transaction.TransactionType
+import ru.wimme.logic.service.ReportService.Companion.MONTH
+import ru.wimme.logic.service.ReportService.Companion.TODAY
+import ru.wimme.logic.service.ReportService.Companion.WEEK
+import ru.wimme.logic.service.ReportService.Companion.YEAR
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -65,7 +69,7 @@ class ReportServiceTest : BasicTest() {
         )
         val report = reportService.formTodayReport(USER_ID)
         assertAll(
-            { assertEquals("Сегодня", report.periodName) },
+            { assertEquals(TODAY, report.periodName) },
             { assertEquals(incomeAmount, report.income.txTypeAmount) },
             { assertEquals(expenseAmount, report.expense.txTypeAmount) }
         )
@@ -81,7 +85,7 @@ class ReportServiceTest : BasicTest() {
         )
         val report = reportService.formThisWeekReport(USER_ID)
         assertAll(
-            { assertEquals("Эта неделя", report.periodName) },
+            { assertEquals(WEEK, report.periodName) },
             { assertEquals(incomeAmount, report.income.txTypeAmount) },
             { assertEquals(expenseAmount, report.expense.txTypeAmount) })
     }
@@ -96,7 +100,7 @@ class ReportServiceTest : BasicTest() {
         )
         val report = reportService.formThisMonthReport(USER_ID)
         assertAll(
-            { assertEquals("Этот месяц", report.periodName) },
+            { assertEquals(MONTH, report.periodName) },
             { assertEquals(incomeAmount, report.income.txTypeAmount) },
             { assertEquals(expenseAmount, report.expense.txTypeAmount) })
     }
@@ -112,7 +116,7 @@ class ReportServiceTest : BasicTest() {
 
         val report = reportService.formThisYearReport(USER_ID)
         assertAll(
-            { assertEquals("Этот год", report.periodName) },
+            { assertEquals(YEAR, report.periodName) },
             { assertEquals(incomeAmount, report.income.txTypeAmount) },
             { assertEquals(expenseAmount, report.expense.txTypeAmount) })
     }
@@ -121,7 +125,7 @@ class ReportServiceTest : BasicTest() {
     fun `reportForPeriod returns empty totals for user with no transactions`() {
         val report = reportService.formTodayReport(USER_ID_2)
         assertAll(
-            { assertEquals("Сегодня", report.periodName) },
+            { assertEquals(TODAY, report.periodName) },
             { assertEquals(BigDecimal.ZERO, report.income.txTypeAmount) },
             { assertEquals(BigDecimal.ZERO, report.expense.txTypeAmount) },
             { assertTrue(report.income.amountByCategory.isEmpty()) },

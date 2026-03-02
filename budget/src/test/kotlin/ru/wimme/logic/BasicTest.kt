@@ -11,15 +11,18 @@ import ru.wimme.logic.model.entity.UserEntity
 import ru.wimme.logic.model.transaction.ExpenseCategory
 import ru.wimme.logic.model.transaction.TransactionType
 import ru.wimme.logic.repository.TransactionRepository
+import ru.wimme.logic.repository.UserDisplayIdSeqRepository
 import ru.wimme.logic.repository.UserRepository
 import java.time.LocalDateTime
 import java.util.*
 
 @SpringBootTest
-//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BasicTest : TestConfig() {
     @Autowired
     lateinit var userRepo: UserRepository
+
+    @Autowired
+    lateinit var userDisplayIdSeqRepository: UserDisplayIdSeqRepository
 
     @Autowired
     lateinit var txRepo: TransactionRepository
@@ -30,6 +33,7 @@ class BasicTest : TestConfig() {
     @BeforeEach
     fun setup() {
         txRepo.deleteAll()
+        userDisplayIdSeqRepository.deleteAll()
         userRepo.deleteAll()
     }
 
@@ -39,7 +43,6 @@ class BasicTest : TestConfig() {
     ): UserEntity = userRepo.save(
         UserEntity(
             tgId = userId,
-            firstName = "Ali Baba",
             name = "Test User"
         )
     )
@@ -47,10 +50,12 @@ class BasicTest : TestConfig() {
     protected fun initTransaction(
         userId: String = USER_ID,
         type: TransactionType = TransactionType.INCOME,
-        amount: Double = 1500.00
+        amount: Double = 1500.00,
+        displayId: Long = 1L
     ): TransactionEntity = txRepo.save(
         TransactionEntity(
             id = UUID.randomUUID(),
+            displayId = displayId,
             type = type,
             userId = userId,
             category = ExpenseCategory.EDUCATION.name,
@@ -70,11 +75,12 @@ class BasicTest : TestConfig() {
         jdbcTemplate.update(
             """
             INSERT INTO transactions
-                (id, type, user_id, category, amount, comment, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                (id, display_id, type, user_id, category, amount, comment, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
                 .trimIndent(),
             id,
+            1L,
             type.name,
             userId,
             category.name,

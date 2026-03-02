@@ -3,6 +3,7 @@ package ru.wimme.logic.api
 import org.springframework.web.bind.annotation.*
 import ru.wimme.logic.model.transaction.TransactionRq
 import ru.wimme.logic.model.transaction.TransactionRs
+import ru.wimme.logic.model.transaction.TransactionSearchRq
 import ru.wimme.logic.service.TransactionService
 import java.util.*
 
@@ -13,10 +14,12 @@ class TransactionApi(
 ) {
 
     @PostMapping
-    fun create(@RequestBody request: TransactionRq): TransactionRs = TransactionRs.fromEntity(transactionService.create(request))
+    fun create(@RequestBody request: TransactionRq): TransactionRs =
+        TransactionRs.fromEntity(transactionService.create(request))
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable id: UUID): TransactionRs = TransactionRs.fromEntity(transactionService.getById(id)) // todo check by userId
+    fun getById(@PathVariable id: UUID): TransactionRs =
+        TransactionRs.fromEntity(transactionService.getById(id)) // todo check by userId
 
     @GetMapping("/user/{userId}")
     fun getUserTransactions(@PathVariable userId: String): List<TransactionRs> =
@@ -28,5 +31,9 @@ class TransactionApi(
         TransactionRs.fromEntity(transactionService.update(id, request))
 
     @DeleteMapping("/{id}")
-    fun delete(@PathVariable id: UUID) = transactionService.delete(id)
+    fun delete(@PathVariable id: UUID) = transactionService.delete(id) // todo check by userId
+
+    @PostMapping("/search")
+    fun getTransactionsWithFilters(@RequestBody rq: TransactionSearchRq): List<TransactionRs> =
+        transactionService.findTransactionsWithFilters(rq)
 }
