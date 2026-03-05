@@ -45,6 +45,15 @@ class ReportMessage(
             "expenseCategories" to expenseCategories
         )
 
-        return messageWriter.process(StepCode.REPORT_TODAY, templateData)
+        return messageWriter.process(mapPeriodToStepCode(data?.periodName), templateData)
     }
+
+    private fun mapPeriodToStepCode(period: String?): StepCode =
+        when(period) {
+            ReportDto.TODAY -> StepCode.REPORT_TODAY
+            ReportDto.WEEK -> StepCode.REPORT_WEEK
+            ReportDto.MONTH -> StepCode.REPORT_MONTH
+            ReportDto.YEAR -> StepCode.REPORT_YEAR
+            else -> StepCode.REPORT_TODAY // todo throw error?
+        }
 }

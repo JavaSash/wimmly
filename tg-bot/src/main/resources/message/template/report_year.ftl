@@ -26,3 +26,5 @@
 /balance - Показать общий баланс
 /add_income - Добавить доход
 /add_expense - Добавить расход
+/search_transactions - новый поиск
+/delete_transaction - удалить транзакцию

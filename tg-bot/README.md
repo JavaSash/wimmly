@@ -78,6 +78,7 @@ Name should be with prefix StepCode.value and postfix Chooser
 For example: StepCode.BALANCE and BalanceChooser
 7. Add new class extended from Step and implement method getNextStep()
 8. Add repository class extended from AbstractRepository<T> (type is DTO class) to provide data if needed
+9. Add new command to /help ftl and to bot commands in tg
 
 ### Create step without button
 1. Create new value in StepCode enum
@@ -88,7 +89,7 @@ For example: StepCode.BALANCE and BalanceChooser
 6. Create chooser class extended from MessageChooser
 
 ### Create step with button
-1. Create repository extended from AbstractRepository<T> (SelectCategoryRepository, type SelectCategoryDto)
+1. Create repository extended from AbstractRepository<T> (SelectCategoryRepository, type SelectCategoryDto) (if data needed to form buttons)
 2. Create DTO extended from DataModel for repository (SelectCategoryDto)
 3. Create message class extended from AbstractSendMessage<T> (SelectCategoryMessage, type SelectCategoryDto)
 4. Override in message class methods: message(), inlineButtons(), replyButtons()
@@ -96,14 +97,48 @@ For example: StepCode.BALANCE and BalanceChooser
 6. Create chooser class extended from CallbackChooser (SelectCategoryChooser)
 7. Create step class and override getNextStep
 
+### Users flow
+#### Общее
+1. Запуск бота
+   * Первый раз
+   * пользователь уже зарегистрирован
+
+#### Работа с транзакциями
+1. Добавление транзакции 
+   -> выбор типа транзакции
+   -> выбор категории
+   -> ввод суммы
+   -> ввод даты (опционально)
+   -> ввод комментария (опционально)
+
+2. Поиск транзакции
+   -> выбор типа транзакции
+   -> выбор категории
+   -> показ 10 последних транзакций
+
+3. Удаление транзакции
+   -> ввод pretty id транзакции
+   -> вывод транзакции
+   -> удалить транзакцию? 
+4. 
+
+#### Отчёты
+Баланс
+Отчёт за сегодня
+Отчёт за неделю
+Отчёт за месяц
+Отчёт за год
+Отчёт за всё время (TODO)
+   
+
 ## TODO
 ### MVP
 1. сделать все нужные операции (под апи бэка)
-   1) Детализация по категории за период (день, неделя, мес)
-   2) Редактировать транзакцию
+   1) убедиться, что часть функционала работает при лежащем сервисе БЛ
+   2) fix баг с дублированием транзакций при создании
    3) Удалить транзакцию
-   4) просмотр транзакций\поиск
-   5) форма обратной связи
+   4) 
+   5) чистить таблицу текущего диалога с пользователем в конце обработки команды (FINAL step)
    6) /commands - список команд из /help вынести
    7) /help - guide, дисклеймер по ПД, не хранит данные об оплатах, только обезличенную инфу по ведению бюджета ()
 2. impl stepCode: FINAL. Ошибка в логах:
@@ -111,6 +146,19 @@ For example: StepCode.BALANCE and BalanceChooser
    Caused by: org.telegram.telegrambots.meta.exceptions.TelegramApiValidationException: Text parameter can't be empty in method: SendMessage(chatId=****, messageThreadId=null, text=, parseMode=html, disableWebPagePreview=null, disableNotification=null, replyToMessageId=null, replyMarkup=ReplyKeyboardRemove(removeKeyboard=true, selective=null), entities=null, allowSendingWithoutReply=null, protectContent=null, linkPreviewOptions=null, replyParameters=null, businessConnectionId=null, messageEffectId=null, allowPaidBroadcast=null)
 3. fix bug при запросе баланса за период  $$$ 0 found for period 2025-12-31T21:00:00Z - 2026-01-31T21:00:00Z
 4. логи с путём пользователя? 
+5. Изучить на этапе выбора клауд платформы для разворачивания: https://sourcecraft.dev/portal/grant/?utm_source=habr&utm_medium=referral&utm_campaign=mini_banner3_201125/
+5. добавить дисклеймер в инфо команду
+   Я серьезно отношусь к вопросам приватности. Всё строится на базе законодательства РФ
+   Что я храню:
+   — ваш Telegram ID и никнейм (техническая необходимость, чтобы бот понимал, кто вы)
+   — обезличенные данные о транзакциях (суммы, категории, даты)
+Чего я НЕ храню:
+— ❌ фамилию, имя, отчество
+— ❌ номера телефонов
+— ❌ паспортные данные
+— ❌ данные банковских карт или счетов
+   Важно: вся информация о ваших доходах и расходах хранится обезличенно и используется только для формирования статистики внутри бота. Я не передаю данные третьим лицам
+   Если у вас есть вопросы — пишите (форма обратной связи)
 5. альфа-тестирование (внутреннее)
    1) составить набор функций, пользовательских сценариев, потенциально проблемные места
    2) проверка через UI (бот) - мобилка, ПК-версия
@@ -136,21 +184,27 @@ For example: StepCode.BALANCE and BalanceChooser
 2. Модифицировать слушателей для отправки запросов в бэкенд 
 3. Оставить только преобразование Telegram → внутренний формат
 4. сделать кнопки категорий в UI на русском, хранение в бд на англ 
-5. Изучить на этапе выбора клауд платформы для разворачивания: https://sourcecraft.dev/portal/grant/?utm_source=habr&utm_medium=referral&utm_campaign=mini_banner3_201125/
-6.
-7. деплой в облако (конец января 2026?)
+5. 
+6. Детализация по категории за период (день, неделя, мес)
+7. деплой в облако (конец февраля 2026?)
 8. интеграция с календарём
 9. интеграция с ОФД (чеки)
 10. ИИ обработка чека
 11. подписки
-12. 
+12. отчёт за конкретный период с разбивкой по категориям
+13. форма обратной связи
+14. Редактировать транзакцию
+15. Реализовать в будущих релизах при поиске транзакции:
+    -> ввод даты
+    -> просмотр транзакций (постранично)
+    -> выбор действия (редактирование\удаление)
 
 ### UI
 
 ### QA
 Test cases
 1. Первый старт (регистрация пользователя в БД бота, бэка, показ приветственного сообщения и help сообщения)
-2. Старт существующего пользователя 
+2. Старт существующего пользователя (есть в БД бота, бэка)
 3. Add income
    3.1 базовый (с датой по умолчанию (сегодняшней) и без коммента)
    3.2 с указанной датой
@@ -160,6 +214,7 @@ Test cases
    3.6 с большой суммой 9999999999999999999999999.99
    3.7 с маленькой суммой 0.01
    3.8 с 0 суммой
+   3.9 попытка добавить доход когда пользователь есть только в БД бота (нет в БД бэка)
 4. Add expense
    4.1 базовый (с датой по умолчанию (сегодняшней) и без коммента)
    4.2 с указанной датой
@@ -169,7 +224,14 @@ Test cases
    4.6 с большой суммой 9999999999999999999999999.99
    4.7 с маленькой суммой 0.01
    4.8 с 0 суммой
-5. 
+5. Report today
+   5.1 в отчёте только транзакции с 00:00:00 сегодняшней даты по текущий момент, суммы по категориям и общие рассчитаны верно (доходы\расходы), итоговый баланс рассчитан верно, доля (%) категории по отношению к общему доходу\расходу рассчитан верно
+   5.2 
+6. Report week
+   6.1 в отчёте только транзакции с 00:00:00 (пн текущей недели) по текущий момент, суммы по категориям и общие рассчитаны верно (доходы\расходы), итоговый баланс рассчитан верно, доля (%) категории по отношению к общему доходу\расходу рассчитан верно
+7. Report month
+   7.1 в отчёте только транзакции с 00:00:00 (пн текущего месяца) по текущий момент, суммы по категориям и общие рассчитаны верно (доходы\расходы), итоговый баланс рассчитан верно, доля (%) категории по отношению к общему доходу\расходу рассчитан верно
+8. Проверка баланса
 
 ### Links
 [This tg-bot template doc](https://habr.com/ru/articles/588474/)

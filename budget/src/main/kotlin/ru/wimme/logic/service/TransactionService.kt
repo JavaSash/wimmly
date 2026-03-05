@@ -1,6 +1,8 @@
 package ru.wimme.logic.service
 
 import mu.KLogging
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ru.wimme.logic.exception.NotFoundException
@@ -69,12 +71,11 @@ class TransactionService(
 
     fun findTransactionsWithFilters(rq: TransactionSearchRq): List<TransactionRs> {
         logger.info { "$$$ TransactionService.findTransactionsWithFilters tx for rq: $rq" }
-        return txRepo.findAllByUserIdAndTypeAndCategoryAndCreatedAtBetween(
+        return txRepo.findAllByUserIdAndTypeAndCategory(
             userId = rq.userId,
             type = rq.type,
             category = rq.category,
-            dateFrom = rq.dateFrom,
-            dateTo = rq.dateTo
+            PageRequest.of(0, rq.limit, Sort.by("createdAt").descending())
         ).map { TransactionRs.fromEntity(it) }
             .also { logger.info { "$$$ Found transactions: ${it}" } }
     }

@@ -9,7 +9,9 @@ import org.telegram.telegrambots.meta.generics.TelegramClient
 import ru.telegram.bot.adapter.dto.enums.BotCommand
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.event.TgStepMessageEvent
-import ru.telegram.bot.adapter.repository.UsersRepository
+import ru.telegram.bot.adapter.repository.ChatContextRepository
+import ru.telegram.bot.adapter.repository.SearchContextRepository
+import ru.telegram.bot.adapter.repository.TransactionDraftRepository
 import ru.telegram.bot.adapter.service.UserService
 import ru.telegram.bot.adapter.strategy.command.report.BalanceCommand
 
@@ -18,11 +20,20 @@ import ru.telegram.bot.adapter.strategy.command.report.BalanceCommand
  */
 @Component
 class StartCommand(
-    private val usersRepository: UsersRepository,
+    chatContextRepository: ChatContextRepository,
     private val balanceCommand: BalanceCommand,
     private val applicationEventPublisher: ApplicationEventPublisher,
-    userService: UserService
-) : AbstractCommand(BotCommand.START, usersRepository, applicationEventPublisher, userService) {
+    userService: UserService,
+    transactionDraftRepository: TransactionDraftRepository,
+    searchContextRepository: SearchContextRepository
+) : AbstractCommand(
+    BotCommand.START,
+    chatContextRepository,
+    applicationEventPublisher,
+    userService,
+    transactionDraftRepository,
+    searchContextRepository
+) {
 
     companion object : KLogging()
 
@@ -30,7 +41,7 @@ class StartCommand(
         logger.info { "$$$ StartCommand.execute for user: $user and chat: $chat" }
         val chatId = chat.id
 
-        if (usersRepository.isUserExist(chatId)) {
+        if (chatContextRepository.isUserExist(chatId)) {
             // Для существующего пользователя - показываем баланс
             balanceCommand.execute(telegramClient, user, chat, arguments)
         } else {
@@ -50,6 +61,6 @@ class StartCommand(
     override fun doPrepare(user: User, chat: Chat, arguments: Array<out String>) {
         logger.info { "$$$ StartCommand.prepare for user: $user and chat: $chat with arguments: $arguments" }
 
-        usersRepository.updateUserStep(chat.id, StepCode.START)
+        chatContextRepository.updateUserStep(chat.id, StepCode.START)
     }
 }

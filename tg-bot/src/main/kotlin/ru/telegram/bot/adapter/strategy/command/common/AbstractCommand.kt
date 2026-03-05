@@ -7,7 +7,9 @@ import org.telegram.telegrambots.meta.api.objects.User
 import org.telegram.telegrambots.meta.api.objects.chat.Chat
 import org.telegram.telegrambots.meta.generics.TelegramClient
 import ru.telegram.bot.adapter.event.TgStepMessageEvent
-import ru.telegram.bot.adapter.repository.UsersRepository
+import ru.telegram.bot.adapter.repository.ChatContextRepository
+import ru.telegram.bot.adapter.repository.SearchContextRepository
+import ru.telegram.bot.adapter.repository.TransactionDraftRepository
 import ru.telegram.bot.adapter.service.UserService
 import ru.telegram.bot.adapter.utils.CommonUtils.currentStepCode
 
@@ -17,9 +19,11 @@ import ru.telegram.bot.adapter.utils.CommonUtils.currentStepCode
  */
 abstract class AbstractCommand(
     botCommand: ru.telegram.bot.adapter.dto.enums.BotCommand,
-    private val usersRepository: UsersRepository,
+    protected val chatContextRepository: ChatContextRepository, // todo перенести все репы в 1 сервис по работе с контекстом диалога
     private val applicationEventPublisher: ApplicationEventPublisher,
-    private val userService: UserService
+    private val userService: UserService,
+    protected val transactionDraftRepository: TransactionDraftRepository,
+    protected val searchContextRepository: SearchContextRepository
 ) : BotCommand(botCommand.command, botCommand.desc), BotCommands {
 
     companion object : KLogging()
@@ -31,7 +35,7 @@ abstract class AbstractCommand(
 
         val chatId = chat.id
 
-        usersRepository.updateUserStep(chatId, classStepCode())
+        chatContextRepository.updateUserStep(chatId, classStepCode())
 
         applicationEventPublisher.publishEvent(
             TgStepMessageEvent(chatId = chatId, stepCode = classStepCode())
@@ -43,14 +47,16 @@ abstract class AbstractCommand(
 
         if (chatId <= 0) {
             // todo        if (chatId < 0) usersRepository.updateUserStep(chatId, StepCode.NOT_SUPPORTED)
-            logger.warn { ">>> Group chat id $chatId is not supported" }
+            logger.warn { "$$$ Group chat id $chatId is not supported" }
             return
         }
         /**
          * Check is user exist in bot DB and in backend DB
          */
-        if (!usersRepository.isUserExist(chatId)) {
-            usersRepository.createUser(chatId)
+        if (!chatContextRepository.isUserExist(chatId)) {
+            chatContextRepository.createUser(chatId)
+            transactionDraftRepository.createTransactionDraft(chatId)
+            searchContextRepository.createSearchContext(chatId)
             userService.syncUserToBackend(chatId, user)
         } else {
             if (!userService.isExist(chatId)) {

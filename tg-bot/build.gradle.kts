@@ -132,17 +132,18 @@ jooq {
                         inputSchema = "public"
                         excludes = "flyway_schema_history|spatial_ref_sys|st_.*|_st.*"
                         // timestamp SQL to java Instant (instead LDT)
+                        // todo del?
                         forcedTypes = listOf(
                             ForcedType().apply {
                                 userType = "java.time.Instant"
                                 converter = "ru.telegram.bot.adapter.repository.InstantConverter"
                                 includeTypes = "TIMESTAMP.*"
-                                includeExpression = ".*\\.TRANSACTION_DATE|.*\\.transaction_date"
+                                includeExpression = ".*\\.DATE|.*\\.date|.*\\.DATE_FROM|.*\\.date_from|.*\\.DATE_TO|.*\\.date_to"
                             }
                         )
                     }
                     target.apply {
-                        packageName = "ru.telegram.bot.adapter.domain"
+                        packageName = "ru.telegram.bot.adapter.domain.tables"
                     }
                     strategy.name = "org.jooq.codegen.DefaultGeneratorStrategy"
                 }

@@ -1,0 +1,15 @@
+package ru.telegram.bot.adapter.strategy.logic.transaction
+
+import org.springframework.stereotype.Component
+import org.telegram.telegrambots.meta.api.objects.message.Message
+import ru.telegram.bot.adapter.dto.enums.StepCode
+import ru.telegram.bot.adapter.repository.ChatContextRepository
+import ru.telegram.bot.adapter.strategy.logic.common.MessageChooser
+
+@Component
+class ShowTransactionsChooser(private val chatContextRepository: ChatContextRepository) : MessageChooser {
+
+    override fun execute(chatId: Long, message: Message) {
+        chatContextRepository.updateUserStep(chatId, StepCode.SHOW_TRANSACTIONS)
+    }
+}

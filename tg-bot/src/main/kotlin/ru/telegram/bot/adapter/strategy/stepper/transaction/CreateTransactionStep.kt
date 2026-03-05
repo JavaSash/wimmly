@@ -3,21 +3,25 @@ package ru.telegram.bot.adapter.strategy.stepper.transaction
 import mu.KLogging
 import org.springframework.stereotype.Component
 import ru.telegram.bot.adapter.dto.enums.StepCode
-import ru.telegram.bot.adapter.repository.UsersRepository
+import ru.telegram.bot.adapter.repository.ChatContextRepository
+import ru.telegram.bot.adapter.repository.TransactionDraftRepository
 import ru.telegram.bot.adapter.service.TransactionService
 import ru.telegram.bot.adapter.strategy.stepper.common.Step
-
+// todo вынести логику в Chooser? в Step классах только логика выбора следующего шага
 @Component
 class CreateTransactionStep(
-    private val usersRepository: UsersRepository,
+    private val chatContextRepository: ChatContextRepository,
+    private val transactionDraftRepository: TransactionDraftRepository,
     private val txService: TransactionService
 ) : Step {
     companion object : KLogging()
 
     override fun getNextStep(chatId: Long): StepCode? {
-        logger.info { "$$$ CreateTransactionChooser.execute for chanId=$chatId" }
-        txService.addTransaction(usersRepository.getUser(chatId)!!) // todo runCatching + onFailure async addTx
-        usersRepository.updateUserStep(chatId, StepCode.BALANCE)
+        logger.info { "$$$ CreateTransactionStep.execute for chanId=$chatId" }
+        val trxDraft = transactionDraftRepository.getTransactionDraft(chatId)!!
+
+        txService.addTransaction(trxDraft) // todo runCatching + onFailure async addTx
+        chatContextRepository.updateUserStep(chatId, StepCode.BALANCE)
         return StepCode.BALANCE
     }
 }

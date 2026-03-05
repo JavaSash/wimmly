@@ -1,0 +1,70 @@
+package ru.telegram.bot.adapter.repository
+
+import mu.KLogging
+import org.jooq.DSLContext
+import org.springframework.stereotype.Repository
+import ru.telegram.bot.adapter.domain.tables.tables.ChatContext.Companion.CHAT_CONTEXT
+import ru.telegram.bot.adapter.domain.tables.tables.pojos.ChatContext
+import ru.telegram.bot.adapter.dto.enums.StepCode
+
+@Repository
+class ChatContextRepository(private val dslContext: DSLContext) { // todo iml with upd all needed fields
+
+    companion object : KLogging()
+
+    // Проверка на существование пользователя в базе. Нужно 1 раз для команды /start
+    fun isUserExist(chatId: Long): Boolean {
+        return dslContext.selectCount().from(CHAT_CONTEXT).where(CHAT_CONTEXT.ID.eq(chatId)).fetchOneInto(Int::class.java) == 1
+    }
+
+    // Создание пользователя для команды /start
+    fun createUser(chatId: Long): ChatContext {
+        val record = dslContext.newRecord(
+            CHAT_CONTEXT, ChatContext(
+                id = chatId,
+                stepCode = StepCode.START.toString()
+            )
+        )
+        record.store()
+        return record.into(ChatContext::class.java)
+    }
+
+    // получить информацию о пользователе
+    fun getUser(chatId: Long): ChatContext? =
+        dslContext.selectFrom(CHAT_CONTEXT).where(CHAT_CONTEXT.ID.eq(chatId)).fetchOneInto(ChatContext::class.java)
+
+    // Обновление этапа в боте
+    fun updateUserStep(chatId: Long, stepCode: StepCode): ChatContext =
+        dslContext.update(CHAT_CONTEXT)
+            .set(CHAT_CONTEXT.STEP_CODE, stepCode.toString())
+            .where(CHAT_CONTEXT.ID.eq(chatId)).returning().fetchOne()!!.into(ChatContext::class.java)
+
+    // Обновление данных пришедших от кнопок
+    fun updateAccept(chatId: Long, accept: Boolean) {
+        dslContext.update(CHAT_CONTEXT)
+            .set(CHAT_CONTEXT.ACCEPT, accept)
+            .where(CHAT_CONTEXT.ID.eq(chatId)).execute()
+    }
+
+    fun updateText(chatId: Long, txt: String) {
+        dslContext.update(CHAT_CONTEXT)
+            .set(CHAT_CONTEXT.TEXT, txt)
+            .where(CHAT_CONTEXT.ID.eq(chatId)).execute()
+    }
+
+    fun updateFlowContext(chatId: Long, flow: String) {
+        dslContext.update(CHAT_CONTEXT)
+            .set(CHAT_CONTEXT.FLOW_CONTEXT, flow)
+            .where(CHAT_CONTEXT.ID.eq(chatId)).execute()
+    }
+
+    fun clearDialogState(chatId: Long) {
+        dslContext.update(CHAT_CONTEXT)
+            .set(CHAT_CONTEXT.STEP_CODE, null as String?)
+            .set(CHAT_CONTEXT.TEXT, null as String?)
+            .set(CHAT_CONTEXT.ACCEPT, false)
+            .set(CHAT_CONTEXT.FLOW_CONTEXT, null as String?)
+            .where(CHAT_CONTEXT.ID.eq(chatId))
+            .execute()
+    }
+}

@@ -9,7 +9,7 @@ import ru.telegram.bot.adapter.dto.enums.ExecuteStatus
 import ru.telegram.bot.adapter.event.TgReceivedCallbackEvent
 import ru.telegram.bot.adapter.event.TgReceivedMessageEvent
 import ru.telegram.bot.adapter.event.TgStepMessageEvent
-import ru.telegram.bot.adapter.repository.UsersRepository
+import ru.telegram.bot.adapter.repository.ChatContextRepository
 import ru.telegram.bot.adapter.strategy.LogicContext
 import ru.telegram.bot.adapter.strategy.StepContext
 
@@ -17,7 +17,7 @@ import ru.telegram.bot.adapter.strategy.StepContext
 class ApplicationListener(
     private val logicContext: LogicContext, // Основная бизнес логика
     private val stepContext: StepContext, // Выбор следующего этапа
-    private val usersRepository: UsersRepository, // Слой СУБД
+    private val chatContextRepository: ChatContextRepository, // Слой СУБД
     private val messageService: MessageService // Сервис, который формирует объект для отправки сообщения в бота
 ) {
 
@@ -46,7 +46,7 @@ class ApplicationListener(
         fun onApplicationEvent(event: TgStepMessageEvent) {
             logger.info { "$$$ ApplicationListener.StepMessage TgStepMessageEvent: $event" }
             // Обновляем шаг
-            usersRepository.updateUserStep(event.chatId, event.stepCode)
+            chatContextRepository.updateUserStep(event.chatId, event.stepCode)
             // Отправляем сообщение в бота (и формируем)
             messageService.sendMessageToBot(event.chatId, event.stepCode)
         }

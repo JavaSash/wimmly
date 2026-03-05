@@ -5,7 +5,7 @@ import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.strategy.stepper.common.Step
 
 @Component
-class AddExpenseStep : Step {
+class AddExpenseStep : Step { // todo AddExpense\AddIncome change for AskTransactionType?
 
     override fun getNextStep(chatId: Long): StepCode? {
         return StepCode.SELECT_CATEGORY

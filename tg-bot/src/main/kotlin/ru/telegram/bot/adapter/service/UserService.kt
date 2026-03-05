@@ -20,7 +20,6 @@ class UserService(
             userClient.registerUser(
                 UserRegistrationRq(
                     telegramUserId = tgUser.id.toString(),
-                    firstName = tgUser.firstName,
                     userName = tgUser.userName
                 )
             ).also { logger.info { "$$$ User ${it.userId} registered" } }

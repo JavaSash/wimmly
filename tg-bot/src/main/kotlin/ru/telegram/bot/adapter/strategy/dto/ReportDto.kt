@@ -8,7 +8,14 @@ data class ReportDto(
     val income: ReportDetail,
     val expense: ReportDetail,
     val periodName: String
-): DataModel
+) : DataModel {
+    companion object {
+        const val TODAY = "Сегодня"
+        const val WEEK = "Неделя"
+        const val MONTH = "Месяц"
+        const val YEAR = "Год"
+    }
+}
 
 data class ReportDetail(
     val amount: BigDecimal,
@@ -20,7 +27,12 @@ data class ReportDetail(
 )
 
 fun getReportStub(): ReportDto =
-    ReportDto(income = formEmptyReportDetail(), expense = formEmptyReportDetail(), balance = BigDecimal.ZERO, periodName = "default")
+    ReportDto(
+        income = formEmptyReportDetail(),
+        expense = formEmptyReportDetail(),
+        balance = BigDecimal.ZERO,
+        periodName = "default"
+    )
 
 private fun formEmptyReportDetail() = ReportDetail(amount = BigDecimal.ZERO)
 

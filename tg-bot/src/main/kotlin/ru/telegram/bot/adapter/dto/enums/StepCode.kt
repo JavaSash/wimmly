@@ -12,7 +12,7 @@ enum class StepCode(val type: StepType, val botPause: Boolean) {
     // Common
     START(StepType.SEND_MESSAGE, false),
     HELP(StepType.SEND_MESSAGE, false),
-    FINAL(StepType.SEND_MESSAGE, false),
+    FINAL(StepType.NO_MESSAGE, false),
 //    NOT_SUPPORTED(StepType.SEND_MESSAGE, false), // todo impl
 
     // Report
@@ -32,11 +32,12 @@ enum class StepCode(val type: StepType, val botPause: Boolean) {
     ASK_COMMENT(StepType.SEND_MESSAGE, true),
     ENTER_COMMENT(StepType.SEND_MESSAGE, true), // ожидаем ввода комментария
     CREATE_TRANSACTION(StepType.SEND_MESSAGE, false),
-//    SHOW_TRANSACTIONS(StepType.SEND_MESSAGE, false),
+    SEARCH_TRANSACTIONS(StepType.SEND_MESSAGE, false),
+    ASK_TRANSACTION_TYPE(StepType.SEND_MESSAGE, true), // todo добавить кнопки INCOME\EXPENSE для этого шага, т.к. сейчас просто ждёт ввода
+    SHOW_TRANSACTIONS(StepType.SEND_MESSAGE, false),
 
     // Просмотр
 //    VIEW_TRANSACTIONS(StepType.INLINE_KEYBOARD_MARKUP, true), // просмотр с навигацией
-//    CATEGORY_REPORT(StepType.SEND_MESSAGE, false), // отчет по категориям
 
     // Настройки
 //    SETTINGS(StepType.INLINE_KEYBOARD_MARKUP, true),
@@ -64,12 +65,13 @@ enum class StepType {
     INLINE_KEYBOARD_MARKUP,
 
     /**
-     * Msg wit photo
+     * Msg with photo
      */
     SEND_PHOTO,
 
     /**
      * Msg with keyboard
      */
-    REPLY_KEYBOARD_MARKUP
+    REPLY_KEYBOARD_MARKUP,
+    NO_MESSAGE
 }

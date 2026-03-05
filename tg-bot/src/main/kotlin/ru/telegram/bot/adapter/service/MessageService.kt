@@ -1,5 +1,6 @@
 package ru.telegram.bot.adapter.service
 
+import mu.KLogging
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
@@ -34,6 +35,8 @@ class MessageService(
     private val stepContext: StepContext // Выбор следующего этапа
 ) {
 
+    companion object : KLogging()
+
     fun sendMessageToBot(
         chatId: Long,
         stepCode: StepCode
@@ -43,15 +46,18 @@ class MessageService(
             StepType.INLINE_KEYBOARD_MARKUP,
             StepType.REPLY_KEYBOARD_MARKUP -> telegramClient.execute(sendMessage(chatId, stepCode))
             StepType.SEND_PHOTO -> telegramClient.execute(sendPhoto(chatId, stepCode))
+            StepType.NO_MESSAGE -> logger.info { "$$$ Step $stepCode has ${StepType.NO_MESSAGE.name} type, skipping message" }
         }
 
-        if (!stepCode.botPause && stepCode != StepCode.FINAL) { // если нет паузы, то формируем следующее сообщение
-            applicationEventPublisher.publishEvent(
-                TgStepMessageEvent(
-                    chatId = chatId,
-                    stepCode = stepContext.next(chatId, stepCode)!!
+        if (!stepCode.botPause) { // если нет паузы, то формируем следующее сообщение
+            if (stepContext.next(chatId, stepCode) != null) { // Отправляем событие только если есть следующий шаг
+                applicationEventPublisher.publishEvent(
+                    TgStepMessageEvent(
+                        chatId = chatId,
+                        stepCode = stepContext.next(chatId, stepCode)!!
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -61,7 +67,7 @@ class MessageService(
                 ?: throw IllegalArgumentException("photo data is empty")
 
         val replyMarkup = photoMessage.inlineButtons
-            .takeIf { it.isNotEmpty() }?.getInlineKeyboardMarkup()?: ReplyKeyboardRemove(true)
+            .takeIf { it.isNotEmpty() }?.getInlineKeyboardMarkup() ?: ReplyKeyboardRemove(true)
 
         return SendPhoto.builder()
             .chatId(chatId)
@@ -70,6 +76,7 @@ class MessageService(
             .replyMarkup(replyMarkup)
             .build()
     }
+
     // SendMessage - объект телеграм АПИ для отправки сообщения
     private fun sendMessage(chatId: Long, stepCode: StepCode): SendMessage {
         val message = messageContext.getMessage(chatId, stepCode)

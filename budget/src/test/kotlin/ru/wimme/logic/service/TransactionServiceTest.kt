@@ -7,7 +7,9 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import ru.wimme.logic.BasicTest
+import ru.wimme.logic.TestConstants.Tx.AMOUNT_0
 import ru.wimme.logic.TestConstants.Tx.AMOUNT_100
+import ru.wimme.logic.TestConstants.Tx.AMOUNT_150
 import ru.wimme.logic.TestConstants.Tx.AMOUNT_250
 import ru.wimme.logic.TestConstants.Tx.AMOUNT_50
 import ru.wimme.logic.TestConstants.User.USER_ID
@@ -15,8 +17,10 @@ import ru.wimme.logic.TestConstants.User.USER_ID_2
 import ru.wimme.logic.exception.NotFoundException
 import ru.wimme.logic.model.transaction.ExpenseCategory
 import ru.wimme.logic.model.transaction.TransactionRq
+import ru.wimme.logic.model.transaction.TransactionSearchRq
 import ru.wimme.logic.model.transaction.TransactionType
 import ru.wimme.logic.money
+import java.time.LocalDateTime
 import java.util.*
 
 class TransactionServiceTest : BasicTest() {
@@ -532,6 +536,220 @@ class TransactionServiceTest : BasicTest() {
             { assertEquals(ExpenseCategory.FOOD.name, updated.category) },
             { assertEquals(AMOUNT_250.money(), updated.amount) },
             { assertEquals("Updated", updated.comment) }
+        )
+    }
+
+    @Test
+    fun `findTransactionsWithFilters - should return filtered transactions with limit`() {
+        val user = initUser()
+        val user2 = initUser(userId = "1")
+
+        // another user
+        initTransaction(
+            userId = user2.tgId,
+            type = TransactionType.EXPENSE,
+            category = ExpenseCategory.EDUCATION.name,
+            amount = AMOUNT_100,
+            displayId = 1L
+        )
+        initTransaction(
+            userId = user.tgId,
+            type = TransactionType.EXPENSE,
+            category = ExpenseCategory.EDUCATION.name,
+            amount = AMOUNT_100,
+            displayId = 1L
+        )
+        val tx2 = initTransaction(
+            userId = user.tgId,
+            type = TransactionType.EXPENSE,
+            category = ExpenseCategory.EDUCATION.name,
+            amount = AMOUNT_150,
+            displayId = 2L
+        )
+        // other category
+        initTransaction(
+            userId = user.tgId,
+            type = TransactionType.EXPENSE,
+            category = ExpenseCategory.FOOD.name,
+            amount = AMOUNT_50,
+            displayId = 3L
+        )
+        val tx4 = initTransaction(
+            userId = user.tgId,
+            type = TransactionType.EXPENSE,
+            category = ExpenseCategory.EDUCATION.name,
+            amount = AMOUNT_250,
+            displayId = 4L
+        )
+        val tx5 = initTransaction(
+            userId = user.tgId,
+            type = TransactionType.EXPENSE,
+            category = ExpenseCategory.EDUCATION.name,
+            amount = AMOUNT_0,
+            displayId = 5L
+        )
+        // another type
+        initTransaction(
+            userId = user.tgId,
+            type = TransactionType.INCOME,
+            category = ExpenseCategory.EDUCATION.name,
+            amount = AMOUNT_0,
+            displayId = 5L
+        )
+
+        val rq = TransactionSearchRq(
+            type = TransactionType.EXPENSE,
+            userId = user.tgId,
+            category = ExpenseCategory.EDUCATION.name,
+            limit = 3
+        )
+
+        val result = txService.findTransactionsWithFilters(rq)
+
+        assertAll(
+            { assertEquals(3, result.size) },
+            { assertEquals(tx5.amount, result[0].amount) },
+            { assertEquals(tx5.displayId, result[0].displayId) },
+            { assertEquals(tx4.amount, result[1].amount) },
+            { assertEquals(tx4.displayId, result[1].displayId) },
+            { assertEquals(tx2.amount, result[2].amount) },
+            { assertEquals(tx2.displayId, result[2].displayId) }
+        )
+    }
+
+    @Test
+    fun `findTransactionsWithFilters - should return empty list when no matches`() {
+        val user = initUser()
+
+        initTransaction(
+            userId = user.tgId,
+            type = TransactionType.INCOME,
+            category = ExpenseCategory.EDUCATION.name,
+            amount = AMOUNT_100
+        )
+
+        val rq = TransactionSearchRq(
+            type = TransactionType.EXPENSE,
+            userId = user.tgId,
+            category = ExpenseCategory.EDUCATION.name,
+            limit = 10
+        )
+
+        assertTrue(txService.findTransactionsWithFilters(rq).isEmpty())
+    }
+
+    @Test
+    fun `findTransactionsWithFilters - should return transactions sorted by createdAt desc`() {
+        val user = initUser()
+        val now = LocalDateTime.now()
+
+        // Создаем транзакции с разными датами
+        initTransactionWithCreatedAt(
+            userId = user.tgId,
+            type = TransactionType.INCOME,
+            category = ExpenseCategory.EDUCATION,
+            amount = AMOUNT_100,
+            createdAt = now.minusSeconds(3600), // час назад
+            displayId = 1L
+        )
+        initTransactionWithCreatedAt(
+            userId = user.tgId,
+            type = TransactionType.INCOME,
+            category = ExpenseCategory.EDUCATION,
+            amount = AMOUNT_50,
+            createdAt = now, // сейчас
+            displayId = 2L
+        )
+        initTransactionWithCreatedAt(
+            userId = user.tgId,
+            type = TransactionType.INCOME,
+            category = ExpenseCategory.EDUCATION,
+            amount = AMOUNT_150,
+            createdAt = now.minusSeconds(1800), // 30 минут назад
+            displayId = 3L
+        )
+
+        val rq = TransactionSearchRq(
+            type = TransactionType.INCOME,
+            userId = user.tgId,
+            category = ExpenseCategory.EDUCATION.name,
+            limit = 3
+        )
+
+        val result = txService.findTransactionsWithFilters(rq)
+
+        assertAll(
+            { assertEquals(3, result.size) },
+            { assertEquals(AMOUNT_50.money(), result[0].amount) }, // самая новая (tx2)
+            { assertEquals(AMOUNT_150.money(), result[1].amount) }, // tx3
+            { assertEquals(AMOUNT_100.money(), result[2].amount) }  // tx1
+        )
+    }
+
+    @Test
+    fun `findTransactionsWithFilters - should work for different users independently`() {
+        val user1 = initUser(USER_ID)
+        val user2 = initUser(USER_ID_2)
+
+        // Транзакции для user1
+        initTransaction(
+            userId = user1.tgId,
+            type = TransactionType.INCOME,
+            category = ExpenseCategory.EDUCATION.name,
+            amount = AMOUNT_100,
+            displayId = 1L
+        )
+        initTransaction(
+            userId = user1.tgId,
+            type = TransactionType.INCOME,
+            category = ExpenseCategory.EDUCATION.name,
+            amount = AMOUNT_150,
+            displayId = 2L
+        )
+
+        // Транзакции для user2
+        initTransaction(
+            userId = user2.tgId,
+            type = TransactionType.INCOME,
+            category = ExpenseCategory.EDUCATION.name,
+            amount = AMOUNT_50,
+            displayId = 1L
+        )
+        initTransaction(
+            userId = user2.tgId,
+            type = TransactionType.INCOME,
+            category = ExpenseCategory.EDUCATION.name,
+            amount = AMOUNT_250,
+            displayId = 2L
+        )
+        initTransaction(
+            userId = user2.tgId,
+            type = TransactionType.INCOME,
+            category = ExpenseCategory.EDUCATION.name,
+            amount = AMOUNT_0,
+            displayId = 3L
+        )
+
+        val rq1 = TransactionSearchRq(
+            type = TransactionType.INCOME,
+            userId = user1.tgId,
+            category = ExpenseCategory.EDUCATION.name,
+            limit = 10
+        )
+
+        val rq2 = TransactionSearchRq(
+            type = TransactionType.INCOME,
+            userId = user2.tgId,
+            category = ExpenseCategory.EDUCATION.name,
+            limit = 10
+        )
+
+        val result1 = txService.findTransactionsWithFilters(rq1)
+        val result2 = txService.findTransactionsWithFilters(rq2)
+
+        assertAll(
+            { assertEquals(2, result1.size) },
+            { assertEquals(3, result2.size) }
         )
     }
 }

@@ -4,7 +4,7 @@ import mu.KLogging
 import org.springframework.stereotype.Repository
 import ru.telegram.bot.adapter.client.CategoryClient
 import ru.telegram.bot.adapter.dto.budget.CategoryDto
-import ru.telegram.bot.adapter.repository.UsersRepository
+import ru.telegram.bot.adapter.repository.TransactionDraftRepository
 import ru.telegram.bot.adapter.strategy.data.AbstractRepository
 import ru.telegram.bot.adapter.strategy.dto.SelectCategoryDto
 import ru.telegram.bot.adapter.utils.Constants.Transaction.EXPENSE
@@ -18,7 +18,7 @@ import ru.telegram.bot.adapter.utils.Constants.Transaction.INCOME
 @Repository
 class SelectCategoryRepository(
     private val categoryClient: CategoryClient,
-    private val usersRepository: UsersRepository
+    private val transactionDraftRepository: TransactionDraftRepository
 ) : AbstractRepository<SelectCategoryDto>() {
     companion object : KLogging()
 
@@ -27,8 +27,8 @@ class SelectCategoryRepository(
      */
     override fun getData(chatId: Long): SelectCategoryDto {
         logger.info { "$$$ Try to get categories for chat: $chatId" }
-        val dialogData = usersRepository.getUser(chatId)
-        val txType = dialogData?.transactionType ?: INCOME
+        val trxDraft = transactionDraftRepository.getTransactionDraft(chatId)
+        val txType = trxDraft?.type ?: INCOME
         return runCatching {
             SelectCategoryDto(
                 categories = categoryClient.getCategories(txType),

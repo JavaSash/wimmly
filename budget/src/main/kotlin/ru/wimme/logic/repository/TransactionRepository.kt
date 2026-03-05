@@ -1,5 +1,6 @@
 package ru.wimme.logic.repository
 
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import ru.wimme.logic.model.entity.TransactionEntity
@@ -14,11 +15,10 @@ interface TransactionRepository: JpaRepository<TransactionEntity, UUID> {
 
     fun findAllByUserIdAndCreatedAtBetween(userId: String, from: Instant, to: Instant): List<TransactionEntity>
 
-    fun findAllByUserIdAndTypeAndCategoryAndCreatedAtBetween(
+    fun findAllByUserIdAndTypeAndCategory(
         userId: String,
         type: TransactionType,
         category: String,
-        dateFrom: Instant,
-        dateTo: Instant
+        pageable: Pageable
     ): List<TransactionEntity>
 }

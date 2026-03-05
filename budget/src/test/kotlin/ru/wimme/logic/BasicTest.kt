@@ -51,14 +51,15 @@ class BasicTest : TestConfig() {
         userId: String = USER_ID,
         type: TransactionType = TransactionType.INCOME,
         amount: Double = 1500.00,
-        displayId: Long = 1L
+        displayId: Long = 1L,
+        category: String = ExpenseCategory.EDUCATION.name
     ): TransactionEntity = txRepo.save(
         TransactionEntity(
             id = UUID.randomUUID(),
             displayId = displayId,
             type = type,
             userId = userId,
-            category = ExpenseCategory.EDUCATION.name,
+            category = category,
             amount = amount.money(),
             comment = "Salary part"
         )
@@ -69,6 +70,7 @@ class BasicTest : TestConfig() {
         type: TransactionType,
         amount: Double,
         createdAt: LocalDateTime,
+        displayId: Long = 1L,
         category: ExpenseCategory = ExpenseCategory.EDUCATION
     ) {
         val id = UUID.randomUUID()

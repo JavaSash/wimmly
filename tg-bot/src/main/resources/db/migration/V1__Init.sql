@@ -1,13 +1,28 @@
 -- Таблица для управления состоянием диалога (stateful conversation)
-create table users
+CREATE TABLE chat_context
 (
-    id                int8 primary key not null,
-    step_code         varchar(100), -- текущее состояние диалога
-    text              varchar(100), -- временные данные ввода пользователя
-    accept            boolean default false,   -- data from boolean buttons (yes/no)
-    transaction_type  varchar(7),
-    category          varchar(255),
-    amount            numeric(19, 2),
-    transaction_date  timestamp,
-    comment           varchar(255)
+    id           BIGINT PRIMARY KEY NOT NULL, -- tg chat id
+    step_code    VARCHAR(100),                -- current dialog state
+    text         VARCHAR(100),                -- temporary text\error message
+    accept       BOOLEAN DEFAULT FALSE,       -- data from boolean buttons (yes/no)
+    flow_context VARCHAR(50)                  -- transaction flow to choose next step after common step
+);
+
+-- add transaction
+CREATE TABLE transaction_draft
+(
+    chat_id  BIGINT PRIMARY KEY REFERENCES chat_context (id) NOT NULL,
+    type     VARCHAR(7),
+    category VARCHAR(100), -- INCOME/EXPENSE category
+    amount   DECIMAL(19, 2),
+    date     TIMESTAMP,
+    comment  VARCHAR(255)
+);
+
+-- search transaction
+CREATE TABLE search_context
+(
+    chat_id                 BIGINT PRIMARY KEY REFERENCES chat_context (id) NOT NULL,
+    type                    VARCHAR(7),
+    category                VARCHAR(50)
 );

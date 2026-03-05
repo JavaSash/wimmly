@@ -4,6 +4,8 @@
 /help - Помощь
 /add_income - Добавить доход
 /add_expense - Добавить расход
+/search_transactions - Поиск транзакций
+/delete_transaction - Удалить транзакцию
 /balance - Показать баланс
 /report_today - Доходы и расходы за сегодня
 /report_week - Доходы и расходы за неделю

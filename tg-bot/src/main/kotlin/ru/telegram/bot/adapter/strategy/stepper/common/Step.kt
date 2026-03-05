@@ -8,9 +8,7 @@ import ru.telegram.bot.adapter.utils.CommonUtils.currentStepCode
  */
 interface Step {
 
-    fun isAvailableForCurrentStep(stepCode: StepCode): Boolean {
-        return this.currentStepCode( "Step") == stepCode
-    }
+    fun isAvailableForCurrentStep(stepCode: StepCode): Boolean = this.currentStepCode("Step") == stepCode
 
     /**
      * Which step is next

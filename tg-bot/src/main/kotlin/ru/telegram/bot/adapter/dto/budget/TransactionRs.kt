@@ -14,5 +14,5 @@ data class TransactionRs(
     val category: String,
     val amount: BigDecimal,
     val comment: String?,
-    val createdAt: Instant?
+    val createdAt: Instant
 )

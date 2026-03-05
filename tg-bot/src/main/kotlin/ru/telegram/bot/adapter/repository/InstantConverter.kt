@@ -9,7 +9,7 @@ import java.time.ZoneId
  * timestamp SQL to java Instant (instead LDT)
  * Used when jooq generate POJOs (build gradle jooq config forcedTypes)
  */
-class InstantConverter : Converter<LocalDateTime, Instant> {
+class InstantConverter : Converter<LocalDateTime, Instant> { // todo del?
 
     override fun from(databaseObject: LocalDateTime?): Instant? {
         return databaseObject?.atZone(ZoneId.systemDefault())?.toInstant()
