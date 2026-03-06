@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import ru.wimme.logic.model.entity.TransactionEntity
 import ru.wimme.logic.model.transaction.TransactionType
+import java.math.BigDecimal
 import java.time.Instant
 import java.util.*
 
@@ -20,5 +21,13 @@ interface TransactionRepository: JpaRepository<TransactionEntity, UUID> {
         type: TransactionType,
         category: String,
         pageable: Pageable
+    ): List<TransactionEntity>
+
+    fun findByUserIdAndAmountAndCategoryAndCreatedAtBetween(
+        userId: String,
+        amount: BigDecimal,
+        category: String,
+        start: Instant,
+        end: Instant
     ): List<TransactionEntity>
 }

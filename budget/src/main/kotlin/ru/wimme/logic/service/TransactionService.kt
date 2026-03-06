@@ -25,6 +25,14 @@ class TransactionService(
     @Transactional
     fun create(rq: TransactionRq): TransactionEntity {
         logger.info { "$$$ TransactionService.create tx for rq: $rq" }
+        val now = Instant.now()
+        val possibleDuplicate = findPossibleDuplicate(rq, now)
+
+        if (possibleDuplicate != null) {
+            logger.info { "$$$ Found possible duplicate transaction, returning existing" }
+            return possibleDuplicate
+        }
+
         return txRepo.save(
             TransactionEntity(
                 id = UUID.randomUUID(),
@@ -44,8 +52,8 @@ class TransactionService(
             .orElseThrow { NotFoundException("Transaction not found: $id") }
 
     fun getUserTransactions(userId: String, from: Instant? = null, to: Instant? = null): List<TransactionEntity> =
-        if (from != null && to != null) txRepo.findAllByUserIdAndCreatedAtBetween(userId =  userId, from = from, to = to)
-            else txRepo.findAllByUserId(userId)
+        if (from != null && to != null) txRepo.findAllByUserIdAndCreatedAtBetween(userId = userId, from = from, to = to)
+        else txRepo.findAllByUserId(userId)
 
     @Transactional
     fun delete(id: UUID) {
@@ -78,5 +86,20 @@ class TransactionService(
             PageRequest.of(0, rq.limit, Sort.by("createdAt").descending())
         ).map { TransactionRs.fromEntity(it) }
             .also { logger.info { "$$$ Found transactions: ${it}" } }
+    }
+
+    private fun findPossibleDuplicate(rq: TransactionRq, now: Instant): TransactionEntity? {
+        val window = 1L
+
+        val start = (rq.date ?: now).minusSeconds(window)
+        val end = (rq.date ?: now).plusSeconds(window)
+
+        return txRepo.findByUserIdAndAmountAndCategoryAndCreatedAtBetween(
+            userId = rq.userId,
+            amount = rq.amount,
+            category = rq.category,
+            start = start,
+            end = end
+        ).firstOrNull()
     }
 }
