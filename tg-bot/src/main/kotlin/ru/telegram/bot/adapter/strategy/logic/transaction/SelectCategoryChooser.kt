@@ -32,10 +32,8 @@ class SelectCategoryChooser(
         if (category != null) {
             transactionDraftRepository.updateCategory(chatId, category.code)
             if (StepCode.SEARCH_TRANSACTIONS.name == chatContextRepository.getUser(chatId)?.flowContext) {
-                chatContextRepository.updateUserStep(chatId, StepCode.ENTER_DATE)
                 searchContextRepository.updateCategory(chatId, category.code)
             } else {
-                chatContextRepository.updateUserStep(chatId, StepCode.ENTER_AMOUNT)
                 transactionDraftRepository.updateCategory(chatId, category.code)
             } // todo else if with ENTER_AMOUNT and else with error (flow is null)
 

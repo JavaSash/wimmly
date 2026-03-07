@@ -3,14 +3,11 @@ package ru.telegram.bot.adapter.strategy.logic.transaction
 import mu.KLogging
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.message.Message
-import ru.telegram.bot.adapter.dto.enums.StepCode
-import ru.telegram.bot.adapter.repository.ChatContextRepository
 import ru.telegram.bot.adapter.repository.TransactionDraftRepository
 import ru.telegram.bot.adapter.strategy.logic.common.MessageChooser
 
 @Component
 class EnterAmountChooser(
-    private val chatContextRepository: ChatContextRepository,
     private val transactionDraftRepository: TransactionDraftRepository,
 ) : MessageChooser {
 
@@ -22,10 +19,7 @@ class EnterAmountChooser(
 
         if (isValidAmount(amountText)) {
             transactionDraftRepository.updateAmount(chatId, amountText!!)
-            chatContextRepository.updateUserStep(chatId, StepCode.ASK_DATE)
-        } else {
-            chatContextRepository.updateUserStep(chatId, StepCode.ENTER_AMOUNT)
-        }
+        } // todo else error step
     }
 
     private fun isValidAmount(amount: String?): Boolean {

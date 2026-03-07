@@ -57,10 +57,4 @@ class StartCommand(
         }
 
     }
-
-    override fun doPrepare(user: User, chat: Chat, arguments: Array<out String>) {
-        logger.info { "$$$ StartCommand.prepare for user: $user and chat: $chat with arguments: $arguments" }
-
-        chatContextRepository.updateUserStep(chat.id, StepCode.START)
-    }
 }

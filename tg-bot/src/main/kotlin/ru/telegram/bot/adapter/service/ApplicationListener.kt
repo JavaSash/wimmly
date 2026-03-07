@@ -42,10 +42,14 @@ class ApplicationListener(
     }
     // Слушаем событие TelegramStepMessageEvent
     inner class StepMessage {
+        /**
+         * Единая точка изменения шага диалога пользователя
+         * Отправка сообщения в tg-бот
+         */
         @EventListener
         fun onApplicationEvent(event: TgStepMessageEvent) {
-            logger.info { "$$$ ApplicationListener.StepMessage TgStepMessageEvent: $event" }
-            // Обновляем шаг
+            logger.info { "$$$ ApplicationListener.StepMessage TgStepMessageEvent data: \nchantId: ${event.chatId}\n stepCode:${event.stepCode}" }
+            // Обновляем шаг в бд (тут, а не в Step\Chooser классах)
             chatContextRepository.updateUserStep(event.chatId, event.stepCode)
             // Отправляем сообщение в бота (и формируем)
             messageService.sendMessageToBot(event.chatId, event.stepCode)

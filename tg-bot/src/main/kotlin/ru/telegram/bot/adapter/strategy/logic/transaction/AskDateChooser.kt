@@ -4,15 +4,17 @@ import mu.KLogging
 import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery
 import ru.telegram.bot.adapter.dto.enums.ExecuteStatus
-import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.repository.ChatContextRepository
+import ru.telegram.bot.adapter.repository.TransactionDraftRepository
 import ru.telegram.bot.adapter.strategy.logic.common.CallbackChooser
 import ru.telegram.bot.adapter.utils.Constants.Button.NO
 import ru.telegram.bot.adapter.utils.Constants.Button.YES
+import java.time.Instant
 
 @Component
 class AskDateChooser(
-    private val chatContextRepository: ChatContextRepository
+    private val chatContextRepository: ChatContextRepository,
+    private val transactionDraftRepository: TransactionDraftRepository
 ) : CallbackChooser {
 
     companion object : KLogging()
@@ -22,13 +24,12 @@ class AskDateChooser(
         return when (callbackQuery.data) {
             YES -> {
                 chatContextRepository.updateAccept(chatId, true)
-                chatContextRepository.updateUserStep(chatId, StepCode.ENTER_DATE)
                 ExecuteStatus.FINAL
             }
 
             NO -> {
                 chatContextRepository.updateAccept(chatId, false)
-                chatContextRepository.updateUserStep(chatId, StepCode.ASK_COMMENT)
+                transactionDraftRepository.updateTransactionDate(chatId, Instant.now())
                 ExecuteStatus.FINAL
             }
 

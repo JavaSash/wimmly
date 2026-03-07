@@ -50,11 +50,12 @@ class MessageService(
         }
 
         if (!stepCode.botPause) { // если нет паузы, то формируем следующее сообщение
-            if (stepContext.next(chatId, stepCode) != null) { // Отправляем событие только если есть следующий шаг
+            val nextStep = stepContext.next(chatId, stepCode)
+            if (nextStep != null) { // Отправляем событие только если есть следующий шаг
                 applicationEventPublisher.publishEvent(
                     TgStepMessageEvent(
                         chatId = chatId,
-                        stepCode = stepContext.next(chatId, stepCode)!!
+                        stepCode = nextStep
                     )
                 )
             }

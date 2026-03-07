@@ -7,7 +7,7 @@ import ru.telegram.bot.adapter.repository.ChatContextRepository
 import ru.telegram.bot.adapter.repository.TransactionDraftRepository
 import ru.telegram.bot.adapter.service.TransactionService
 import ru.telegram.bot.adapter.strategy.stepper.common.Step
-// todo вынести логику в Chooser? в Step классах только логика выбора следующего шага
+
 @Component
 class CreateTransactionStep(
     private val chatContextRepository: ChatContextRepository,
@@ -19,7 +19,6 @@ class CreateTransactionStep(
     override fun getNextStep(chatId: Long): StepCode? {
         logger.info { "$$$ CreateTransactionStep.execute for chanId=$chatId" }
         val trxDraft = transactionDraftRepository.getTransactionDraft(chatId)!!
-
         txService.addTransaction(trxDraft) // todo runCatching + onFailure async addTx
         chatContextRepository.updateUserStep(chatId, StepCode.BALANCE)
         return StepCode.BALANCE

@@ -28,7 +28,6 @@ class AddIncomeCommand(
 
     override fun doPrepare(user: User, chat: Chat, arguments: Array<out String>) {
         val chatId = chat.id
-        chatContextRepository.updateUserStep(chatId, StepCode.ADD_INCOME)
         transactionDraftRepository.updateTransactionType(chatId, INCOME)
         chatContextRepository.updateFlowContext(chatId, StepCode.ADD_INCOME.name)
     }

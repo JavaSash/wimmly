@@ -31,7 +31,6 @@ class SearchTransactionsCommand(
 ) {
 
     override fun doPrepare(user: User, chat: Chat, arguments: Array<out String>) {
-        chatContextRepository.updateUserStep(chat.id, StepCode.SEARCH_TRANSACTIONS)
         chatContextRepository.updateFlowContext(
             chat.id,
             StepCode.SEARCH_TRANSACTIONS.name

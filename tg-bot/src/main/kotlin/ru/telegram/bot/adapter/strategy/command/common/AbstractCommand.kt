@@ -33,12 +33,8 @@ abstract class AbstractCommand(
     override fun execute(telegramClient: TelegramClient, user: User, chat: Chat, arguments: Array<out String>) {
         prepare(user, chat, arguments)
 
-        val chatId = chat.id
-
-        chatContextRepository.updateUserStep(chatId, classStepCode())
-
         applicationEventPublisher.publishEvent(
-            TgStepMessageEvent(chatId = chatId, stepCode = classStepCode())
+            TgStepMessageEvent(chatId = chat.id, stepCode = classStepCode())
         )
     }
 
@@ -46,7 +42,7 @@ abstract class AbstractCommand(
         val chatId = chat.id
 
         if (chatId <= 0) {
-            // todo        if (chatId < 0) usersRepository.updateUserStep(chatId, StepCode.NOT_SUPPORTED)
+            // todo        if (chatId < 0) StepCode.NOT_SUPPORTED
             logger.warn { "$$$ Group chat id $chatId is not supported" }
             return
         }
