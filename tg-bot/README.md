@@ -86,7 +86,7 @@ For example: StepCode.BALANCE and BalanceChooser
 3. Create dto extended from DataModel (if custom DTO needed)
 4. Create message class extended from AbstractSendMessage<T> with type from 3.
 5. Create .ftl file with response txt
-6. Create chooser class extended from MessageChooser
+6. Create chooser class extended from MessageChooser (only for steps, which needed user's response)
 
 ### Create step with button
 1. Create repository extended from AbstractRepository<T> (SelectCategoryRepository, type SelectCategoryDto) (if data needed to form buttons)
@@ -138,7 +138,7 @@ For example: StepCode.BALANCE and BalanceChooser
 ### MVP
 1. сделать все нужные операции (под апи бэка)
    1) убедиться, что часть функционала работает при лежащем сервисе БЛ
-   2) fix баг с датой формата Д.ММ.ГГГГ (1 цифра в дне без 0)
+   2) 
    3) Удалить транзакцию
    4) 
    5) 

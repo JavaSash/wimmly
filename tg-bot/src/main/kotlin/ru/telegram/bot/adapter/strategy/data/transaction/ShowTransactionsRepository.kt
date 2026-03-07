@@ -9,7 +9,7 @@ import ru.telegram.bot.adapter.repository.SearchContextRepository
 import ru.telegram.bot.adapter.strategy.data.AbstractRepository
 import ru.telegram.bot.adapter.strategy.dto.ShowTransactionsDto
 import ru.telegram.bot.adapter.strategy.dto.TransactionItem
-import ru.telegram.bot.adapter.utils.Constants.Transaction.DATE_PATTERN
+import ru.telegram.bot.adapter.utils.Constants.Transaction.DATE_FORMAT
 import ru.telegram.bot.adapter.utils.formatDate
 import ru.telegram.bot.adapter.utils.formatMoney
 
@@ -45,7 +45,7 @@ class ShowTransactionsRepository(
                     tx ->
                 TransactionItem(
                     displayId = tx.displayId,
-                    formattedDate = tx.createdAt.formatDate(DATE_PATTERN),
+                    formattedDate = tx.createdAt.formatDate(DATE_FORMAT),
                     category = tx.category,
                     type = tx.type,
                     amount = tx.amount.formatMoney(),
