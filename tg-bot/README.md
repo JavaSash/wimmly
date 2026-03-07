@@ -138,16 +138,12 @@ For example: StepCode.BALANCE and BalanceChooser
 ### MVP
 1. сделать все нужные операции (под апи бэка)
    1) убедиться, что часть функционала работает при лежащем сервисе БЛ
-   2) 
+   2) ERROR step для ошибок с выводом сообщения об ошибке
    3) Удалить транзакцию
-   4) 
-   5) 
    6) /commands - список команд из /help вынести
    7) /help - guide, дисклеймер по ПД, не хранит данные об оплатах, только обезличенную инфу по ведению бюджета ()
-2. impl stepCode: FINAL. Ошибка в логах:
-   Caused by: org.telegram.telegrambots.meta.exceptions.TelegramApiException: Unable to execute sendmessage method
-   Caused by: org.telegram.telegrambots.meta.exceptions.TelegramApiValidationException: Text parameter can't be empty in method: SendMessage(chatId=****, messageThreadId=null, text=, parseMode=html, disableWebPagePreview=null, disableNotification=null, replyToMessageId=null, replyMarkup=ReplyKeyboardRemove(removeKeyboard=true, selective=null), entities=null, allowSendingWithoutReply=null, protectContent=null, linkPreviewOptions=null, replyParameters=null, businessConnectionId=null, messageEffectId=null, allowPaidBroadcast=null)
-3. fix bug при запросе баланса за период  $$$ 0 found for period 2025-12-31T21:00:00Z - 2026-01-31T21:00:00Z
+2. 
+3. fix bug с таймзоной при запросе баланса за период  $$$ 0 found for period 2025-12-31T21:00:00Z - 2026-01-31T21:00:00Z
 4. логи с путём пользователя? 
 5. Изучить на этапе выбора клауд платформы для разворачивания: https://sourcecraft.dev/portal/grant/?utm_source=habr&utm_medium=referral&utm_campaign=mini_banner3_201125/
 5. добавить дисклеймер в инфо команду

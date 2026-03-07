@@ -14,7 +14,6 @@ import java.time.ZoneOffset
 class EnterDateChooser(
     private val chatContextRepository: ChatContextRepository,
     private val transactionDraftRepository: TransactionDraftRepository,
-//    private val searchContextRepository: SearchContextRepository,
 ) : MessageChooser {
 
     companion object : KLogging()
@@ -23,25 +22,8 @@ class EnterDateChooser(
         val dateText = message.text?.trim() ?: ""
 
         runCatching {
-            // todo код для интервала дат
-//            if (dateText.contains("-") && INTERVAL_PATTERN.matches(dateText)) {
-//                val (fromStr, toStr) = dateText.split("-").map { it.trim() }
-//                val from = LocalDate.parse(fromStr, DATE_PATTERN).atStartOfDay(ZoneOffset.UTC)
-//                val to = LocalDate.parse(toStr, DATE_PATTERN).atStartOfDay(ZoneOffset.UTC)
-//
-//                validatePeriod(from, to)
-//
-//                if (to.isBefore(from)) {
-//                    throw IllegalArgumentException("Конечная дата раньше начальной")
-//                }
-//
-//                // Сохраняем интервал
-//                searchContextRepository.updateDateRange(chatId, from.toInstant(), to.toInstant())
-//            } else {
             val date = LocalDate.parse(dateText, FLEXIBLE_DATE_FORMAT)
             transactionDraftRepository.updateTransactionDate(chatId, date.atStartOfDay(ZoneOffset.UTC).toInstant())
-            chatContextRepository.updateAccept(chatId, false) // todo del .set to default to use in another buttons
-//            }
         }.onFailure { error ->
             logger.error { "$$$ EnterDateChooser.execute incorrect date format: $dateText " }
             // При ошибке остаемся на том же шаге и показываем сообщение
