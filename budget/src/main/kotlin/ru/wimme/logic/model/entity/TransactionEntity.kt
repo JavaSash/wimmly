@@ -9,7 +9,7 @@ import java.util.*
 @Entity
 @Table(name = "transactions")
 data class TransactionEntity(
-    @Id
+    @Id // todo сделать составной ПК user_id+display_id?
     @GeneratedValue
     val id: UUID? = null,
     @Column(name = "display_id", nullable = false)

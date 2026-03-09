@@ -23,6 +23,7 @@ CREATE TABLE transaction_draft
 CREATE TABLE search_context
 (
     chat_id                 BIGINT PRIMARY KEY REFERENCES chat_context (id) NOT NULL,
+    trx_id                  BIGINT,
     type                    VARCHAR(7),
     category                VARCHAR(50)
 );

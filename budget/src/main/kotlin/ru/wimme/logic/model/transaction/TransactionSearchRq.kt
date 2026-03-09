@@ -1,8 +1,18 @@
 package ru.wimme.logic.model.transaction
 
 data class TransactionSearchRq(
-    val type: TransactionType,
+    /**
+     * For search trx
+     */
+    val type: TransactionType?,
     val userId: String,
-    val category: String,
-    val limit: Int
+    /**
+     * For search trx
+     */
+    val category: String?,
+    val limit: Int,
+    /**
+     * Only for search before delete
+     */
+    val displayId: Long?
 )

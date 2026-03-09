@@ -14,7 +14,7 @@ class EnterAmountChooser(
     companion object : KLogging()
 
     override fun execute(chatId: Long, message: Message) {
-        logger.info { "$$$ EnterAmountChooser.execute with params: \nchanId=$chatId\nmessage=$message" }
+        logger.info { "$$$ EnterAmountChooser.execute with params: \nchatId=$chatId\nmessage=$message" }
         val amountText = message.text?.trim()
 
         if (isValidAmount(amountText)) {

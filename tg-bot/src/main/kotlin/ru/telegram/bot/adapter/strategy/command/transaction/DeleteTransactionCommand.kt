@@ -11,31 +11,29 @@ import ru.telegram.bot.adapter.repository.SearchContextRepository
 import ru.telegram.bot.adapter.repository.TransactionDraftRepository
 import ru.telegram.bot.adapter.service.UserService
 import ru.telegram.bot.adapter.strategy.command.common.AbstractCommand
-import ru.telegram.bot.adapter.utils.Constants.Transaction.INCOME
 
 /**
- * Добавление транзакции
- *    -> выбор категории
- *    -> ввод суммы
- *    -> ввод даты (опционально)
- *    -> ввод комментария (опционально)
+ * Ввод номера транзакции
+ * Вывод информации о транзакции
+ * Подтверждение удаления
  */
 @Component
-class AddIncomeCommand(
+class DeleteTransactionCommand(
     chatContextRepository: ChatContextRepository,
     userService: UserService,
     applicationEventPublisher: ApplicationEventPublisher,
     transactionDraftRepository: TransactionDraftRepository,
     searchContextRepository: SearchContextRepository
-) : AbstractCommand(
-    BotCommand.ADD_INCOME, chatContextRepository, applicationEventPublisher, userService,
+): AbstractCommand(
+    BotCommand.DELETE_TRANSACTION, chatContextRepository, applicationEventPublisher, userService,
     transactionDraftRepository,
     searchContextRepository
 ) {
 
     override fun doPrepare(user: User, chat: Chat, arguments: Array<out String>) {
-        val chatId = chat.id
-        transactionDraftRepository.updateTransactionType(chatId, INCOME)
-        chatContextRepository.updateFlowContext(chatId, StepCode.ADD_INCOME.name)
+        chatContextRepository.updateFlowContext(
+            chat.id,
+            StepCode.DELETE_TRANSACTION.name
+        ) // mark user flow to choose correct step after common steps
     }
 }

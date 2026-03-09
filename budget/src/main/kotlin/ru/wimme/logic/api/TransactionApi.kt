@@ -33,7 +33,15 @@ class TransactionApi(
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: UUID) = transactionService.delete(id) // todo check by userId
 
+    @DeleteMapping("/user/{userId}/{displayId}")
+    fun deleteByDisplayId(@PathVariable userId: Long, @PathVariable displayId: Long) =
+        transactionService.delete(userId = userId, displayId = displayId)
+
     @PostMapping("/search")
     fun getTransactionsWithFilters(@RequestBody rq: TransactionSearchRq): List<TransactionRs> =
         transactionService.findTransactionsWithFilters(rq)
+
+    @GetMapping("/exist/user/{userId}/{displayId}")
+    fun isTransactionExist(@PathVariable userId: Long, @PathVariable displayId: Long): Boolean =
+        transactionService.isExist(userId, displayId)
 }

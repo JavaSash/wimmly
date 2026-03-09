@@ -601,7 +601,8 @@ class TransactionServiceTest : BasicTest() {
             type = TransactionType.EXPENSE,
             userId = user.tgId,
             category = ExpenseCategory.EDUCATION.name,
-            limit = 3
+            limit = 3,
+            displayId = null
         )
 
         val result = txService.findTransactionsWithFilters(rq)
@@ -632,7 +633,8 @@ class TransactionServiceTest : BasicTest() {
             type = TransactionType.EXPENSE,
             userId = user.tgId,
             category = ExpenseCategory.EDUCATION.name,
-            limit = 10
+            limit = 10,
+            displayId = null
         )
 
         assertTrue(txService.findTransactionsWithFilters(rq).isEmpty())
@@ -673,7 +675,8 @@ class TransactionServiceTest : BasicTest() {
             type = TransactionType.INCOME,
             userId = user.tgId,
             category = ExpenseCategory.EDUCATION.name,
-            limit = 3
+            limit = 3,
+            displayId = null
         )
 
         val result = txService.findTransactionsWithFilters(rq)
@@ -734,14 +737,16 @@ class TransactionServiceTest : BasicTest() {
             type = TransactionType.INCOME,
             userId = user1.tgId,
             category = ExpenseCategory.EDUCATION.name,
-            limit = 10
+            limit = 10,
+            displayId = null
         )
 
         val rq2 = TransactionSearchRq(
             type = TransactionType.INCOME,
             userId = user2.tgId,
             category = ExpenseCategory.EDUCATION.name,
-            limit = 10
+            limit = 10,
+            displayId = null
         )
 
         val result1 = txService.findTransactionsWithFilters(rq1)
@@ -751,5 +756,287 @@ class TransactionServiceTest : BasicTest() {
             { assertEquals(2, result1.size) },
             { assertEquals(3, result2.size) }
         )
+    }
+
+    @Test
+    fun `findTransactionsWithFilters - should find transaction by displayId`() {
+        val user = initUser()
+
+        initTransaction(
+            userId = user.tgId,
+            type = TransactionType.INCOME,
+            category = ExpenseCategory.EDUCATION.name,
+            amount = AMOUNT_100,
+            displayId = 1L
+        )
+        val targetTx = initTransaction(
+            userId = user.tgId,
+            type = TransactionType.EXPENSE,
+            category = ExpenseCategory.FOOD.name,
+            amount = AMOUNT_150,
+            displayId = 5L
+        )
+        initTransaction(
+            userId = user.tgId,
+            type = TransactionType.INCOME,
+            category = ExpenseCategory.EDUCATION.name,
+            amount = AMOUNT_250,
+            displayId = 3L
+        )
+
+        val rq = TransactionSearchRq(
+            type = null, // не используется при поиске по displayId
+            userId = user.tgId,
+            category = null, // не используется при поиске по displayId
+            limit = 1, // не используется при поиске по displayId
+            displayId = 5L
+        )
+
+        val result = txService.findTransactionsWithFilters(rq)
+
+        assertAll(
+            { assertEquals(1, result.size) },
+            { assertEquals(targetTx.id, result[0].id) },
+            { assertEquals(targetTx.displayId, result[0].displayId) },
+            { assertEquals(targetTx.amount, result[0].amount) },
+            { assertEquals(targetTx.category, result[0].category) },
+            { assertEquals(targetTx.type, result[0].type) }
+        )
+    }
+
+    @Test
+    fun `findTransactionsWithFilters - should return empty list when displayId not found`() {
+        val user = initUser()
+
+        initTransaction(
+            userId = user.tgId,
+            type = TransactionType.INCOME,
+            category = ExpenseCategory.EDUCATION.name,
+            amount = AMOUNT_100,
+            displayId = 1L
+        )
+        initTransaction(
+            userId = user.tgId,
+            type = TransactionType.EXPENSE,
+            category = ExpenseCategory.FOOD.name,
+            amount = AMOUNT_150,
+            displayId = 2L
+        )
+
+        val rq = TransactionSearchRq(
+            type = null,
+            userId = user.tgId,
+            category = null,
+            limit = 10,
+            displayId = 999L // несуществующий displayId
+        )
+
+        val result = txService.findTransactionsWithFilters(rq)
+
+        assertTrue(result.isEmpty())
+    }
+
+    @Test
+    fun `findTransactionsWithFilters - should return empty list when displayId exists but belongs to different user`() {
+        val user1 = initUser(USER_ID)
+        val user2 = initUser(USER_ID_2)
+
+        initTransaction(
+            userId = user1.tgId,
+            type = TransactionType.INCOME,
+            category = ExpenseCategory.EDUCATION.name,
+            amount = AMOUNT_100,
+            displayId = 5L
+        )
+        initTransaction(
+            userId = user2.tgId,
+            type = TransactionType.INCOME,
+            category = ExpenseCategory.EDUCATION.name,
+            amount = AMOUNT_100,
+            displayId = 1L
+        )
+
+        // Ищем по displayId, который принадлежит user1, но запрос от user2
+        val rq = TransactionSearchRq(
+            type = null,
+            userId = user2.tgId,
+            category = null,
+            limit = 10,
+            displayId = 5L
+        )
+
+        val result = txService.findTransactionsWithFilters(rq)
+
+        assertTrue(result.isEmpty())
+    }
+
+    @Test
+    fun `findTransactionsWithFilters - should ignore other filters when displayId is provided`() {
+        val user = initUser()
+
+        initTransaction(
+            userId = user.tgId,
+            type = TransactionType.INCOME,
+            category = ExpenseCategory.EDUCATION.name,
+            amount = AMOUNT_100,
+            displayId = 1L
+        )
+        val targetTx = initTransaction(
+            userId = user.tgId,
+            type = TransactionType.EXPENSE, // тип расход
+            category = ExpenseCategory.FOOD.name, // категория FOOD
+            amount = AMOUNT_150,
+            displayId = 5L
+        )
+        initTransaction(
+            userId = user.tgId,
+            type = TransactionType.INCOME,
+            category = ExpenseCategory.EDUCATION.name,
+            amount = AMOUNT_250,
+            displayId = 3L
+        )
+
+        // В запросе указаны type=INCOME и category=EDUCATION, но displayId=5L
+        // Должна вернуться транзакция с displayId=5L (EXPENSE/FOOD), игнорируя фильтры
+        val rq = TransactionSearchRq(
+            type = TransactionType.INCOME,
+            userId = user.tgId,
+            category = ExpenseCategory.EDUCATION.name,
+            limit = 10,
+            displayId = 5L
+        )
+
+        val result = txService.findTransactionsWithFilters(rq)
+
+        assertAll(
+            { assertEquals(1, result.size) },
+            { assertEquals(targetTx.id, result[0].id) },
+            { assertEquals(targetTx.displayId, result[0].displayId) },
+            { assertEquals(targetTx.type, result[0].type) }, // тип не INCOME
+            { assertEquals(targetTx.category, result[0].category) } // категория не EDUCATION
+        )
+    }
+
+    @Test
+    fun `findTransactionsWithFilters - should work with displayId even when limit is 0`() {
+        val user = initUser()
+
+        val targetTx = initTransaction(
+            userId = user.tgId,
+            type = TransactionType.INCOME,
+            category = ExpenseCategory.EDUCATION.name,
+            amount = AMOUNT_100,
+            displayId = 42L
+        )
+
+        val rq = TransactionSearchRq(
+            type = null,
+            userId = user.tgId,
+            category = null,
+            limit = 0, // limit не должен влиять при поиске по displayId
+            displayId = 42L
+        )
+
+        val result = txService.findTransactionsWithFilters(rq)
+
+        assertAll(
+            { assertEquals(1, result.size) },
+            { assertEquals(targetTx.id, result[0].id) },
+            { assertEquals(targetTx.displayId, result[0].displayId) }
+        )
+    }
+
+    @Test
+    fun `delete - should delete transaction by userId and displayId`() {
+        val user = initUser()
+        val tx = initTransaction(
+            userId = user.tgId,
+            displayId = 5L,
+            amount = AMOUNT_100
+        )
+
+        txService.delete(user.tgId.toLong(), tx.displayId)
+
+        assertFalse(txRepo.existsById(tx.id!!))
+    }
+
+    @Test
+    fun `delete - should throw when transaction not found`() {
+        val user = initUser()
+        initTransaction(
+            userId = user.tgId,
+            displayId = 5L,
+            amount = AMOUNT_100
+        )
+        val displayId = 999L
+
+        val exception = assertThrows<IllegalArgumentException> {
+            txService.delete(user.tgId.toLong(), displayId)
+        }
+
+        assertEquals("Transaction not found: $displayId for user: ${user.tgId}", exception.message)
+    }
+
+    @Test
+    fun `delete - should not delete transaction with same displayId for different user`() {
+        val user1 = initUser(USER_ID)
+        val user2 = initUser(USER_ID_2)
+
+        val tx1 = initTransaction(
+            userId = user1.tgId,
+            displayId = 5L,
+            amount = AMOUNT_100
+        )
+        val tx2 = initTransaction(
+            userId = user2.tgId,
+            displayId = 1L,
+            amount = AMOUNT_50
+        )
+
+        // Пытаемся удалить транзакцию user1 от имени user2
+        assertThrows<IllegalArgumentException> {
+            txService.delete(tx2.userId.toLong(), tx1.displayId)
+        }
+
+        // Транзакция user1 должна остаться
+        assertTrue(txRepo.existsById(tx1.id!!))
+    }
+
+    @Test
+    fun `isExist - should return true when transaction exists`() {
+        val user = initUser()
+        val tx = initTransaction(
+            userId = user.tgId,
+            displayId = 5L,
+            amount = AMOUNT_100
+        )
+
+        assertTrue(txService.isExist(user.tgId.toLong(), tx.displayId))
+    }
+
+    @Test
+    fun `isExist - should return false when transaction does not exist`() {
+        val user = initUser()
+        initTransaction(
+            userId = user.tgId,
+            displayId = 5L,
+            amount = AMOUNT_100
+        )
+
+        assertFalse(txService.isExist(user.tgId.toLong(), 999L))
+    }
+
+    @Test
+    fun `isExist - should return false when displayId exists but for different user`() {
+        val user1 = initUser(USER_ID)
+        val user2 = initUser(USER_ID_2)
+
+        val tx = initTransaction(
+            userId = user1.tgId,
+            displayId = 5L,
+            amount = AMOUNT_100
+        )
+
+        assertFalse(txService.isExist(user2.tgId.toLong(), tx.displayId))
     }
 }

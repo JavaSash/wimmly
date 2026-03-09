@@ -22,6 +22,7 @@ enum class BotCommand(val command: String, val desc: String) {
     ADD_INCOME("add_income", "Добавить доход"),
     ADD_EXPENSE("add_expense", "Добавить расход"),
     SEARCH_TRANSACTIONS("search_transactions", "Поиск транзакций"),
+    DELETE_TRANSACTION("delete_transaction", "Удаление транзакции"),
 
     // not used
     ACCESS("access", "access check"),

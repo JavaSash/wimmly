@@ -54,6 +54,12 @@ class TransactionService(
     }
 
     @Transactional
+    fun delete(userId: Long, displayId: Long) {
+        if (!isExist(userId = userId, displayId =  displayId)) throw IllegalArgumentException("Transaction not found: $displayId for user: $userId")
+        txRepo.deleteByUserIdAndDisplayId(userId = userId.toString(), displayId =  displayId)
+    }
+
+    @Transactional
     fun update(id: UUID, request: TransactionRq): TransactionEntity {
         val tx = txRepo.findById(id)
             .orElseThrow { NotFoundException("Transaction not found: $id") }
@@ -71,12 +77,19 @@ class TransactionService(
 
     fun findTransactionsWithFilters(rq: TransactionSearchRq): List<TransactionRs> {
         logger.info { "$$$ TransactionService.findTransactionsWithFilters tx for rq: $rq" }
-        return txRepo.findAllByUserIdAndTypeAndCategory(
-            userId = rq.userId,
-            type = rq.type,
-            category = rq.category,
-            PageRequest.of(0, rq.limit, Sort.by("createdAt").descending())
-        ).map { TransactionRs.fromEntity(it) }
-            .also { logger.info { "$$$ Found transactions: ${it}" } }
+        val transactions = rq.displayId?.let { displayId ->
+            txRepo.findByUserIdAndDisplayId(userId = rq.userId, displayId = displayId).map { TransactionRs.fromEntity(it) }
+        }
+            ?: txRepo.findAllByUserIdAndTypeAndCategory(
+                userId = rq.userId,
+                type = rq.type!!,
+                category = rq.category!!,
+                PageRequest.of(0, rq.limit, Sort.by("createdAt").descending())
+            ).map { TransactionRs.fromEntity(it) }
+
+        return transactions.also { logger.info { "$$$ Found transactions: $it" } }
     }
+
+    fun isExist(userId: Long, displayId: Long): Boolean =
+        txRepo.isExistByUserIdAndDisplayId(userId = userId.toString(), displayId = displayId)
 }

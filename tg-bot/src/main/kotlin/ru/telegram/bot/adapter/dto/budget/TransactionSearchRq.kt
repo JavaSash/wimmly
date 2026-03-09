@@ -1,8 +1,18 @@
 package ru.telegram.bot.adapter.dto.budget
 
 data class TransactionSearchRq(
-    val type: String,
+    /**
+     * For search trx
+     */
+    val type: String?,
     val userId: String,
-    val category: String,
-    val limit: Int
+    /**
+     * For search trx
+     */
+    val category: String?,
+    val limit: Int,
+    /**
+     * Only for search before delete
+     */
+    val displayId: Long?
 )

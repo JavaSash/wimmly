@@ -1,4 +1,4 @@
-📋 <b>Последние 10 транзакций</b>
+📋 <b>Найденные транзакции</b>
 
 <#if data.data.transactions?has_content>
     <#list data.data.transactions as tx>

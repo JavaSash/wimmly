@@ -35,16 +35,12 @@ enum class StepCode(val type: StepType, val botPause: Boolean) {
     SEARCH_TRANSACTIONS(StepType.SEND_MESSAGE, false),
     ASK_TRANSACTION_TYPE(StepType.SEND_MESSAGE, true), // todo добавить кнопки INCOME\EXPENSE для этого шага, т.к. сейчас просто ждёт ввода
     SHOW_TRANSACTIONS(StepType.SEND_MESSAGE, false),
-
-    // Просмотр
-//    VIEW_TRANSACTIONS(StepType.INLINE_KEYBOARD_MARKUP, true), // просмотр с навигацией
-
-    // Настройки
-//    SETTINGS(StepType.INLINE_KEYBOARD_MARKUP, true),
-//    EDIT_TRANSACTION(StepType.INLINE_KEYBOARD_MARKUP, true),
-//    DELETE_TRANSACTION(StepType.INLINE_KEYBOARD_MARKUP, true),
+    DELETE_TRANSACTION(StepType.SEND_MESSAGE, true), // ожидаем ввода displayId транзакции
+    ASK_DELETE_TRANSACTION(StepType.SEND_MESSAGE, true),
+    REMOVE_TRANSACTION(StepType.SEND_MESSAGE, false),
 
     // not used
+//    SETTINGS(StepType.INLINE_KEYBOARD_MARKUP, true),
     BUTTON_RESPONSE(StepType.SEND_MESSAGE, true),
     ACCESS(StepType.SEND_MESSAGE, true),
     PHOTO(StepType.SEND_PHOTO, true),

@@ -13,6 +13,13 @@ import ru.telegram.bot.adapter.service.UserService
 import ru.telegram.bot.adapter.strategy.command.common.AbstractCommand
 import ru.telegram.bot.adapter.utils.Constants.Transaction.EXPENSE
 
+/**
+ * Добавление транзакции
+ *    -> выбор категории
+ *    -> ввод суммы
+ *    -> ввод даты (опционально)
+ *    -> ввод комментария (опционально)
+ */
 @Component
 class AddExpenseCommand(
     chatContextRepository: ChatContextRepository,

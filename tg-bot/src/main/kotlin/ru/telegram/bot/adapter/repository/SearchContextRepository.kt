@@ -37,8 +37,15 @@ class SearchContextRepository(private val dslContext: DSLContext) {
             .where(SEARCH_CONTEXT.CHAT_ID.eq(chatId)).execute()
     }
 
+    fun updateTrxId(chatId: Long, trxId: Long) {
+        dslContext.update(SEARCH_CONTEXT)
+            .set(SEARCH_CONTEXT.TRX_ID, trxId)
+            .where(SEARCH_CONTEXT.CHAT_ID.eq(chatId)).execute()
+    }
+
     fun clearDialogState(chatId: Long) {
         dslContext.update(SEARCH_CONTEXT)
+            .set(SEARCH_CONTEXT.TRX_ID, null as Long?)
             .set(SEARCH_CONTEXT.TYPE, null as String?)
             .set(SEARCH_CONTEXT.CATEGORY, null as String?)
             .where(SEARCH_CONTEXT.CHAT_ID.eq(chatId))

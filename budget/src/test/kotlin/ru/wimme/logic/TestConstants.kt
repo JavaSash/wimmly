@@ -11,8 +11,8 @@ object TestConstants {
     }
 
     object User {
-        const val USER_ID = "test_user"
-        const val USER_ID_2 = "another_user"
+        const val USER_ID = "1234567890"
+        const val USER_ID_2 = "9876543210"
         const val USER_NAME = "User name"
         const val USER_NAME_2 = "name of user"
     }
