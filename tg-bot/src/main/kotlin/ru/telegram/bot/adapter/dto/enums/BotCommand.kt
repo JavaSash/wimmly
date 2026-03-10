@@ -9,7 +9,9 @@ package ru.telegram.bot.adapter.dto.enums
 enum class BotCommand(val command: String, val desc: String) {
     // Common
     START("start", "Start work"),
-    HELP("help", "Help"),
+    HELP("help", "FAQ, how to"),
+    INFO("info", "Общая информация"),
+    COMMANDS("commands", "Список команд"),
 
     //Report
     BALANCE("balance", "Текущий баланс"),
