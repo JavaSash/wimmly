@@ -19,4 +19,10 @@ object Constants {
         const val YES = "YES"
         const val NO = "NO"
     }
+
+    object Errors {
+        const val FUTURE_DATE = "Дата не может быть в будущем"
+        const val NOT_UNIX_DATE = "Дата должна быть после 1970 года"
+        const val END_BEFORE_START_DATE = "Начальная дата должна быть раньше конечной"
+    }
 }

@@ -3,7 +3,7 @@ package ru.telegram.bot.adapter.strategy.data.report
 import mu.KLogging
 import org.springframework.stereotype.Repository
 import ru.telegram.bot.adapter.client.ReportClient
-import ru.telegram.bot.adapter.strategy.data.AbstractRepository
+import ru.telegram.bot.adapter.strategy.data.common.AbstractRepository
 import ru.telegram.bot.adapter.strategy.dto.BalanceDto
 import java.math.BigDecimal
 

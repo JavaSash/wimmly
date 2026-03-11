@@ -2,6 +2,7 @@ package ru.telegram.bot.adapter.strategy.data
 
 import org.springframework.stereotype.Repository
 import ru.telegram.bot.adapter.repository.ChatContextRepository
+import ru.telegram.bot.adapter.strategy.data.common.AbstractRepository
 import ru.telegram.bot.adapter.strategy.dto.ButtonResponseDto
 
 @Repository

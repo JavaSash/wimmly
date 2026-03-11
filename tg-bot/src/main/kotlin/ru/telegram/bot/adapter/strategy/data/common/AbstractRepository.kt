@@ -1,4 +1,4 @@
-package ru.telegram.bot.adapter.strategy.data
+package ru.telegram.bot.adapter.strategy.data.common
 
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository

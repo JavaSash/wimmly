@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository
 import ru.telegram.bot.adapter.client.CategoryClient
 import ru.telegram.bot.adapter.dto.budget.CategoryDto
 import ru.telegram.bot.adapter.repository.TransactionDraftRepository
-import ru.telegram.bot.adapter.strategy.data.AbstractRepository
+import ru.telegram.bot.adapter.strategy.data.common.AbstractRepository
 import ru.telegram.bot.adapter.strategy.dto.SelectCategoryDto
 import ru.telegram.bot.adapter.utils.Constants.Transaction.EXPENSE
 import ru.telegram.bot.adapter.utils.Constants.Transaction.INCOME

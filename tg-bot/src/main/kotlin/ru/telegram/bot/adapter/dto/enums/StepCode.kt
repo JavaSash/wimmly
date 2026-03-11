@@ -15,6 +15,7 @@ enum class StepCode(val type: StepType, val botPause: Boolean) {
     INFO(StepType.SEND_MESSAGE, false),
     COMMANDS(StepType.SEND_MESSAGE, false),
     FINAL(StepType.NO_MESSAGE, false),
+    ERROR(StepType.SEND_MESSAGE, false),
 //    NOT_SUPPORTED(StepType.SEND_MESSAGE, false), // todo impl
 
     // Report
@@ -35,7 +36,7 @@ enum class StepCode(val type: StepType, val botPause: Boolean) {
     ENTER_COMMENT(StepType.SEND_MESSAGE, true), // ожидаем ввода комментария
     CREATE_TRANSACTION(StepType.SEND_MESSAGE, false),
     SEARCH_TRANSACTIONS(StepType.SEND_MESSAGE, false),
-    ASK_TRANSACTION_TYPE(StepType.SEND_MESSAGE, true), // todo добавить кнопки INCOME\EXPENSE для этого шага, т.к. сейчас просто ждёт ввода
+    ASK_TRANSACTION_TYPE(StepType.SEND_MESSAGE, true),
     SHOW_TRANSACTIONS(StepType.SEND_MESSAGE, false),
     DELETE_TRANSACTION(StepType.SEND_MESSAGE, true), // ожидаем ввода displayId транзакции
     ASK_DELETE_TRANSACTION(StepType.SEND_MESSAGE, true),

@@ -2,7 +2,7 @@ package ru.telegram.bot.adapter.strategy.data.report
 
 import mu.KLogging
 import ru.telegram.bot.adapter.dto.budget.PeriodReport
-import ru.telegram.bot.adapter.strategy.data.AbstractRepository
+import ru.telegram.bot.adapter.strategy.data.common.AbstractRepository
 import ru.telegram.bot.adapter.strategy.dto.ReportDto
 import ru.telegram.bot.adapter.strategy.dto.getReportStub
 import ru.telegram.bot.adapter.strategy.dto.mapToReportDto

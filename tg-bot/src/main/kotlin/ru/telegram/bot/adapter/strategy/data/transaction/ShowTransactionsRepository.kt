@@ -8,7 +8,7 @@ import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.repository.ChatContextRepository
 import ru.telegram.bot.adapter.repository.SearchContextRepository
 import ru.telegram.bot.adapter.service.TransactionService
-import ru.telegram.bot.adapter.strategy.data.AbstractRepository
+import ru.telegram.bot.adapter.strategy.data.common.AbstractRepository
 import ru.telegram.bot.adapter.strategy.dto.ShowTransactionsDto
 import ru.telegram.bot.adapter.strategy.dto.TransactionItem
 import ru.telegram.bot.adapter.utils.Constants.Transaction.DATE_FORMAT

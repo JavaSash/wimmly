@@ -4,7 +4,10 @@ import mu.KLogging
 import org.springframework.stereotype.Component
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.strategy.stepper.common.Step
-// Выбор следующего этапа
+
+/**
+ * Выбор следующего этапа
+  */
 @Component
 class StepContext(private val step: List<Step>) {
 

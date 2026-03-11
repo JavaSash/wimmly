@@ -6,9 +6,12 @@ import org.springframework.stereotype.Repository
 import ru.telegram.bot.adapter.domain.tables.tables.ChatContext.Companion.CHAT_CONTEXT
 import ru.telegram.bot.adapter.domain.tables.tables.pojos.ChatContext
 import ru.telegram.bot.adapter.dto.enums.StepCode
-
+/*
+todo iml with upd all needed fields
+    use setNull on clear methods
+ */
 @Repository
-class ChatContextRepository(private val dslContext: DSLContext) { // todo iml with upd all needed fields
+class ChatContextRepository(private val dslContext: DSLContext) {
 
     companion object : KLogging()
 
@@ -52,6 +55,13 @@ class ChatContextRepository(private val dslContext: DSLContext) { // todo iml wi
             .where(CHAT_CONTEXT.ID.eq(chatId)).execute()
     }
 
+    fun updateErrorMsgAndErrorStep(chatId: Long, errorMsg: String, errorStep: StepCode) {
+        dslContext.update(CHAT_CONTEXT)
+            .set(CHAT_CONTEXT.ERROR_MSG, errorMsg)
+            .set(CHAT_CONTEXT.ERROR_STEP, errorStep.toString())
+            .where(CHAT_CONTEXT.ID.eq(chatId)).execute()
+    }
+
     fun updateFlowContext(chatId: Long, flow: String) {
         dslContext.update(CHAT_CONTEXT)
             .set(CHAT_CONTEXT.FLOW_CONTEXT, flow)
@@ -64,6 +74,14 @@ class ChatContextRepository(private val dslContext: DSLContext) { // todo iml wi
             .set(CHAT_CONTEXT.TEXT, null as String?)
             .set(CHAT_CONTEXT.ACCEPT, false)
             .set(CHAT_CONTEXT.FLOW_CONTEXT, null as String?)
+            .where(CHAT_CONTEXT.ID.eq(chatId))
+            .execute()
+    }
+
+    fun clearErrorData(chatId: Long) {
+        dslContext.update(CHAT_CONTEXT)
+            .setNull(CHAT_CONTEXT.ERROR_MSG)
+            .setNull(CHAT_CONTEXT.ERROR_STEP)
             .where(CHAT_CONTEXT.ID.eq(chatId))
             .execute()
     }
