@@ -1,6 +1,7 @@
 package ru.telegram.bot.adapter.utils
 
 import ru.telegram.bot.adapter.exceptions.InvalidDateException
+import ru.telegram.bot.adapter.strategy.dto.BotErrors
 import ru.telegram.bot.adapter.utils.Constants.Errors.END_BEFORE_START_DATE
 import ru.telegram.bot.adapter.utils.Constants.Errors.FUTURE_DATE
 import ru.telegram.bot.adapter.utils.Constants.Errors.NOT_UNIX_DATE
@@ -63,3 +64,17 @@ fun LocalDateTime?.toInstant(): Instant? =
 
 fun Instant.formatDate(pattern: DateTimeFormatter): String =
     this.atZone(ZoneId.systemDefault()).format(pattern)
+
+/**
+ * @return parsed date (Instant), throws [InvalidDateException]
+ * Need handle it and use [ru.telegram.bot.adapter.service.ErrorService.logError] to process error handle flow
+ */
+fun parseDate(dateString: String): Instant {
+    val date: Instant = runCatching {
+        LocalDate.parse(dateString, Constants.Transaction.FLEXIBLE_DATE_FORMAT).atStartOfDay(ZoneOffset.UTC).toInstant()
+    }.getOrNull() ?: throw InvalidDateException(BotErrors.INVALID_DATE.msg)
+
+    validateDate(date)
+
+    return date
+}

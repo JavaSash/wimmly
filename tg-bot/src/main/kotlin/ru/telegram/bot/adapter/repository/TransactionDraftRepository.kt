@@ -44,17 +44,11 @@ class TransactionDraftRepository(private val dslContext: DSLContext) {// todo im
             .where(TRANSACTION_DRAFT.CHAT_ID.eq(chatId)).execute()
     }
 
-    fun updateAmount(chatId: Long, amount: String) {
+    fun updateAmount(chatId: Long, amount: BigDecimal) {
         logger.info { "$$$ Updating amount for chat $chatId: $amount" }
-        val bigDecimal = try {
-            BigDecimal(amount)
-        } catch (e: Exception) {
-            logger.error("Failed to parse amount: $amount", e)
-            BigDecimal.ZERO
-        }
 
         dslContext.update(TRANSACTION_DRAFT)
-            .set(TRANSACTION_DRAFT.AMOUNT, bigDecimal)
+            .set(TRANSACTION_DRAFT.AMOUNT, amount)
             .where(TRANSACTION_DRAFT.CHAT_ID.eq(chatId)).execute()
     }
 
