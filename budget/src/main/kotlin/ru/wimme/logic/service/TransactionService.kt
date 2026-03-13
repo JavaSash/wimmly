@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ru.wimme.logic.exception.NotFoundException
 import ru.wimme.logic.model.entity.TransactionEntity
+import ru.wimme.logic.model.report.Balance
 import ru.wimme.logic.model.transaction.TransactionRq
 import ru.wimme.logic.model.transaction.TransactionRs
 import ru.wimme.logic.model.transaction.TransactionSearchRq
@@ -47,6 +48,12 @@ class TransactionService(
         if (from != null && to != null) txRepo.findAllByUserIdAndCreatedAtBetween(userId = userId, from = from, to = to)
         else txRepo.findAllByUserId(userId)
 
+    fun getBalance(userId: String, periodStart: Instant): Balance =
+        txRepo.getBalance(userId = userId, periodStart = periodStart)
+
+    fun getBalanceForPeriod(userId: String, from: Instant, to: Instant): Balance =
+        txRepo.getBalanceForPeriod(userId = userId, from = from, to = to)
+
     @Transactional
     fun delete(id: UUID) {
         if (!txRepo.existsById(id)) throw IllegalArgumentException("Transaction not found: $id")
@@ -55,8 +62,12 @@ class TransactionService(
 
     @Transactional
     fun delete(userId: Long, displayId: Long) {
-        if (!isExist(userId = userId, displayId =  displayId)) throw IllegalArgumentException("Transaction not found: $displayId for user: $userId")
-        txRepo.deleteByUserIdAndDisplayId(userId = userId.toString(), displayId =  displayId)
+        if (!isExist(
+                userId = userId,
+                displayId = displayId
+            )
+        ) throw IllegalArgumentException("Transaction not found: $displayId for user: $userId")
+        txRepo.deleteByUserIdAndDisplayId(userId = userId.toString(), displayId = displayId)
     }
 
     @Transactional
@@ -78,7 +89,8 @@ class TransactionService(
     fun findTransactionsWithFilters(rq: TransactionSearchRq): List<TransactionRs> {
         logger.info { "$$$ TransactionService.findTransactionsWithFilters tx for rq: $rq" }
         val transactions = rq.displayId?.let { displayId ->
-            txRepo.findByUserIdAndDisplayId(userId = rq.userId, displayId = displayId).map { TransactionRs.fromEntity(it) }
+            txRepo.findByUserIdAndDisplayId(userId = rq.userId, displayId = displayId)
+                .map { TransactionRs.fromEntity(it) }
         }
             ?: txRepo.findAllByUserIdAndTypeAndCategory(
                 userId = rq.userId,

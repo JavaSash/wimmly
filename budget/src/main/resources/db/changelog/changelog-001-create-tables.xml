@@ -56,23 +56,19 @@
             <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="updated_at" type="TIMESTAMP"/>
         </createTable>
-
-        <!-- Инициализируем счётчики для существующих пользователей максимальным display_id -->
-<!--        <sql>-->
-<!--            INSERT INTO user_display_id_seq (user_id, current_seq, updated_at)-->
-<!--            SELECT-->
-<!--                user_id,-->
-<!--                COALESCE(MAX(display_id), 0) as current_seq,-->
-<!--                CURRENT_TIMESTAMP-->
-<!--            FROM transactions-->
-<!--            GROUP BY user_id;-->
-<!--        </sql>-->
     </changeSet>
 
     <changeSet id="004" author="java_sash">
         <createIndex indexName="idx_transactions_user_display" tableName="transactions">
             <column name="user_id"/>
             <column name="display_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="005" author="java_sash">
+        <createIndex indexName="idx_transactions_user_type" tableName="transactions">
+            <column name="user_id"/>
+            <column name="type"/>
         </createIndex>
     </changeSet>
 </databaseChangeLog>

@@ -24,8 +24,8 @@ class BalanceRepository(
     override fun getData(chatId: Long): BalanceDto {
         logger.info { "$$$ Try to get balance for chat: $chatId" }
         return runCatching {
-            val report = reportClient.getThisMonthReport(chatId.toString())
-            BalanceDto(balance = report.balance, income = report.income.txTypeAmount, expense = report.expense.txTypeAmount)
+            val report = reportClient.getBalance(chatId.toString())
+            BalanceDto(balance = report.balance, income = report.income, expense = report.expense)
         }
             .onFailure { logger.error { "$$$ Can't receive balance for user: $chatId. Cause: ${it.message}. Return stub" } }
             .getOrDefault(getBalanceStub())

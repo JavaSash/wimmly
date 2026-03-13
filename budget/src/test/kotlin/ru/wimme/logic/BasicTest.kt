@@ -13,7 +13,9 @@ import ru.wimme.logic.model.transaction.TransactionType
 import ru.wimme.logic.repository.TransactionRepository
 import ru.wimme.logic.repository.UserDisplayIdSeqRepository
 import ru.wimme.logic.repository.UserRepository
+import java.math.BigDecimal
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.*
 
 @SpringBootTest
@@ -66,13 +68,13 @@ class BasicTest : TestConfig() {
     )
 
     protected fun initTransactionWithCreatedAt(
-        userId: String,
-        type: TransactionType,
-        amount: Double,
+        userId: String = USER_ID,
+        type: TransactionType = TransactionType.INCOME,
+        amount: Double = 1500.00,
         createdAt: LocalDateTime,
         displayId: Long = 1L,
         category: ExpenseCategory = ExpenseCategory.EDUCATION
-    ) {
+    ): TransactionEntity {
         val id = UUID.randomUUID()
         jdbcTemplate.update(
             """
@@ -90,6 +92,17 @@ class BasicTest : TestConfig() {
             "Old tx",
             createdAt,
             createdAt
+        )
+
+        return TransactionEntity(
+            id = id,
+            displayId = displayId,
+            type = type,
+            userId = userId,
+            category = category.name,
+            amount = BigDecimal.valueOf(amount),
+            comment = "Old tx",
+            createdAt = createdAt.atZone(ZoneId.systemDefault()).toInstant()
         )
     }
 }
