@@ -20,7 +20,31 @@ class SelectCategoryRepository(
     private val categoryClient: CategoryClient,
     private val transactionDraftRepository: TransactionDraftRepository
 ) : AbstractRepository<SelectCategoryDto>() {
-    companion object : KLogging()
+    companion object : KLogging() {
+        val INCOME_CATEGORIES_STUB: List<CategoryDto> = listOf(
+            CategoryDto("SALARY", "Зарплата", INCOME),
+            CategoryDto("INVESTMENT", "Инвестиции", INCOME),
+            CategoryDto("SAVINGS", "Сбережения", INCOME),
+            CategoryDto("OTHER", "Прочее", INCOME)
+        )
+
+        val EXPENSE_CATEGORIES_STUB: List<CategoryDto> = listOf(
+            CategoryDto("HYGIENE", "Гигиена", EXPENSE),
+            CategoryDto("FOOD", "Еда", EXPENSE),
+            CategoryDto("HOME", "Дом", EXPENSE),
+            CategoryDto("HEALTH", "Здоровье", EXPENSE),
+            CategoryDto("CAFE", "Кафе", EXPENSE),
+            CategoryDto("EDUCATION", "Образование", EXPENSE),
+            CategoryDto("TRANSPORT", "Транспорт", EXPENSE),
+            CategoryDto("CAR", "Машина", EXPENSE),
+            CategoryDto("CLOTHES", "Одежда", EXPENSE),
+            CategoryDto("PETS", "Питомцы", EXPENSE),
+            CategoryDto("COMMUNICATION", "Связь", EXPENSE),
+            CategoryDto("SPORT", "Спорт", EXPENSE),
+            CategoryDto("ENTERTAINMENT", "Развлечения", EXPENSE),
+            CategoryDto("OTHER", "Прочее", EXPENSE)
+        )
+    }
 
     /**
      * @return categories from budget-service or stub
@@ -40,31 +64,7 @@ class SelectCategoryRepository(
     }
 
     private fun getCategoriesStub(txType: String): SelectCategoryDto {
-        val categories = if (txType == INCOME) {
-            listOf(
-                CategoryDto("SALARY", "Зарплата", INCOME),
-                CategoryDto("INVESTMENT", "Инвестиции", INCOME),
-                CategoryDto("SAVINGS", "Сбережения", INCOME),
-                CategoryDto("OTHER", "Прочее", INCOME)
-            )
-        } else {
-            listOf(
-                CategoryDto("HYGIENE", "Гигиена", EXPENSE),
-                CategoryDto("FOOD", "Еда", EXPENSE),
-                CategoryDto("HOME", "Дом", EXPENSE),
-                CategoryDto("HEALTH", "Здоровье", EXPENSE),
-                CategoryDto("CAFE", "Кафе", EXPENSE),
-                CategoryDto("EDUCATION", "Образование", EXPENSE),
-                CategoryDto("TRANSPORT", "Транспорт", EXPENSE),
-                CategoryDto("CAR", "Машина", EXPENSE),
-                CategoryDto("CLOTHES", "Одежда", EXPENSE),
-                CategoryDto("PETS", "Питомцы", EXPENSE),
-                CategoryDto("COMMUNICATION", "Связь", EXPENSE),
-                CategoryDto("SPORT", "Спорт", EXPENSE),
-                CategoryDto("ENTERTAINMENT", "Развлечения", EXPENSE),
-                CategoryDto("OTHER", "Прочее", EXPENSE)
-            )
-        }
+        val categories = if (txType == INCOME) INCOME_CATEGORIES_STUB else EXPENSE_CATEGORIES_STUB
         return SelectCategoryDto(categories = categories, txType = txType)
     }
 }

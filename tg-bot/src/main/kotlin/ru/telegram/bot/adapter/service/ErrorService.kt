@@ -23,12 +23,15 @@ class ErrorService(private val chatContextRepository: ChatContextRepository) {
         )
     }
 
-    fun getStepBeforeError(chatId: Long): StepCode {
+    fun getStepBeforeError(chatId: Long): StepCode? {
         val errorStep = chatContextRepository.getUser(chatId)?.errorStep
-        if (errorStep == null) logger.error { "$$$ Step before error is null" }
+        if (errorStep == null) {
+            logger.error { "$$$ Step before error is null" }
+            return null // todo throw exc to parse to BotErrors.UNKNOWN.msg?
+        }
         logger.info { "$$$ [ErrorService] Before error step is: $errorStep" }
         chatContextRepository.clearErrorData(chatId)
-        return StepCode.valueOf(errorStep!!)
+        return StepCode.valueOf(errorStep)
     }
 
     private fun formErrorMsg(exc: Throwable) = when (exc) {

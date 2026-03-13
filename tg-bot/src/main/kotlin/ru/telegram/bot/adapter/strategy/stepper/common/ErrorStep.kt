@@ -12,5 +12,5 @@ class ErrorStep(
 
     companion object : KLogging()
 
-    override fun getNextStep(chatId: Long): StepCode = errorService.getStepBeforeError(chatId)
+    override fun getNextStep(chatId: Long): StepCode? = errorService.getStepBeforeError(chatId)
 }

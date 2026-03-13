@@ -1,41 +1,24 @@
 package ru.telegram.bot.adapter.repository
 
-import org.jooq.DSLContext
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.jooq.JooqTest
-import org.springframework.context.annotation.Import
-import ru.telegram.bot.adapter.PostgresTestContainer
+import ru.telegram.bot.adapter.DbBasicTest
 import ru.telegram.bot.adapter.TestConstants.Tx.AMOUNT_100
 import ru.telegram.bot.adapter.TestConstants.Tx.COMMENT
 import ru.telegram.bot.adapter.TestConstants.Tx.SALARY_CATEGORY
 import ru.telegram.bot.adapter.TestConstants.User.CHAT_ID
-import ru.telegram.bot.adapter.domain.tables.tables.TransactionDraft.Companion.TRANSACTION_DRAFT
 import ru.telegram.bot.adapter.utils.Constants.Transaction.INCOME
 import java.math.BigDecimal
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
-@JooqTest
-@Import(TransactionDraftRepository::class, ChatContextRepository::class)
-class TransactionDraftRepositoryTest : PostgresTestContainer() {
-
-    @Autowired
-    lateinit var trxDraftRepo: TransactionDraftRepository
-
-    @Autowired
-    lateinit var chatContextRepository: ChatContextRepository
-
-    @Autowired
-    lateinit var dsl: DSLContext
+class TransactionDraftRepositoryTest : DbBasicTest() {
 
     @BeforeEach
-    fun clean() {
-        dsl.deleteFrom(TRANSACTION_DRAFT).execute()
-        chatContextRepository.createUser(CHAT_ID)
+    fun setUp() {
+        chatCtxRepo.createUser(CHAT_ID)
     }
 
     @Test

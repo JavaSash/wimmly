@@ -13,6 +13,9 @@ object TestConstants {
         const val TRX_ID = 1L
         const val COMMENT = "test comment"
         val AMOUNT_100 = BigDecimal(100)
+        val AMOUNT_50 = BigDecimal(50)
+        const val INVALID_AMOUNT_VALUE = "f12"
+        const val INVALID_DATE_VALUE = "2026-02-30"
     }
 
     object Chat {

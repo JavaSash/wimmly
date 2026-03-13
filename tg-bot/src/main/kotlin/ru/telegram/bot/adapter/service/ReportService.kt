@@ -25,11 +25,7 @@ class ReportService {
                     name = cleanCategoryName(categoryName),
                     amount = amount,
                     formattedAmount = amount.formatMoney(),
-                    percentage = if (totalAmount > BigDecimal.ZERO) {
-                        val percent = (amount / totalAmount * 100.toBigDecimal())
-                            .setScale(1, RoundingMode.HALF_UP)
-                        "${percent}%"
-                    } else "0%",
+                    percentage = calculatePercentage(totalAmount = totalAmount, amount = amount),
                     isExpense = isExpense
                 )
             }
@@ -48,4 +44,11 @@ class ReportService {
             else -> categoryString
         }
     }
+
+    private fun calculatePercentage(totalAmount: BigDecimal, amount: BigDecimal): String =
+        if (totalAmount > BigDecimal.ZERO) {
+            val percent = amount.multiply(100.toBigDecimal())
+                .divide(totalAmount, 1, RoundingMode.HALF_UP)
+            "${percent}%"
+        } else "0%"
 }

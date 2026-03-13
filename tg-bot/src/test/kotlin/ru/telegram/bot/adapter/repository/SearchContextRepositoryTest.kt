@@ -1,35 +1,20 @@
 package ru.telegram.bot.adapter.repository
 
-import org.jooq.DSLContext
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.jooq.JooqTest
-import org.springframework.context.annotation.Import
-import ru.telegram.bot.adapter.PostgresTestContainer
+import ru.telegram.bot.adapter.DbBasicTest
 import ru.telegram.bot.adapter.TestConstants.Tx.SALARY_CATEGORY
 import ru.telegram.bot.adapter.TestConstants.Tx.TRX_ID
 import ru.telegram.bot.adapter.TestConstants.User.CHAT_ID
-import ru.telegram.bot.adapter.domain.tables.tables.SearchContext.Companion.SEARCH_CONTEXT
 import ru.telegram.bot.adapter.utils.Constants.Transaction.INCOME
 
-@JooqTest
-@Import(SearchContextRepository::class, ChatContextRepository::class)
-class SearchContextRepositoryTest: PostgresTestContainer() {
-    @Autowired
-    lateinit var searchCtxRepo: SearchContextRepository
-    @Autowired
-    lateinit var chatContextRepository: ChatContextRepository
-
-    @Autowired
-    lateinit var dsl: DSLContext
+class SearchContextRepositoryTest: DbBasicTest() {
 
     @BeforeEach
-    fun clean() {
-        dsl.deleteFrom(SEARCH_CONTEXT).execute()
-        chatContextRepository.createUser(CHAT_ID)
+    fun setUp() {
+        chatCtxRepo.createUser(CHAT_ID)
     }
 
     @Test

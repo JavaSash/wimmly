@@ -1,38 +1,17 @@
 package ru.telegram.bot.adapter.repository
 
-import org.jooq.DSLContext
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.jooq.JooqTest
-import org.springframework.context.annotation.Import
-import ru.telegram.bot.adapter.PostgresTestContainer
+import ru.telegram.bot.adapter.DbBasicTest
 import ru.telegram.bot.adapter.TestConstants.Chat.TEXT
 import ru.telegram.bot.adapter.TestConstants.User.CHAT_ID
-import ru.telegram.bot.adapter.domain.tables.tables.ChatContext.Companion.CHAT_CONTEXT
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.strategy.dto.BotErrors
 
-/**
- * Up only DataSource, jOOQ DSLContext, transaction manager for test
- */
-@JooqTest
-@Import(ChatContextRepository::class)
-class ChatContextRepositoryTest : PostgresTestContainer() {
-    @Autowired
-    lateinit var chatCtxRepo: ChatContextRepository
-
-    @Autowired
-    lateinit var dsl: DSLContext
-
-    @BeforeEach
-    fun clean() {
-        dsl.deleteFrom(CHAT_CONTEXT).execute()
-    }
+class ChatContextRepositoryTest : DbBasicTest() {
 
     @ParameterizedTest
     @ValueSource(longs = [999L, -123L])
