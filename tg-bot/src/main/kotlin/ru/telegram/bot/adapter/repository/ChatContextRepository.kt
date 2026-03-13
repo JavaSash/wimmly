@@ -8,7 +8,6 @@ import ru.telegram.bot.adapter.domain.tables.tables.pojos.ChatContext
 import ru.telegram.bot.adapter.dto.enums.StepCode
 /*
 todo iml with upd all needed fields
-    use setNull on clear methods
  */
 @Repository
 class ChatContextRepository(private val dslContext: DSLContext) {
@@ -17,7 +16,8 @@ class ChatContextRepository(private val dslContext: DSLContext) {
 
     // Проверка на существование пользователя в базе. Нужно 1 раз для команды /start
     fun isUserExist(chatId: Long): Boolean {
-        return dslContext.selectCount().from(CHAT_CONTEXT).where(CHAT_CONTEXT.ID.eq(chatId)).fetchOneInto(Int::class.java) == 1
+        return dslContext.selectCount().from(CHAT_CONTEXT)
+            .where(CHAT_CONTEXT.ID.eq(chatId)).fetchOneInto(Int::class.java) == 1
     }
 
     // Создание пользователя для команды /start
@@ -70,10 +70,10 @@ class ChatContextRepository(private val dslContext: DSLContext) {
 
     fun clearDialogState(chatId: Long) {
         dslContext.update(CHAT_CONTEXT)
-            .set(CHAT_CONTEXT.STEP_CODE, null as String?)
-            .set(CHAT_CONTEXT.TEXT, null as String?)
-            .set(CHAT_CONTEXT.ACCEPT, false)
-            .set(CHAT_CONTEXT.FLOW_CONTEXT, null as String?)
+            .setNull(CHAT_CONTEXT.STEP_CODE)
+            .setNull(CHAT_CONTEXT.TEXT)
+            .setNull(CHAT_CONTEXT.ACCEPT)
+            .setNull(CHAT_CONTEXT.FLOW_CONTEXT)
             .where(CHAT_CONTEXT.ID.eq(chatId))
             .execute()
     }

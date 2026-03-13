@@ -7,9 +7,11 @@ import ru.telegram.bot.adapter.domain.tables.tables.TransactionDraft.Companion.T
 import ru.telegram.bot.adapter.domain.tables.tables.pojos.TransactionDraft
 import java.math.BigDecimal
 import java.time.Instant
-
+/*
+todo iml with upd all needed fields
+ */
 @Repository
-class TransactionDraftRepository(private val dslContext: DSLContext) {// todo iml with upd all needed fields
+class TransactionDraftRepository(private val dslContext: DSLContext) {
     companion object : KLogging()
 
     fun createTransactionDraft(chatId: Long): TransactionDraft {
@@ -60,11 +62,11 @@ class TransactionDraftRepository(private val dslContext: DSLContext) {// todo im
 
     fun clearDialogState(chatId: Long) {
         dslContext.update(TRANSACTION_DRAFT)
-            .set(TRANSACTION_DRAFT.TYPE, null as String?)
-            .set(TRANSACTION_DRAFT.CATEGORY, null as String?)
-            .set(TRANSACTION_DRAFT.AMOUNT, null as BigDecimal?)
-            .set(TRANSACTION_DRAFT.DATE, null as Instant?)
-            .set(TRANSACTION_DRAFT.COMMENT, null as String?)
+            .setNull(TRANSACTION_DRAFT.TYPE)
+            .setNull(TRANSACTION_DRAFT.CATEGORY)
+            .setNull(TRANSACTION_DRAFT.AMOUNT)
+            .setNull(TRANSACTION_DRAFT.DATE)
+            .setNull(TRANSACTION_DRAFT.COMMENT)
             .where(TRANSACTION_DRAFT.CHAT_ID.eq(chatId))
             .execute()
     }

@@ -5,7 +5,9 @@ import org.jooq.DSLContext
 import org.springframework.stereotype.Repository
 import ru.telegram.bot.adapter.domain.tables.tables.SearchContext.Companion.SEARCH_CONTEXT
 import ru.telegram.bot.adapter.domain.tables.tables.pojos.SearchContext
-
+/*
+todo iml with upd all needed fields
+ */
 @Repository
 class SearchContextRepository(private val dslContext: DSLContext) {
     companion object : KLogging()
@@ -45,9 +47,9 @@ class SearchContextRepository(private val dslContext: DSLContext) {
 
     fun clearDialogState(chatId: Long) {
         dslContext.update(SEARCH_CONTEXT)
-            .set(SEARCH_CONTEXT.TRX_ID, null as Long?)
-            .set(SEARCH_CONTEXT.TYPE, null as String?)
-            .set(SEARCH_CONTEXT.CATEGORY, null as String?)
+            .setNull(SEARCH_CONTEXT.TRX_ID)
+            .setNull(SEARCH_CONTEXT.TYPE)
+            .setNull(SEARCH_CONTEXT.CATEGORY)
             .where(SEARCH_CONTEXT.CHAT_ID.eq(chatId))
             .execute()
     }
