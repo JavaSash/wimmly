@@ -92,6 +92,7 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers")
     testImplementation("org.mockito:mockito-core:5.5.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.5.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
 }
 
 dependencyManagement {

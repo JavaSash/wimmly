@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream
 import java.net.URI
 import org.springframework.stereotype.Service
 
-
 @Service
 class FileService {
 

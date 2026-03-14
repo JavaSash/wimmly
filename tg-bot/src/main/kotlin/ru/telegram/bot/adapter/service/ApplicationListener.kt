@@ -13,6 +13,9 @@ import ru.telegram.bot.adapter.repository.ChatContextRepository
 import ru.telegram.bot.adapter.strategy.LogicContext
 import ru.telegram.bot.adapter.strategy.StepContext
 
+/**
+ * Центральный оркестратор адаптера
+ */
 @Component
 class ApplicationListener(
     private val logicContext: LogicContext, // Основная бизнес логика
@@ -21,9 +24,11 @@ class ApplicationListener(
     private val messageService: MessageService // Сервис, который формирует объект для отправки сообщения в бота
 ) {
 
-    companion object: KLogging()
+    companion object : KLogging()
 
-    // Слушаем событие TelegramReceivedMessageEvent
+    /**
+     * Слушаем событие TelegramReceivedMessageEvent
+     */
     inner class Message {
         @EventListener
         fun onApplicationEvent(event: TgReceivedMessageEvent) {
@@ -40,7 +45,10 @@ class ApplicationListener(
             }
         }
     }
-    // Слушаем событие TelegramStepMessageEvent
+
+    /**
+     * Слушаем событие TelegramStepMessageEvent
+     */
     inner class StepMessage {
         /**
          * Единая точка изменения шага диалога пользователя
@@ -55,7 +63,10 @@ class ApplicationListener(
             messageService.sendMessageToBot(event.chatId, event.stepCode)
         }
     }
-    // Слушаем событие TelegramReceivedCallbackEvent
+
+    /**
+     * Слушаем событие TelegramReceivedCallbackEvent
+      */
     inner class CallbackMessage {
         @EventListener
         fun onApplicationEvent(event: TgReceivedCallbackEvent) {
@@ -64,6 +75,7 @@ class ApplicationListener(
                 ExecuteStatus.FINAL -> { // Если бизнес процесс одобрил переход на новый этап
                     stepContext.next(event.chatId, event.stepCode)
                 }
+                // В эту ветку не должны попасть никогда (по логике сда идём когда несуществующую кнопку выбрали или можем вернуть этот статус в Chooser-классе
                 ExecuteStatus.NOTHING -> throw IllegalStateException("Не поддерживается")
             }
             if (nextStepCode != null) {
