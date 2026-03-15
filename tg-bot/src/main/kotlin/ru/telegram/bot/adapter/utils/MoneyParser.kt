@@ -2,6 +2,7 @@ package ru.telegram.bot.adapter.utils
 
 import ru.telegram.bot.adapter.exceptions.InvalidAmountException
 import ru.telegram.bot.adapter.strategy.dto.BotErrors
+import ru.telegram.bot.adapter.utils.Constants.Transaction.MAX_AMOUNT
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -26,7 +27,8 @@ fun parseAmount(amount: String?): BigDecimal {
          normalized.toBigDecimal()
     }.getOrNull() ?: throw InvalidAmountException(BotErrors.INVALID_AMOUNT.msg)
 
-    if (value <= BigDecimal.ZERO) throw IllegalArgumentException("Сумма должна быть больше нуля")
+    if (value <= BigDecimal.ZERO) throw InvalidAmountException("Сумма должна быть больше нуля")
+    if (value > MAX_AMOUNT.toBigDecimal()) throw InvalidAmountException("Сумма должна быть меньше $MAX_AMOUNT")
 
     return value.setScale(2, RoundingMode.HALF_UP)
 }
