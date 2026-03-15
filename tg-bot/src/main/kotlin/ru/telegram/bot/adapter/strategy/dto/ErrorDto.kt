@@ -1,5 +1,7 @@
 package ru.telegram.bot.adapter.strategy.dto
 
+import ru.telegram.bot.adapter.utils.Constants.Transaction.COMMENT_MAX_LENGTH
+
 data class ErrorDto(
     val errorMsg: String
 ): DataModel
@@ -7,5 +9,6 @@ data class ErrorDto(
 enum class BotErrors(val msg: String) {
     INVALID_DATE("Дата должна быть в формате ДД.ММ.ГГГГ"),
     INVALID_AMOUNT("Сумма должна быть вида: 1; 1.21; 2,37; 2.01; 5,1; 7.40"),
+    TOO_LONG_COMMENT("Комментарий должен быть короче $COMMENT_MAX_LENGTH символов"),
     UNKNOWN("Пу-пу-пу. Вы что-то нажали и всё сломалось.\nВызовите /balance и попробуйте снова")
 }

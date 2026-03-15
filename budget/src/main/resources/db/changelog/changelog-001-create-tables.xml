@@ -71,4 +71,11 @@
             <column name="type"/>
         </createIndex>
     </changeSet>
+
+    <changeSet id="006" author="java_sash">
+        <modifyDataType
+                tableName="transactions"
+                columnName="comment"
+                newDataType="VARCHAR(50)"/>
+    </changeSet>
 </databaseChangeLog>

@@ -18,7 +18,7 @@ plugins {
 }
 
 group = "ru.telegram.bot.adapter"
-version = "1.0.0"
+version = "0.1.0-beta"
 
 java {
     toolchain {

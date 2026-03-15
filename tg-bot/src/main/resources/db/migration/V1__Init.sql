@@ -18,7 +18,7 @@ CREATE TABLE transaction_draft
     category VARCHAR(100), -- INCOME/EXPENSE category
     amount   DECIMAL(19, 2),
     date     TIMESTAMP,
-    comment  VARCHAR(255)
+    comment  VARCHAR(50)
 );
 
 -- search transaction

@@ -74,6 +74,8 @@ class ChatContextRepository(private val dslContext: DSLContext) {
             .setNull(CHAT_CONTEXT.TEXT)
             .setNull(CHAT_CONTEXT.ACCEPT)
             .setNull(CHAT_CONTEXT.FLOW_CONTEXT)
+            .setNull(CHAT_CONTEXT.ERROR_MSG)
+            .setNull(CHAT_CONTEXT.ERROR_STEP)
             .where(CHAT_CONTEXT.ID.eq(chatId))
             .execute()
     }

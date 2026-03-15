@@ -97,6 +97,11 @@ For example: StepCode.BALANCE and BalanceChooser
 6. Create chooser class extended from CallbackChooser (SelectCategoryChooser)
 7. Create step class and override getNextStep
 
+### Add validation error on step with user input
+1. Add new exception extended from [ValidationException.kt](src%2Fmain%2Fkotlin%2Fru%2Ftelegram%2Fbot%2Fadapter%2Fexceptions%2FValidationException.kt)
+2. Add in execute() of Chooser class runCatching block with validation check (it should throw ValidationException) and in onFailure call logError() from [ErrorService.kt](src%2Fmain%2Fkotlin%2Fru%2Ftelegram%2Fbot%2Fadapter%2Fservice%2FErrorService.kt)
+3. Add in getNextStep() call resolveNextStep() of ErrorService class with onSuccessStep (next step on success flow)
+
 ### Users flow
 #### Общее
 1. Запуск бота

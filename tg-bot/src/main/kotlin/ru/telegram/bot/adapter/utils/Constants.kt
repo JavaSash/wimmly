@@ -8,6 +8,7 @@ object Constants {
     object Transaction {
         const val INCOME = "INCOME"
         const val EXPENSE = "EXPENSE"
+        const val COMMENT_MAX_LENGTH = 50
         val DATE_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy")
         val FLEXIBLE_DATE_FORMAT: DateTimeFormatter =
             DateTimeFormatter.ofPattern("d.M.uuuu")
