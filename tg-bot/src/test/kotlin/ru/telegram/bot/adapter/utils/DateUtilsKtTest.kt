@@ -7,9 +7,6 @@ import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertThrows
 import ru.telegram.bot.adapter.exceptions.InvalidDateException
 import ru.telegram.bot.adapter.strategy.dto.BotErrors
-import ru.telegram.bot.adapter.utils.Constants.Errors.END_BEFORE_START_DATE
-import ru.telegram.bot.adapter.utils.Constants.Errors.FUTURE_DATE
-import ru.telegram.bot.adapter.utils.Constants.Errors.NOT_UNIX_DATE
 import java.time.*
 import java.time.format.DateTimeFormatter
 
@@ -26,7 +23,7 @@ class DateUtilsKtTest {
         val exception = assertThrows<InvalidDateException> {
             validateDate(futureDate)
         }
-        assertEquals(FUTURE_DATE, exception.message)
+        assertEquals(BotErrors.FUTURE_DATE.msg, exception.message)
     }
 
     @Test
@@ -35,7 +32,7 @@ class DateUtilsKtTest {
         val exception = assertThrows<InvalidDateException> {
             validateDate(oldDate)
         }
-        assertEquals(NOT_UNIX_DATE, exception.message)
+        assertEquals(BotErrors.NOT_UNIX_DATE.msg, exception.message)
     }
 
     @Test
@@ -50,7 +47,7 @@ class DateUtilsKtTest {
         val exception = assertThrows<InvalidDateException> {
             validateDate(futureDate)
         }
-        assertEquals(FUTURE_DATE, exception.message)
+        assertEquals(BotErrors.FUTURE_DATE.msg, exception.message)
     }
 
     @Test
@@ -59,7 +56,7 @@ class DateUtilsKtTest {
         val exception = assertThrows<InvalidDateException> {
             validateDate(oldDate)
         }
-        assertEquals(NOT_UNIX_DATE, exception.message)
+        assertEquals(BotErrors.NOT_UNIX_DATE.msg, exception.message)
     }
 
     @Test
@@ -74,7 +71,7 @@ class DateUtilsKtTest {
         val exception = assertThrows<InvalidDateException> {
             validateDate(futureDate)
         }
-        assertEquals(FUTURE_DATE, exception.message)
+        assertEquals(BotErrors.FUTURE_DATE.msg, exception.message)
     }
 
     @Test
@@ -83,7 +80,7 @@ class DateUtilsKtTest {
         val exception = assertThrows<InvalidDateException> {
             validateDate(oldDate)
         }
-        assertEquals(NOT_UNIX_DATE, exception.message)
+        assertEquals(BotErrors.NOT_UNIX_DATE.msg, exception.message)
     }
 
     @Test
@@ -100,7 +97,7 @@ class DateUtilsKtTest {
         val exception = assertThrows<InvalidDateException> {
             validatePeriod(from, to)
         }
-        assertEquals(END_BEFORE_START_DATE, exception.message)
+        assertEquals(BotErrors.END_BEFORE_START_DATE.msg, exception.message)
     }
 
     @Test
@@ -110,7 +107,7 @@ class DateUtilsKtTest {
         val exception = assertThrows<InvalidDateException> {
             validatePeriod(from, to)
         }
-        assertEquals(FUTURE_DATE, exception.message)
+        assertEquals(BotErrors.FUTURE_DATE.msg, exception.message)
     }
 
     @Test
@@ -127,7 +124,7 @@ class DateUtilsKtTest {
         val exception = assertThrows<InvalidDateException> {
             validatePeriod(from, to)
         }
-        assertEquals(END_BEFORE_START_DATE, exception.message)
+        assertEquals(BotErrors.END_BEFORE_START_DATE.msg, exception.message)
     }
 
     @Test
@@ -193,7 +190,7 @@ class DateUtilsKtTest {
         val exception = assertThrows<InvalidDateException> {
             parseDate(futureDate)
         }
-        assertEquals(FUTURE_DATE, exception.message)
+        assertEquals(BotErrors.FUTURE_DATE.msg, exception.message)
     }
 
     @Test
@@ -201,6 +198,6 @@ class DateUtilsKtTest {
         val exception = assertThrows<InvalidDateException> {
             parseDate("31.12.1969")
         }
-        assertEquals(NOT_UNIX_DATE, exception.message)
+        assertEquals(BotErrors.NOT_UNIX_DATE.msg, exception.message)
     }
 }

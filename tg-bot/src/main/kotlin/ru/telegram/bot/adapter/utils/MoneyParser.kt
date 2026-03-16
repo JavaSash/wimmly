@@ -27,8 +27,8 @@ fun parseAmount(amount: String?): BigDecimal {
          normalized.toBigDecimal()
     }.getOrNull() ?: throw InvalidAmountException(BotErrors.INVALID_AMOUNT.msg)
 
-    if (value <= BigDecimal.ZERO) throw InvalidAmountException("Сумма должна быть больше нуля")
-    if (value > MAX_AMOUNT.toBigDecimal()) throw InvalidAmountException("Сумма должна быть меньше $MAX_AMOUNT")
+    if (value <= BigDecimal.ZERO) throw InvalidAmountException(BotErrors.AMOUNT_SHOULD_BE_POSITIVE.msg)
+    if (value > MAX_AMOUNT.toBigDecimal()) throw InvalidAmountException(BotErrors.AMOUNT_SHOULD_BE_SMALLER.msg)
 
     return value.setScale(2, RoundingMode.HALF_UP)
 }

@@ -140,8 +140,8 @@ class MoneyParserKtTest {
         "-100",
         "-0.00"
     ])
-    fun `parseAmount - should throw for zero amount`(amount: String) {
-        val exception = assertThrows<IllegalArgumentException> {
+    fun `parseAmount - should throw for more than zero amount`(amount: String) {
+        val exception = assertThrows<InvalidAmountException> {
             parseAmount(amount)
         }
         assertEquals("Сумма должна быть больше нуля", exception.message)
