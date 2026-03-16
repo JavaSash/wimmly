@@ -28,5 +28,4 @@ class MessageWriter(
         template.process(data, output)
         return output.toString()
     }
-
 }
