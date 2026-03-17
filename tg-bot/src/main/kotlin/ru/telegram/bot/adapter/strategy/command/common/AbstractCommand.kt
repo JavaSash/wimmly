@@ -49,15 +49,15 @@ abstract class AbstractCommand(
         /**
          * Check is user exist in bot DB and in backend DB
          */
-        if (!chatContextRepository.isUserExist(chatId)) {
+        if (chatContextRepository.isUserExist(chatId)) {
+            if (!userService.isExist(chatId)) {
+                userService.syncUserToBackend(chatId, user)
+            }
+        } else {
             chatContextRepository.createUser(chatId)
             transactionDraftRepository.createTransactionDraft(chatId)
             searchContextRepository.createSearchContext(chatId)
             userService.syncUserToBackend(chatId, user)
-        } else {
-            if (!userService.isExist(chatId)) {
-                userService.syncUserToBackend(chatId, user)
-            }
         }
         doPrepare(user, chat, arguments)
     }
