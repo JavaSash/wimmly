@@ -1,5 +1,8 @@
 package ru.telegram.bot.adapter
 
+import ru.telegram.bot.adapter.dto.budget.CategoryDto
+import ru.telegram.bot.adapter.utils.Constants.Transaction.EXPENSE
+import ru.telegram.bot.adapter.utils.Constants.Transaction.INCOME
 import java.math.BigDecimal
 
 object TestConstants {
@@ -10,6 +13,9 @@ object TestConstants {
 
     object Tx {
         const val SALARY_CATEGORY = "SALARY"
+        const val FOOD_CATEGORY = "FOOD"
+        val SALARY_CATEGORY_DTO = CategoryDto("SALARY", "Зарплата", INCOME)
+        val FOOD_CATEGORY_DTO = CategoryDto("FOOD", "Еда", EXPENSE)
         const val TRX_ID = 1L
         const val COMMENT = "test comment"
         val AMOUNT_0 = BigDecimal.ZERO
