@@ -23,7 +23,7 @@ abstract class ReportRepository: AbstractRepository<ReportDto>() {
         return runCatching { mapToReportDto(getPeriodReport(chatId.toString())
             .also { logger.info { "$$$ Received report: $it" } }
         ) }
-            .onFailure { error { "$$$ Can't receive report for user: $chatId. Cause: ${it.message}. Return stub" } }
+            .onFailure { logger.error { "$$$ Can't receive report for user: $chatId. Cause: ${it.message}. Return stub" } }
             .getOrDefault(getReportStub())
     }
 
