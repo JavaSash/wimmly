@@ -29,11 +29,10 @@ class DeleteTransactionCommand(
     transactionDraftRepository,
     searchContextRepository
 ) {
-
+    /**
+     * mark user flow to choose correct step after common steps
+     */
     override fun doPrepare(user: User, chat: Chat, arguments: Array<out String>) {
-        chatContextRepository.updateFlowContext(
-            chat.id,
-            StepCode.DELETE_TRANSACTION.name
-        ) // mark user flow to choose correct step after common steps
+        chatContextRepository.updateFlowContext(chat.id, StepCode.DELETE_TRANSACTION.name)
     }
 }

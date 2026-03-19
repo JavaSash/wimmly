@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.User
 import org.telegram.telegrambots.meta.api.objects.chat.Chat
 import org.telegram.telegrambots.meta.generics.TelegramClient
 import ru.telegram.bot.adapter.TestConstants.User.CHAT_ID
+import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.repository.ChatContextRepository
 import ru.telegram.bot.adapter.repository.SearchContextRepository
 import ru.telegram.bot.adapter.repository.TransactionDraftRepository
@@ -36,7 +37,9 @@ abstract class CommandBasicTest {
 
     protected val user: User = User(CHAT_ID, "Test", false)
 
-    protected fun mockUserExists(chatId: Long = CHAT_ID) {
+    protected lateinit var stepCode: StepCode
+
+    protected fun mockBotUserExists(chatId: Long = CHAT_ID) {
         whenever(chatContextRepository.isUserExist(chatId)).thenReturn(true)
     }
 

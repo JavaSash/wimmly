@@ -1,10 +1,9 @@
-package ru.telegram.bot.adapter.strategy.command.common
+package ru.telegram.bot.adapter.strategy.command.transaction
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.never
@@ -13,60 +12,64 @@ import ru.telegram.bot.adapter.TestConstants.User.CHAT_ID
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.event.TgStepMessageEvent
 import ru.telegram.bot.adapter.strategy.command.CommandBasicTest
-import ru.telegram.bot.adapter.strategy.command.report.BalanceCommand
 
-class StartCommandTest: CommandBasicTest() {
-    @Mock
-    lateinit var balanceCommand: BalanceCommand
-
-    private lateinit var command: StartCommand
+class DeleteTransactionCommandTest: CommandBasicTest() {
+    private lateinit var command: DeleteTransactionCommand
 
     @BeforeEach
     fun setup() {
-        command = StartCommand(
+        command = DeleteTransactionCommand(
             chatContextRepository,
-            balanceCommand,
-            applicationEventPublisher,
             userService,
+            applicationEventPublisher,
             transactionDraftRepository,
             searchContextRepository
         )
+        stepCode = StepCode.DELETE_TRANSACTION
     }
 
     @Test
-    fun `execute should call balanceCommand when user exists`() {
-        mockBotUserExists()
-
-        command.execute(telegramClient, user, chat, emptyArray())
-
-        assertAll(
-            { verify(balanceCommand).execute(telegramClient, user, chat, emptyArray()) },
-            { verify(applicationEventPublisher, never()).publishEvent(any()) },
-            { verify(chatContextRepository, never()).createUser(any()) }
-        )
-    }
-
-    @Test
-    fun `execute should create user and publish START event when user not exists`() {
+    fun `execute should update flow when user fully exists`() {
         val chatId = CHAT_ID
-        mockUserNotExists()
+        mockUserFullyExists(chatId)
 
         command.execute(telegramClient, user, chat, emptyArray())
 
         val captor = argumentCaptor<TgStepMessageEvent>()
-
         verify(applicationEventPublisher).publishEvent(captor.capture())
 
         val event = captor.firstValue
 
         assertAll(
-            { verify(balanceCommand, never()).execute(any(), any(), any(), any()) },
+            { verify(chatContextRepository).updateFlowContext(chatId, stepCode.name) },
+            { verify(chatContextRepository, never()).createUser(any()) },
+            { verify(transactionDraftRepository, never()).createTransactionDraft(any()) },
+            { verify(searchContextRepository, never()).createSearchContext(any()) },
+            { assertEquals(chatId, event.chatId) },
+            { assertEquals(stepCode, event.stepCode) }
+        )
+    }
+
+    @Test
+    fun `execute should create user and then update flow when user not exists`() {
+        val chatId = CHAT_ID
+        mockUserNotExists(chatId)
+
+        command.execute(telegramClient, user, chat, emptyArray())
+
+        val captor = argumentCaptor<TgStepMessageEvent>()
+        verify(applicationEventPublisher).publishEvent(captor.capture())
+
+        val event = captor.firstValue
+
+        assertAll(
             { verify(chatContextRepository).createUser(chatId) },
             { verify(transactionDraftRepository).createTransactionDraft(chatId) },
             { verify(searchContextRepository).createSearchContext(chatId) },
             { verify(userService).syncUserToBackend(chatId, user) },
+            { verify(chatContextRepository).updateFlowContext(chatId, stepCode.name) },
             { assertEquals(chatId, event.chatId) },
-            { assertEquals(StepCode.START, event.stepCode) }
+            { assertEquals(stepCode, event.stepCode) }
         )
     }
 }
