@@ -4,44 +4,24 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import org.mockito.Mock
-import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.*
-import org.springframework.context.ApplicationEventPublisher
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.telegram.telegrambots.meta.api.objects.User
 import org.telegram.telegrambots.meta.api.objects.chat.Chat
-import org.telegram.telegrambots.meta.generics.TelegramClient
 import ru.telegram.bot.adapter.TestConstants.User.CHAT_ID
 import ru.telegram.bot.adapter.event.TgStepMessageEvent
-import ru.telegram.bot.adapter.repository.ChatContextRepository
-import ru.telegram.bot.adapter.repository.SearchContextRepository
-import ru.telegram.bot.adapter.repository.TransactionDraftRepository
-import ru.telegram.bot.adapter.service.UserService
+import ru.telegram.bot.adapter.strategy.command.CommandBasicTest
 
 /**
  * @link [AbstractCommand] test
  */
-@ExtendWith(MockitoExtension::class)
-class HelpCommandTest {
-    @Mock lateinit var chatContextRepository: ChatContextRepository
-    @Mock
-    lateinit var applicationEventPublisher: ApplicationEventPublisher
-    @Mock
-    lateinit var userService: UserService
-    @Mock
-    lateinit var transactionDraftRepository: TransactionDraftRepository
-    @Mock
-    lateinit var searchContextRepository: SearchContextRepository
-    @Mock
-    lateinit var telegramClient: TelegramClient
+class HelpCommandTest: CommandBasicTest() {
 
-    lateinit var command: HelpCommand
-
-    private val chat = Chat.builder().id(CHAT_ID).type("private").build()
-    private val user = User(CHAT_ID, "Test", false)
+    private lateinit var command: HelpCommand
 
     @BeforeEach
     fun setup() {
@@ -56,9 +36,9 @@ class HelpCommandTest {
 
     @Test
     fun `execute should publish help step event when user fully exists`() {
+        mockUserFullyExists()
         val chatId = CHAT_ID
-        whenever(chatContextRepository.isUserExist(chatId)).thenReturn(true)
-        whenever(userService.isExist(chatId)).thenReturn(true)
+
         command.execute(telegramClient, user, chat, emptyArray())
 
         val captor = argumentCaptor<TgStepMessageEvent>()
@@ -97,8 +77,8 @@ class HelpCommandTest {
 
     @Test
     fun `execute should create user and related contexts when user not exist`() {
+        mockUserNotExists()
         val chatId = CHAT_ID
-        whenever(chatContextRepository.isUserExist(chatId)).thenReturn(false)
 
         command.execute(telegramClient, user, chat, emptyArray())
 
@@ -113,9 +93,8 @@ class HelpCommandTest {
 
     @Test
     fun `execute should sync user to backend when not exist in backend`() {
+        mockUserNotInBackend()
         val chatId = CHAT_ID
-        whenever(chatContextRepository.isUserExist(chatId)).thenReturn(true)
-        whenever(userService.isExist(chatId)).thenReturn(false)
 
         command.execute(telegramClient, user, chat, emptyArray())
 
