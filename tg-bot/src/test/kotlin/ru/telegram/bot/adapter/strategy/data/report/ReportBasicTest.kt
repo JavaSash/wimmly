@@ -5,7 +5,7 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import ru.telegram.bot.adapter.TestConstants.Tx.AMOUNT_150
 import ru.telegram.bot.adapter.TestConstants.Tx.AMOUNT_50
-import ru.telegram.bot.adapter.TestConstants.User.CHAT_ID
+import ru.telegram.bot.adapter.TestConstants.Chat.CHAT_ID
 import ru.telegram.bot.adapter.client.ReportClient
 import ru.telegram.bot.adapter.dto.budget.TxTypeDetail
 import ru.telegram.bot.adapter.strategy.data.transaction.SelectCategoryRepository.Companion.EXPENSE_CATEGORIES_STUB

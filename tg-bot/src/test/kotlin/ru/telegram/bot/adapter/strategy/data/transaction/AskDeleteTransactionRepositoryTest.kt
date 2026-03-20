@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import ru.telegram.bot.adapter.TestConstants.User.CHAT_ID
+import ru.telegram.bot.adapter.TestConstants.Chat.CHAT_ID
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.utils.CommonUtils.currentStepCode
 import ru.telegram.bot.adapter.utils.Constants.Button.NO

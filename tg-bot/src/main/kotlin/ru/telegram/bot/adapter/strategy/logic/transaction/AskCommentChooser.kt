@@ -5,15 +5,13 @@ import org.springframework.stereotype.Component
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery
 import ru.telegram.bot.adapter.dto.enums.ExecuteStatus
 import ru.telegram.bot.adapter.repository.ChatContextRepository
-import ru.telegram.bot.adapter.repository.TransactionDraftRepository
 import ru.telegram.bot.adapter.strategy.logic.common.CallbackChooser
 import ru.telegram.bot.adapter.utils.Constants.Button.NO
 import ru.telegram.bot.adapter.utils.Constants.Button.YES
 
 @Component
 class AskCommentChooser(
-    private val chatContextRepository: ChatContextRepository,
-    private val transactionDraftRepository: TransactionDraftRepository,
+    private val chatContextRepository: ChatContextRepository
 ) : CallbackChooser {
 
     companion object : KLogging()
@@ -28,7 +26,6 @@ class AskCommentChooser(
 
             NO -> {
                 chatContextRepository.updateAccept(chatId, false)
-                transactionDraftRepository.updateComment(chatId, comment = null)
                 ExecuteStatus.FINAL
             }
 

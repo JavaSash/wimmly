@@ -8,7 +8,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
-import ru.telegram.bot.adapter.TestConstants
+import ru.telegram.bot.adapter.TestConstants.Chat.CHAT_ID
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.event.TgStepMessageEvent
 import ru.telegram.bot.adapter.strategy.command.CommandBasicTest
@@ -31,7 +31,7 @@ class SearchTransactionsCommandTest: CommandBasicTest() {
 
     @Test
     fun `execute should update flow when user fully exists`() {
-        val chatId = TestConstants.User.CHAT_ID
+        val chatId = CHAT_ID
         mockUserFullyExists(chatId)
 
         command.execute(telegramClient, user, chat, emptyArray())
@@ -53,7 +53,7 @@ class SearchTransactionsCommandTest: CommandBasicTest() {
 
     @Test
     fun `execute should create user and then update flow when user not exists`() {
-        val chatId = TestConstants.User.CHAT_ID
+        val chatId = CHAT_ID
         mockUserNotExists(chatId)
 
         command.execute(telegramClient, user, chat, emptyArray())

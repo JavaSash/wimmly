@@ -7,7 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import ru.telegram.bot.adapter.DbBasicTest
 import ru.telegram.bot.adapter.TestConstants.Chat.TEXT
-import ru.telegram.bot.adapter.TestConstants.User.CHAT_ID
+import ru.telegram.bot.adapter.TestConstants.Chat.CHAT_ID
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.strategy.dto.BotErrors
 

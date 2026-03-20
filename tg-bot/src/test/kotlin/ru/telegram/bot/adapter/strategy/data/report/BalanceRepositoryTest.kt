@@ -11,7 +11,7 @@ import org.mockito.kotlin.whenever
 import ru.telegram.bot.adapter.TestConstants.Tx.AMOUNT_100
 import ru.telegram.bot.adapter.TestConstants.Tx.AMOUNT_150
 import ru.telegram.bot.adapter.TestConstants.Tx.AMOUNT_50
-import ru.telegram.bot.adapter.TestConstants.User.CHAT_ID
+import ru.telegram.bot.adapter.TestConstants.Chat.CHAT_ID
 import ru.telegram.bot.adapter.client.ReportClient
 import ru.telegram.bot.adapter.strategy.dto.BalanceDto
 import java.math.BigDecimal

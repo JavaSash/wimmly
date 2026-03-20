@@ -9,9 +9,10 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.*
+import ru.telegram.bot.adapter.TestConstants.Chat.UNKNOWN_FLOW
 import ru.telegram.bot.adapter.TestConstants.Tx.FOOD_CATEGORY
 import ru.telegram.bot.adapter.TestConstants.Tx.SALARY_CATEGORY
-import ru.telegram.bot.adapter.TestConstants.User.CHAT_ID
+import ru.telegram.bot.adapter.TestConstants.Chat.CHAT_ID
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.formChatContext
 import ru.telegram.bot.adapter.formSearchContext
@@ -103,7 +104,7 @@ class ShowTransactionsRepositoryTest {
     @Test
     fun `getData should return empty list for unsupported flow`() {
         val searchCtx = formSearchContext()
-        val chatCtx = formChatContext(flowContext = "UNKNOWN_FLOW")
+        val chatCtx = formChatContext(flowContext = UNKNOWN_FLOW)
 
         whenever(searchContextRepository.findById(chatId)).thenReturn(searchCtx)
         whenever(chatContextRepository.getUser(chatId)).thenReturn(chatCtx)

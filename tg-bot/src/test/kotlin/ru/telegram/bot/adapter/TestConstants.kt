@@ -7,10 +7,6 @@ import java.math.BigDecimal
 
 object TestConstants {
 
-    object User {
-        const val CHAT_ID = 123L
-    }
-
     object Tx {
         const val SALARY_CATEGORY = "SALARY"
         const val FOOD_CATEGORY = "FOOD"
@@ -28,5 +24,7 @@ object TestConstants {
 
     object Chat {
         const val TEXT = "hello"
+        const val CHAT_ID = 123L
+        const val UNKNOWN_FLOW = "UNKNOWN_FLOW"
     }
 }

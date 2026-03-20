@@ -7,7 +7,7 @@ import org.junit.jupiter.api.assertAll
 import ru.telegram.bot.adapter.DbBasicTest
 import ru.telegram.bot.adapter.TestConstants.Tx.SALARY_CATEGORY
 import ru.telegram.bot.adapter.TestConstants.Tx.TRX_ID
-import ru.telegram.bot.adapter.TestConstants.User.CHAT_ID
+import ru.telegram.bot.adapter.TestConstants.Chat.CHAT_ID
 import ru.telegram.bot.adapter.utils.Constants.Transaction.INCOME
 
 class SearchContextRepositoryTest: DbBasicTest() {

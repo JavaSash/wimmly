@@ -10,6 +10,7 @@ import ru.telegram.bot.adapter.repository.ChatContextRepository
 import ru.telegram.bot.adapter.repository.SearchContextRepository
 import ru.telegram.bot.adapter.repository.TransactionDraftRepository
 import ru.telegram.bot.adapter.strategy.data.transaction.SelectCategoryRepository
+import ru.telegram.bot.adapter.strategy.dto.SelectCategoryDto
 import ru.telegram.bot.adapter.strategy.logic.common.CallbackChooser
 
 @Component
@@ -26,21 +27,24 @@ class SelectCategoryChooser(
         logger.info { "$$$ SelectCategoryChooser.execute for chatId: $chatId with callback: $callbackQuery" }
         val selectedCategoryCode = callbackQuery.data
 
-        val categoriesDto = selectCategoryRepository.getData(chatId)
+        val categoriesDto: SelectCategoryDto = selectCategoryRepository.getData(chatId)
         val category: CategoryDto? = categoriesDto.categories.find { it.code == selectedCategoryCode }
+        val flowCtx = chatContextRepository.getUser(chatId)?.flowContext
+        logger.info { "$$$ [SelectCategoryChooser] process with flow context: $flowCtx" }
 
         if (category != null) {
-            transactionDraftRepository.updateCategory(chatId, category.code)
-            if (StepCode.SEARCH_TRANSACTIONS.name == chatContextRepository.getUser(chatId)?.flowContext) {
-                searchContextRepository.updateCategory(chatId, category.code)
-            } else {
-                transactionDraftRepository.updateCategory(chatId, category.code)
-            } // todo else if with ENTER_AMOUNT and else with error (flow is null)
-
+            when(flowCtx) {
+                StepCode.SEARCH_TRANSACTIONS.name -> searchContextRepository.updateCategory(chatId, category.code)
+                StepCode.ADD_INCOME.name, StepCode.ADD_EXPENSE.name -> transactionDraftRepository.updateCategory(chatId, category.code)
+                else -> {
+                    logger.error { "$$$ Unsupported flow: $flowCtx for SelectCategoryChooser logic" }
+                    return ExecuteStatus.NOTHING // todo error step?
+                }
+            }
             logger.info { "$$$ Category selected: code=${category.code}, desc=${category.description}" }
         } else {
             logger.error { "$$$ Unknown category code: $selectedCategoryCode" }
-            return ExecuteStatus.NOTHING
+            return ExecuteStatus.NOTHING // todo error step?
         }
         return ExecuteStatus.FINAL
     }

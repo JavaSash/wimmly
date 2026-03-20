@@ -8,7 +8,7 @@ import ru.telegram.bot.adapter.DbBasicTest
 import ru.telegram.bot.adapter.TestConstants.Tx.AMOUNT_100
 import ru.telegram.bot.adapter.TestConstants.Tx.COMMENT
 import ru.telegram.bot.adapter.TestConstants.Tx.SALARY_CATEGORY
-import ru.telegram.bot.adapter.TestConstants.User.CHAT_ID
+import ru.telegram.bot.adapter.TestConstants.Chat.CHAT_ID
 import ru.telegram.bot.adapter.utils.Constants.Transaction.INCOME
 import java.math.BigDecimal
 import java.time.Instant

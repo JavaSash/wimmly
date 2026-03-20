@@ -14,7 +14,7 @@ import org.springframework.context.ApplicationEventPublisher
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery
 import org.telegram.telegrambots.meta.api.objects.Update
 import org.telegram.telegrambots.meta.api.objects.message.Message
-import ru.telegram.bot.adapter.TestConstants.User.CHAT_ID
+import ru.telegram.bot.adapter.TestConstants.Chat.CHAT_ID
 import ru.telegram.bot.adapter.domain.tables.tables.pojos.ChatContext
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.event.TgReceivedCallbackEvent

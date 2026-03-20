@@ -8,7 +8,7 @@ import org.springframework.context.ApplicationEventPublisher
 import org.telegram.telegrambots.meta.api.objects.User
 import org.telegram.telegrambots.meta.api.objects.chat.Chat
 import org.telegram.telegrambots.meta.generics.TelegramClient
-import ru.telegram.bot.adapter.TestConstants.User.CHAT_ID
+import ru.telegram.bot.adapter.TestConstants.Chat.CHAT_ID
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.repository.ChatContextRepository
 import ru.telegram.bot.adapter.repository.SearchContextRepository

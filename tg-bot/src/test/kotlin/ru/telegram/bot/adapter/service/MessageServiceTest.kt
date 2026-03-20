@@ -15,7 +15,7 @@ import org.springframework.context.ApplicationEventPublisher
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto
 import org.telegram.telegrambots.meta.generics.TelegramClient
-import ru.telegram.bot.adapter.TestConstants.User.CHAT_ID
+import ru.telegram.bot.adapter.TestConstants.Chat.CHAT_ID
 import ru.telegram.bot.adapter.dto.MessageModelDto
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.event.TgStepMessageEvent

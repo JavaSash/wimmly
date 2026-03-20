@@ -9,7 +9,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.never
 import org.mockito.kotlin.whenever
 import ru.telegram.bot.adapter.DbBasicTest
-import ru.telegram.bot.adapter.TestConstants.User.CHAT_ID
+import ru.telegram.bot.adapter.TestConstants.Chat.CHAT_ID
 import ru.telegram.bot.adapter.dto.enums.ExecuteStatus
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.event.TgReceivedCallbackEvent

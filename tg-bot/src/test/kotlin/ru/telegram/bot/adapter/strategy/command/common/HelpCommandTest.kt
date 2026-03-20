@@ -12,7 +12,7 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.telegram.telegrambots.meta.api.objects.User
 import org.telegram.telegrambots.meta.api.objects.chat.Chat
-import ru.telegram.bot.adapter.TestConstants.User.CHAT_ID
+import ru.telegram.bot.adapter.TestConstants.Chat.CHAT_ID
 import ru.telegram.bot.adapter.event.TgStepMessageEvent
 import ru.telegram.bot.adapter.strategy.command.CommandBasicTest
 

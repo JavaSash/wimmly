@@ -4,6 +4,9 @@ import mu.KLogging
 import org.springframework.stereotype.Repository
 import ru.telegram.bot.adapter.client.CategoryClient
 import ru.telegram.bot.adapter.dto.budget.CategoryDto
+import ru.telegram.bot.adapter.dto.enums.StepCode
+import ru.telegram.bot.adapter.repository.ChatContextRepository
+import ru.telegram.bot.adapter.repository.SearchContextRepository
 import ru.telegram.bot.adapter.repository.TransactionDraftRepository
 import ru.telegram.bot.adapter.strategy.data.common.AbstractRepository
 import ru.telegram.bot.adapter.strategy.dto.SelectCategoryDto
@@ -18,7 +21,9 @@ import ru.telegram.bot.adapter.utils.Constants.Transaction.INCOME
 @Repository
 class SelectCategoryRepository(
     private val categoryClient: CategoryClient,
-    private val transactionDraftRepository: TransactionDraftRepository
+    private val transactionDraftRepository: TransactionDraftRepository,
+    private val chatContextRepository: ChatContextRepository,
+    private val searchContextRepository: SearchContextRepository
 ) : AbstractRepository<SelectCategoryDto>() {
     companion object : KLogging() {
         val INCOME_CATEGORIES_STUB: List<CategoryDto> = listOf(
@@ -50,9 +55,14 @@ class SelectCategoryRepository(
      * @return categories from budget-service or stub
      */
     override fun getData(chatId: Long): SelectCategoryDto {
-        logger.info { "$$$ Try to get categories for chat: $chatId" }
-        val trxDraft = transactionDraftRepository.getTransactionDraft(chatId)
-        val txType = trxDraft?.type ?: INCOME
+        val flowCtx = chatContextRepository.getUser(chatId)?.flowContext
+        logger.info { "$$$ Try to get categories for chat: $chatId and flow: $flowCtx" }
+
+        val txType = when (flowCtx) {
+            StepCode.SEARCH_TRANSACTIONS.name -> searchContextRepository.findById(chatId)?.type
+            StepCode.ADD_INCOME.name, StepCode.ADD_EXPENSE.name -> transactionDraftRepository.getTransactionDraft(chatId)?.type
+            else -> INCOME
+        } ?: INCOME // impossible
         return runCatching {
             SelectCategoryDto(
                 categories = categoryClient.getCategories(txType),

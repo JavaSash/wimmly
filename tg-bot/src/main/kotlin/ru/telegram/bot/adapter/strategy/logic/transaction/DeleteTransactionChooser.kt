@@ -39,13 +39,13 @@ class DeleteTransactionChooser(
 
     private fun parseTransactionId(chatId: Long, trxIdString: String?): Long {
         logger.info { "$$$ [DeleteTransactionChooser] Try to parse trxId: $trxIdString for chat: $chatId" }
-        // только цифра
+        // only digits
         val trxId = trxIdString?.toLongOrNull()
             ?: throw TransactionIdFormatException(BotErrors.TRX_ID_NOT_NUMBER.msg)
-        // логические ограничения номера
+        // logic constraint
         if (trxId <= 0 || trxId > MAX_TRX_ID)
             throw TransactionIdFormatException(BotErrors.TRX_ID_NOT_EXIST.msg)
-        // транзакция с id не существует у пользователя
+        // tx with id not exist for user
         if (!transactionService.isExist(chatId = chatId, displayId = trxId))
             throw TransactionIdNotExistException(BotErrors.TRX_ID_NOT_EXIST.msg)
 

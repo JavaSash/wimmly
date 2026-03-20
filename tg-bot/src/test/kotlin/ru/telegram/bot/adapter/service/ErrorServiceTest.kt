@@ -10,7 +10,7 @@ import ru.telegram.bot.adapter.DbBasicTest
 import ru.telegram.bot.adapter.TestConstants.Chat.TEXT
 import ru.telegram.bot.adapter.TestConstants.Tx.INVALID_AMOUNT_VALUE
 import ru.telegram.bot.adapter.TestConstants.Tx.INVALID_DATE_VALUE
-import ru.telegram.bot.adapter.TestConstants.User.CHAT_ID
+import ru.telegram.bot.adapter.TestConstants.Chat.CHAT_ID
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.exceptions.InvalidAmountException
 import ru.telegram.bot.adapter.exceptions.InvalidDateException
