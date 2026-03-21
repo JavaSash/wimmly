@@ -12,7 +12,7 @@ class SelectCategoryStep(private val chatContextRepository: ChatContextRepositor
         return when (chatContextRepository.getUser(chatId)?.flowContext) {
             StepCode.ADD_INCOME.name, StepCode.ADD_EXPENSE.name -> StepCode.ENTER_AMOUNT // add transaction flow
             StepCode.SEARCH_TRANSACTIONS.name -> StepCode.SHOW_TRANSACTIONS // search_transactions flow
-            else -> StepCode.ENTER_AMOUNT // todo default?
+            else -> null // todo error?
         }
     }
 }

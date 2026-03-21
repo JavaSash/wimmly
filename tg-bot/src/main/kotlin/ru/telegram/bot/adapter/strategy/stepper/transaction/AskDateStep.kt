@@ -11,10 +11,10 @@ class AskDateStep(
 ) : Step {
     override fun getNextStep(chatId: Long): StepCode? {
         val user = chatContextRepository.getUser(chatId)
-        return if (user?.accept == true) {
-            StepCode.ENTER_DATE
-        } else {
-            StepCode.ASK_COMMENT
+        return when (user?.accept) {
+            true -> StepCode.ENTER_DATE
+            false -> StepCode.ASK_COMMENT
+            else -> null // todo ERROR step?
         }
     }
 }

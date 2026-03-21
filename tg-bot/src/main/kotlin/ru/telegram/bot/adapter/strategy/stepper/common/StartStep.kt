@@ -9,5 +9,4 @@ class StartStep : Step {
     override fun getNextStep(chatId: Long): StepCode {
         return StepCode.HELP
     }
-
 }

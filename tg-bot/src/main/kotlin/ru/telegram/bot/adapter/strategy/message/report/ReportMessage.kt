@@ -2,6 +2,7 @@ package ru.telegram.bot.adapter.strategy.message.report
 
 import mu.KLogging
 import ru.telegram.bot.adapter.dto.enums.StepCode
+import ru.telegram.bot.adapter.dto.view.CategoryInfo
 import ru.telegram.bot.adapter.service.MessageWriter
 import ru.telegram.bot.adapter.service.ReportService
 import ru.telegram.bot.adapter.strategy.dto.ReportDto
@@ -24,14 +25,14 @@ class ReportMessage(
     override fun message(data: ReportDto?): String {
         logger.info { "$$$ ReportMessage.message for period: ${data?.periodName} with data: $data" }
 
-        val incomeCategories = reportService.prepareCategories(
-            data?.income?.amountByCategory ?: emptyMap(),
-            data?.income?.amount ?: BigDecimal.ZERO
+        val incomeCategories: List<CategoryInfo> = reportService.prepareCategories(
+            categories = data?.income?.amountByCategory ?: emptyMap(),
+            totalAmount = data?.income?.amount ?: BigDecimal.ZERO
         )
 
-        val expenseCategories = reportService.prepareCategories(
-            data?.expense?.amountByCategory ?: emptyMap(),
-            data?.expense?.amount ?: BigDecimal.ZERO,
+        val expenseCategories: List<CategoryInfo> = reportService.prepareCategories(
+            categories = data?.expense?.amountByCategory ?: emptyMap(),
+            totalAmount = data?.expense?.amount ?: BigDecimal.ZERO,
             isExpense = true
         )
 
@@ -49,7 +50,7 @@ class ReportMessage(
     }
 
     private fun mapPeriodToStepCode(period: String?): StepCode =
-        when(period) {
+        when (period) {
             ReportDto.TODAY -> StepCode.REPORT_TODAY
             ReportDto.WEEK -> StepCode.REPORT_WEEK
             ReportDto.MONTH -> StepCode.REPORT_MONTH

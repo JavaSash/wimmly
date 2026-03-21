@@ -7,6 +7,9 @@ import ru.telegram.bot.adapter.repository.ChatContextRepository
 import ru.telegram.bot.adapter.repository.SearchContextRepository
 import ru.telegram.bot.adapter.repository.TransactionDraftRepository
 
+/**
+ * Step to clean up temporary dialogue tables
+ */
 @Component
 class FinalStep(
     private val chatContextRepository: ChatContextRepository,
@@ -19,13 +22,28 @@ class FinalStep(
     override fun getNextStep(chatId: Long): StepCode? {
         logger.info { "$$$ FinalStep.cleanup for chat: $chatId" }
 
-        runCatching {
-            chatContextRepository.clearDialogState(chatId)
-            transactionDraftRepository.clearDialogState(chatId)
-            searchContextRepository.clearDialogState(chatId)
+        var hasErrors = false
+
+        runCatching { chatContextRepository.clearDialogState(chatId) }
+            .onFailure {
+                logger.error { "$$$ Failed to cleanup chat context for chat: $chatId" }
+                hasErrors = true
+            }
+
+        runCatching { transactionDraftRepository.clearDialogState(chatId) }
+            .onFailure {
+                logger.error { "$$$ Failed to cleanup transaction draft for chat: $chatId" }
+                hasErrors = true
+            }
+
+        runCatching { searchContextRepository.clearDialogState(chatId) }
+            .onFailure {
+                logger.error { "$$$ Failed to cleanup search context for chat: $chatId" }
+                hasErrors = true
+            }
+
+        if (!hasErrors) {
             logger.info { "$$$ Dialog cleanup successful for chat: $chatId" }
-        }.onFailure { e ->
-            logger.error(e) { "$$$ Failed to cleanup dialog for chat: $chatId" }
         }
         return null // no steps after
     }

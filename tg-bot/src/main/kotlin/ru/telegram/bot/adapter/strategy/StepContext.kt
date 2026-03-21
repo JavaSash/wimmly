@@ -6,7 +6,7 @@ import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.strategy.stepper.common.Step
 
 /**
- * Выбор следующего этапа
+ * Choose next step
   */
 @Component
 class StepContext(private val step: List<Step>) {

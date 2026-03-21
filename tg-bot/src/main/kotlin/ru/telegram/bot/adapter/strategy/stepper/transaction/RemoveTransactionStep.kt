@@ -12,8 +12,7 @@ class RemoveTransactionStep(
     private val transactionService: TransactionService
 ) : Step {
     override fun getNextStep(chatId: Long): StepCode? {
-        transactionService.removeTransaction(chatId, searchContextRepository.findById(chatId)?.trxId!!)
-
+        transactionService.removeTransaction(chatId, searchContextRepository.findById(chatId)?.trxId!!) // todo error step for trxId null and when data not found?
         return StepCode.FINAL
     }
 }

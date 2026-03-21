@@ -16,7 +16,7 @@ class CreateTransactionStep(
 
     override fun getNextStep(chatId: Long): StepCode? {
         logger.info { "$$$ CreateTransactionStep.execute for chanId=$chatId" }
-        val trxDraft = transactionDraftRepository.getTransactionDraft(chatId)!!
+        val trxDraft = transactionDraftRepository.getTransactionDraft(chatId)!! // todo error when draft is null
         txService.addTransaction(trxDraft) // todo runCatching + onFailure async addTx
         return StepCode.BALANCE
     }

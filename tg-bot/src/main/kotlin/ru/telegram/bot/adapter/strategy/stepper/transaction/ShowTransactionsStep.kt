@@ -1,6 +1,5 @@
 package ru.telegram.bot.adapter.strategy.stepper.transaction
 
-import mu.KLogging
 import org.springframework.stereotype.Component
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.repository.ChatContextRepository
@@ -11,11 +10,8 @@ class ShowTransactionsStep(
     private val chatContextRepository: ChatContextRepository
 ) : Step {
 
-    companion object : KLogging()
-
     override fun getNextStep(chatId: Long): StepCode? {
         return if (chatContextRepository.getUser(chatId)?.flowContext == StepCode.DELETE_TRANSACTION.name) StepCode.ASK_DELETE_TRANSACTION
         else StepCode.FINAL
     }
-
 }

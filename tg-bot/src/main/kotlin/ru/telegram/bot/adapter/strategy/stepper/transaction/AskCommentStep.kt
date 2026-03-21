@@ -11,10 +11,10 @@ class AskCommentStep(
 ) : Step {
     override fun getNextStep(chatId: Long): StepCode? {
         val user = chatContextRepository.getUser(chatId)
-        return if (user?.accept == true) {
-            StepCode.ENTER_COMMENT
-        } else {
-            StepCode.CREATE_TRANSACTION
+        return when (user?.accept) {
+            true -> StepCode.ENTER_COMMENT
+            false -> StepCode.CREATE_TRANSACTION
+            else -> null // todo ERROR step?
         }
     }
 }

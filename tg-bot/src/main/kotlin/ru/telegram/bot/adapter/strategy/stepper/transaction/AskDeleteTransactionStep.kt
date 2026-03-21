@@ -11,10 +11,10 @@ class AskDeleteTransactionStep(
 ) : Step {
     override fun getNextStep(chatId: Long): StepCode? {
         val user = chatContextRepository.getUser(chatId)
-        return if (user?.accept == true) {
-            StepCode.REMOVE_TRANSACTION
-        } else {
-            StepCode.FINAL
+        return when (user?.accept) {
+            true -> StepCode.REMOVE_TRANSACTION
+            false -> StepCode.FINAL
+            else -> null // todo ERROR step?
         }
     }
 }
