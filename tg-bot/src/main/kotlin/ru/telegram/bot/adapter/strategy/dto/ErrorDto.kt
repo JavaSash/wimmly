@@ -15,7 +15,7 @@ enum class BotErrors(val msg: String) {
     END_BEFORE_START_DATE("Начальная дата должна быть раньше конечной"),
 
     // Number errors
-    INVALID_AMOUNT("Сумма должна быть вида: 1; 1.21; 2,37; 2.01; 5,1; 7.40"),
+    INVALID_AMOUNT("Сумма должна быть вида: 1; 1.21; 2,37; 2.01; 5,1; 7.40; 0,99"),
     AMOUNT_SHOULD_BE_POSITIVE("Сумма должна быть больше нуля"),
     AMOUNT_SHOULD_BE_SMALLER("Сумма должна быть меньше $MAX_AMOUNT"),
     TRX_ID_NOT_NUMBER("Номер транзакции должен быть числом"),

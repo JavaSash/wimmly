@@ -78,15 +78,6 @@ class MoneyParserKtTest {
     }
 
     @Test
-    fun `parseAmount - should round to two decimals`() {
-        val result = parseAmount("1234.5678")
-        assertAll(
-            { assertEquals(BigDecimal("1234.57").setScale(2, RoundingMode.HALF_UP), result) },
-            { assertEquals(2, result.scale()) }
-        )
-    }
-
-    @Test
     fun `parseAmount - should throw for null input`() {
         val exception = assertThrows<InvalidAmountException> {
             parseAmount(null)
@@ -110,26 +101,11 @@ class MoneyParserKtTest {
         assertEquals(BotErrors.INVALID_AMOUNT.msg, exception.message)
     }
 
-    @Test
-    fun `parseAmount - should throw for invalid format`() {
+    @ParameterizedTest
+    @ValueSource(strings = ["abc", "123.45.67", "123a.45", "123.999"])
+    fun `parseAmount - should throw for invalid format`(amount: String) {
         val exception = assertThrows<InvalidAmountException> {
-            parseAmount("abc")
-        }
-        assertEquals(BotErrors.INVALID_AMOUNT.msg, exception.message)
-    }
-
-    @Test
-    fun `parseAmount - should throw for amount with multiple dots`() {
-        val exception = assertThrows<InvalidAmountException> {
-            parseAmount("123.45.67")
-        }
-        assertEquals(BotErrors.INVALID_AMOUNT.msg, exception.message)
-    }
-
-    @Test
-    fun `parseAmount - should throw for amount with letters`() {
-        val exception = assertThrows<InvalidAmountException> {
-            parseAmount("123a.45")
+            parseAmount(amount)
         }
         assertEquals(BotErrors.INVALID_AMOUNT.msg, exception.message)
     }
