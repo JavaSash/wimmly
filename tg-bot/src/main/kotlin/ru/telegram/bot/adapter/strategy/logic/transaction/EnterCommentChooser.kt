@@ -20,8 +20,8 @@ class EnterCommentChooser(
     companion object : KLogging()
 
     override fun execute(chatId: Long, message: Message) {
-        logger.info { "$$$ EnterCommentChooser.execute with params: \nchatId=$chatId\nmessage=${message.text}" }
         val comment = message.text
+        logger.info { "$$$ EnterCommentChooser.execute with params: \nchatId=$chatId\nmessage=$comment" }
 
         runCatching {
             comment.validateStringLength(

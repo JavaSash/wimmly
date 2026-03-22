@@ -33,6 +33,9 @@ class SearchTransactionsCommand(
      * mark user flow to choose correct step after common steps
      */
     override fun doPrepare(user: User, chat: Chat, arguments: Array<out String>) {
-        chatContextRepository.updateFlowContext(chat.id, StepCode.SEARCH_TRANSACTIONS.name)
+        val chatId = chat.id
+        chatContextRepository.clearDialogState(chatId)
+        searchContextRepository.clearDialogState(chatId)
+        chatContextRepository.updateFlowContext(chatId, StepCode.SEARCH_TRANSACTIONS.name)
     }
 }

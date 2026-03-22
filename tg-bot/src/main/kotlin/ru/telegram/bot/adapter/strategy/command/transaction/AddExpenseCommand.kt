@@ -35,6 +35,8 @@ class AddExpenseCommand(
 
     override fun doPrepare(user: User, chat: Chat, arguments: Array<out String>) {
         val chatId = chat.id
+        chatContextRepository.clearDialogState(chatId)
+        transactionDraftRepository.clearDialogState(chatId)
         transactionDraftRepository.updateTransactionType(chatId, EXPENSE)
         chatContextRepository.updateFlowContext(chatId, StepCode.ADD_EXPENSE.name)
     }
