@@ -4,8 +4,8 @@ import mu.KLogging
 import org.springframework.stereotype.Service
 import ru.wimme.logic.model.report.Balance
 import ru.wimme.logic.model.report.Period
+import ru.wimme.logic.utils.Constants.Date.ZONE_OFFSET
 import java.time.LocalDate
-import java.time.ZoneOffset
 
 @Service
 class BalanceService(
@@ -27,7 +27,7 @@ class BalanceService(
             val monthStart = LocalDate
                 .now()
                 .withDayOfMonth(1)
-                .atStartOfDay(ZoneOffset.UTC)
+                .atStartOfDay(ZONE_OFFSET)
                 .toInstant()
             logger.info { "$$$ Form balance for user: $userId from: $monthStart to now" }
             txService.getBalance(userId = userId, periodStart = monthStart)

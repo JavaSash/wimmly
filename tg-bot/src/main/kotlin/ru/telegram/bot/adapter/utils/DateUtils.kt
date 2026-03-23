@@ -2,7 +2,12 @@ package ru.telegram.bot.adapter.utils
 
 import ru.telegram.bot.adapter.exceptions.InvalidDateException
 import ru.telegram.bot.adapter.strategy.dto.BotErrors
-import java.time.*
+import ru.telegram.bot.adapter.utils.Constants.Date.ZONE_OFFSET
+import ru.telegram.bot.adapter.utils.Constants.Transaction.FLEXIBLE_DATE_FORMAT
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 fun validateDate(date: LocalDateTime) {
@@ -32,7 +37,7 @@ fun validateDate(date: ZonedDateTime) {
         throw InvalidDateException(BotErrors.FUTURE_DATE.msg)
     }
 
-    if (date.isBefore(ZonedDateTime.of(LocalDateTime.of(1970, 1, 1, 0, 0), ZoneOffset.UTC))) {
+    if (date.isBefore(ZonedDateTime.of(LocalDateTime.of(1970, 1, 1, 0, 0), ZONE_OFFSET))) {
         throw InvalidDateException(BotErrors.NOT_UNIX_DATE.msg)
     }
 }
@@ -54,13 +59,13 @@ fun validatePeriod(from: ZonedDateTime, to: ZonedDateTime) {
 }
 
 fun Instant.toLocalDateTime(): LocalDateTime =
-    this.atZone(ZoneId.systemDefault()).toLocalDateTime()
+    this.atZone(ZONE_OFFSET).toLocalDateTime()
 
 fun LocalDateTime?.toInstant(): Instant? =
-    this?.atZone(ZoneId.systemDefault())?.toInstant()
+    this?.atZone(ZONE_OFFSET)?.toInstant()
 
 fun Instant.formatDate(pattern: DateTimeFormatter): String =
-    this.atZone(ZoneId.systemDefault()).format(pattern)
+    this.atZone(ZONE_OFFSET).format(pattern)
 
 /**
  * @return parsed date (Instant), throws [InvalidDateException]
@@ -68,7 +73,7 @@ fun Instant.formatDate(pattern: DateTimeFormatter): String =
  */
 fun parseDate(dateString: String): Instant {
     val date: Instant = runCatching {
-        LocalDate.parse(dateString, Constants.Transaction.FLEXIBLE_DATE_FORMAT).atStartOfDay(ZoneOffset.UTC).toInstant()
+        LocalDate.parse(dateString, FLEXIBLE_DATE_FORMAT).atStartOfDay(ZONE_OFFSET).toInstant()
     }.getOrNull() ?: throw InvalidDateException(BotErrors.INVALID_DATE.msg)
 
     validateDate(date)

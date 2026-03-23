@@ -29,7 +29,9 @@ class AskDateChooser(
 
             NO -> {
                 chatContextRepository.updateAccept(chatId, false)
-                transactionDraftRepository.updateTransactionDate(chatId, Instant.now())
+                val now = Instant.now()
+                transactionDraftRepository.updateTransactionDate(chatId, now)
+                logger.info { "$$$ Save trx date $now for chat: $chatId" }
                 ExecuteStatus.FINAL
             }
 

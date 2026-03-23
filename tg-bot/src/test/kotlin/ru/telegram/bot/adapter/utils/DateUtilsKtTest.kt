@@ -7,6 +7,7 @@ import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertThrows
 import ru.telegram.bot.adapter.exceptions.InvalidDateException
 import ru.telegram.bot.adapter.strategy.dto.BotErrors
+import ru.telegram.bot.adapter.utils.Constants.Date.ZONE_OFFSET
 import java.time.*
 import java.time.format.DateTimeFormatter
 
@@ -52,7 +53,7 @@ class DateUtilsKtTest {
 
     @Test
     fun `validateDate with Instant - should throw for date before 1970`() {
-        val oldDate = ZonedDateTime.of(1969, 12, 31, 23, 59, 0, 0, ZoneId.systemDefault()).toInstant()
+        val oldDate = ZonedDateTime.of(1969, 12, 31, 23, 59, 0, 0, ZONE_OFFSET).toInstant()
         val exception = assertThrows<InvalidDateException> {
             validateDate(oldDate)
         }
@@ -76,7 +77,7 @@ class DateUtilsKtTest {
 
     @Test
     fun `validateDate with ZonedDateTime - should throw for date before 1970`() {
-        val oldDate = ZonedDateTime.of(1969, 12, 31, 23, 59, 0, 0, ZoneOffset.UTC)
+        val oldDate = ZonedDateTime.of(1969, 12, 31, 23, 59, 0, 0, ZONE_OFFSET)
         val exception = assertThrows<InvalidDateException> {
             validateDate(oldDate)
         }
@@ -130,7 +131,7 @@ class DateUtilsKtTest {
     @Test
     fun `toLocalDateTime - should convert Instant to LocalDateTime`() {
         val instant = Instant.parse("2024-03-15T10:30:00Z")
-        val result = instant.atZone(ZoneOffset.UTC).toLocalDateTime()
+        val result = instant.atZone(ZONE_OFFSET).toLocalDateTime()
 
         assertAll(
             { assertEquals(2024, result.year) },
@@ -146,9 +147,9 @@ class DateUtilsKtTest {
         val localDateTime = LocalDateTime.of(2024, 3, 15, 10, 30)
         val result = localDateTime.toInstant()
         assertAll(
-            { assertEquals(2024, result?.atZone(ZoneId.systemDefault())?.year) },
-            { assertEquals(3, result?.atZone(ZoneId.systemDefault())?.monthValue) },
-            { assertEquals(15, result?.atZone(ZoneId.systemDefault())?.dayOfMonth) }
+            { assertEquals(2024, result?.atZone(ZONE_OFFSET)?.year) },
+            { assertEquals(3, result?.atZone(ZONE_OFFSET)?.monthValue) },
+            { assertEquals(15, result?.atZone(ZONE_OFFSET)?.dayOfMonth) }
         )
     }
 

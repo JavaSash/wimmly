@@ -13,9 +13,9 @@ import ru.wimme.logic.model.transaction.TransactionType
 import ru.wimme.logic.repository.TransactionRepository
 import ru.wimme.logic.repository.UserDisplayIdSeqRepository
 import ru.wimme.logic.repository.UserRepository
+import ru.wimme.logic.utils.Constants.Date.ZONE_OFFSET
 import java.math.BigDecimal
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.util.*
 
 @SpringBootTest
@@ -102,7 +102,7 @@ class BasicTest : TestConfig() {
             category = category.name,
             amount = BigDecimal.valueOf(amount),
             comment = "Old tx",
-            createdAt = createdAt.atZone(ZoneId.systemDefault()).toInstant()
+            createdAt = createdAt.atZone(ZONE_OFFSET).toInstant()
         )
     }
 }

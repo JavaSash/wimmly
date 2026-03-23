@@ -13,9 +13,9 @@ import ru.telegram.bot.adapter.exceptions.InvalidDateException
 import ru.telegram.bot.adapter.formMessage
 import ru.telegram.bot.adapter.repository.TransactionDraftRepository
 import ru.telegram.bot.adapter.service.ErrorService
+import ru.telegram.bot.adapter.utils.Constants.Date.ZONE_OFFSET
 import ru.telegram.bot.adapter.utils.Constants.Transaction.FLEXIBLE_DATE_FORMAT
 import java.time.LocalDate
-import java.time.ZoneOffset
 
 @ExtendWith(MockitoExtension::class)
 class EnterDateChooserTest {
@@ -41,7 +41,7 @@ class EnterDateChooserTest {
     fun `execute should parse valid date and update repository`() {
         val dateText = "1.1.2024"
         val expectedInstant = LocalDate.parse(dateText, FLEXIBLE_DATE_FORMAT)
-            .atStartOfDay(ZoneOffset.UTC).toInstant()
+            .atStartOfDay(ZONE_OFFSET).toInstant()
         val message = formMessage(text = dateText)
 
         chooser.execute(chatId, message)

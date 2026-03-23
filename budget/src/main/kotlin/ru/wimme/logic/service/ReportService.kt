@@ -7,11 +7,11 @@ import ru.wimme.logic.model.report.PeriodReport
 import ru.wimme.logic.model.report.TxTypeDetail
 import ru.wimme.logic.model.transaction.TransactionCategory
 import ru.wimme.logic.model.transaction.TransactionType
+import ru.wimme.logic.utils.Constants.Date.ZONE_OFFSET
 import java.math.BigDecimal
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneId
 import java.time.temporal.WeekFields
 import java.util.*
 
@@ -27,32 +27,37 @@ class ReportService(
         const val YEAR = "Год"
     }
 
-    fun formTodayReport(userId: String): PeriodReport =
-        reportForPeriod(
+    fun formTodayReport(userId: String): PeriodReport {
+        val today = LocalDate.now(ZONE_OFFSET)
+        val from = today.atStartOfDay(ZONE_OFFSET).toInstant()
+        val to = today.plusDays(1).atStartOfDay(ZONE_OFFSET).toInstant()
+
+        return reportForPeriod(
             userId = userId,
-            from = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant(),
-            to = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant(),
+            from = from,
+            to = to,
             label = TODAY // todo date
         )
+    }
 
     fun formThisWeekReport(userId: String): PeriodReport {
         val week = WeekFields.of(Locale.getDefault())
-        val now = LocalDate.now()
-        val start = now.with(week.dayOfWeek(), 1).atStartOfDay(ZoneId.systemDefault()).toInstant()
+        val now = LocalDate.now(ZONE_OFFSET)
+        val start = now.with(week.dayOfWeek(), 1).atStartOfDay(ZONE_OFFSET).toInstant()
         val end = start.plus(Duration.ofDays(7))
         return reportForPeriod(userId, start, end, WEEK) // todo period
     }
 
     fun formThisMonthReport(userId: String): PeriodReport {
-        val now = LocalDate.now()
-        val start = now.withDayOfMonth(1).atStartOfDay(ZoneId.systemDefault()).toInstant()
+        val now = LocalDate.now(ZONE_OFFSET)
+        val start = now.withDayOfMonth(1).atStartOfDay(ZONE_OFFSET).toInstant()
         val end = start.plus(Duration.ofDays(now.lengthOfMonth().toLong()))
         return reportForPeriod(userId, start, end, MONTH) // todo period
     }
 
     fun formThisYearReport(userId: String): PeriodReport {
-        val now = LocalDate.now()
-        val start = now.withDayOfYear(1).atStartOfDay(ZoneId.systemDefault()).toInstant()
+        val now = LocalDate.now(ZONE_OFFSET)
+        val start = now.withDayOfYear(1).atStartOfDay(ZONE_OFFSET).toInstant()
         val end = start.plus(Duration.ofDays(now.lengthOfYear().toLong()))
         return reportForPeriod(userId, start, end, YEAR) // todo current year
     }

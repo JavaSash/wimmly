@@ -1,5 +1,6 @@
 package ru.telegram.bot.adapter.utils
 
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.ResolverStyle
 
@@ -21,5 +22,9 @@ object Constants {
     object Button {
         const val YES = "YES"
         const val NO = "NO"
+    }
+
+    object Date {
+        val ZONE_OFFSET = ZoneOffset.UTC
     }
 }

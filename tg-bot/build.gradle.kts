@@ -136,7 +136,6 @@ jooq {
                         inputSchema = "public"
                         excludes = "flyway_schema_history|spatial_ref_sys|st_.*|_st.*"
                         // timestamp SQL to java Instant (instead LDT)
-                        // todo del?
                         forcedTypes = listOf(
                             ForcedType().apply {
                                 userType = "java.time.Instant"
