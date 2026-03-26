@@ -1,3 +1,19 @@
+## Build docker img and push to docker hub
+https://hub.docker.com
+1. cd {MODULE_NAME}
+2. ./gradlew clean bootJar
+3. cd ..
+4. docker build -t {DOCKER_USER}/budget:0.1.0 ./budget
+5. docker images
+6. docker login -u {DOCKER_USER} -> access token
+7. docker push {DOCKER_USER}/budget:0.1.0
+
+## Deploy
+
+
+
+gradle clean tg-bot:build
+./gradlew clean tg-bot:bootJar
 
 ## Release 0.1.0 (beta)
 1. Work with user
@@ -24,8 +40,9 @@
 ## Release 1.0.0 (MVP)
 
 ### MVP
-4. логи с путём пользователя?
-5. Изучить на этапе выбора клауд платформы для разворачивания: https://sourcecraft.dev/portal/grant/?utm_source=habr&utm_medium=referral&utm_campaign=mini_banner3_201125/
+4. выбрать клауд платформу\VPS
+5. развернуть бэк, бд
+6. настроить окружение
 6. бэта-тестирование
     1) гайд как начать, канал для обратной связи
     2) выдача доступа знакомым, сбор фидбэка
@@ -33,7 +50,7 @@
     4) дополнение бэклога
     5) настроить бэкапы бд
 7. сбор обратной связи -> планирование -> разработка -> тестирование -> релиз
-8. 
+8.
 
 ## Backlog
 
@@ -88,6 +105,8 @@
 7. сообщения пользователю - на русском, комменты в коде, джавадок - на англ 
 8. E2E-тесты (авто тесты\скрипты на питоне с имитацией пользовательских действий или DSL самописный)
 9. сделать бота для тест окружения
+10. логи с путём пользователя (больше?)
+11. ratelimiter?
 
 ## Marketing
 1. Public Beta

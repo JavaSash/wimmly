@@ -1,0 +1,58 @@
+#  project/
+#  ├── docker-compose.yml
+#  ├── env/
+#  │   ├── budget.env
+#  │   └── bot.env
+services:
+  budget-pg:
+    image: postgres:16
+    container_name: budget-pg
+    env_file:
+      - ./env/budget.env
+    environment:
+      POSTGRES_DB: budget
+    volumes:
+      - budget_pgdata:/var/lib/postgresql/data
+    networks:
+      - bot_net
+    restart: unless-stopped # auto rise when it crashes or when server restarts
+
+  bot-pg:
+    image: postgres:16
+    container_name: bot-pg
+    env_file:
+      - ./env/bot.env
+    environment:
+      POSTGRES_DB: bot
+    volumes:
+      - bot_pgdata:/var/lib/postgresql/data
+    networks:
+      - bot_net
+    restart: unless-stopped
+
+  budget-service:
+    image: alexandrstepenko/budget:0.1.0
+    env_file:
+      - ./env/budget.env
+    depends_on:
+      - budget-pg
+    networks:
+      - bot_net
+    restart: unless-stopped
+
+  tg-bot:
+    image: alexandrstepenko/tg-bot:0.1.0
+    env_file:
+      - ./env/bot.env
+    depends_on:
+      - bot-pg
+    networks:
+      - bot_net
+    restart: unless-stopped
+
+networks:
+  bot_net:
+
+volumes:
+  budget_pgdata:
+  bot_pgdata:
