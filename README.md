@@ -1,18 +1,3 @@
-## Build docker img and push to docker hub
-https://hub.docker.com
-1. cd {MODULE_NAME}
-2. ./gradlew clean {MODULE_NAME}:bootJar
-3. cd ..
-4. docker build -t {DOCKER_USER}/budget:0.1.0 ./budget
-5. docker images
-6. docker login -u {DOCKER_USER} -> access token
-7. docker push {DOCKER_USER}/budget:0.1.0
-
-## Deploy
-1. ssh {user}@{IP}
-2. docker compose up -d (all backend)
-3.
-
 ## Release 0.1.0 (beta)
 1. Work with user
    * registration
@@ -38,9 +23,8 @@ https://hub.docker.com
 ## Release 1.0.0 (MVP)
 
 ### MVP
-4. выбрать клауд платформу\VPS
-5. развернуть бэк, бд
-6. настроить окружение
+1. 
+2. настроить окружение, фаервол и тп
 6. бэта-тестирование
     1) гайд как начать, канал для обратной связи
     2) выдача доступа знакомым, сбор фидбэка
@@ -115,3 +99,4 @@ https://hub.docker.com
 3. Сбор статистики по боту
 4. сарафанная реклама по знакомым, чатам
 5. Анализ фич конкурентов (@Kalverion_bot, DeltaFin chat, Monefy), добавление в бэклог
+6. перенести свой бюджет в бота
