@@ -1,7 +1,7 @@
 ## Build docker img and push to docker hub
 https://hub.docker.com
 1. cd {MODULE_NAME}
-2. ./gradlew clean bootJar
+2. ./gradlew clean {MODULE_NAME}:bootJar
 3. cd ..
 4. docker build -t {DOCKER_USER}/budget:0.1.0 ./budget
 5. docker images
@@ -9,11 +9,9 @@ https://hub.docker.com
 7. docker push {DOCKER_USER}/budget:0.1.0
 
 ## Deploy
-
-
-
-gradle clean tg-bot:build
-./gradlew clean tg-bot:bootJar
+1. ssh {user}@{IP}
+2. docker compose up -d (all backend)
+3.
 
 ## Release 0.1.0 (beta)
 1. Work with user
