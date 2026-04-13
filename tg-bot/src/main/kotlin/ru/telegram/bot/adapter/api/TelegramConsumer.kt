@@ -13,9 +13,9 @@ import ru.telegram.bot.adapter.config.BotProperty
 import ru.telegram.bot.adapter.service.ReceiverService
 import ru.telegram.bot.adapter.strategy.command.common.AbstractCommand
 
-/*
-Базовый класс Телеграм АПИ, который отправляет и принимает сообщения.
-в примере есть проперти, который нужно задать через BotFather
+/**
+ * Базовый класс Телеграм АПИ, который отправляет и принимает сообщения.
+ * в примере есть проперти, который нужно задать через BotFather
  */
 @Component
 class TelegramConsumer(

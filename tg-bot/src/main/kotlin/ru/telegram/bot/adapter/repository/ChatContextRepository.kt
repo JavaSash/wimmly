@@ -48,7 +48,7 @@ class ChatContextRepository(private val dslContext: DSLContext) {
             .set(CHAT_CONTEXT.ACCEPT, accept)
             .where(CHAT_CONTEXT.ID.eq(chatId)).execute()
     }
-
+// todo del field text?
     fun updateText(chatId: Long, txt: String) {
         dslContext.update(CHAT_CONTEXT)
             .set(CHAT_CONTEXT.TEXT, txt)
