@@ -10,7 +10,14 @@ Postgres start: [docker-compose.yml](docker-compose.yml)
 
 Migrations: [changelog-001-create-tables.xml](src%2Fmain%2Fresources%2Fdb%2Fchangelog%2Fchangelog-001-create-tables.xml)
 
-docker exec -it {CONTAINER_ID} psql -U {PSQL_USER} -d {DNB_NAME} -c "SELECT * FROM {TABLE};"
+`docker exec -it {CONTAINER_ID} psql -U {PSQL_USER} -d {DNB_NAME} -c "SELECT * FROM {TABLE};"`
+Transactions count by user
+`SELECT
+user_id,
+COUNT(*) AS transaction_count
+FROM transactions
+GROUP BY user_id
+ORDER BY transaction_count DESC;`
 
 ## Build docker img and push to docker hub
 https://hub.docker.com

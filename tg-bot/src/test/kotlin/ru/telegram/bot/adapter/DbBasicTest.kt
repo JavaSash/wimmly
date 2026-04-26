@@ -29,7 +29,7 @@ abstract class DbBasicTest : PostgresTestContainer() {
 
     @Autowired
     lateinit var dsl: DSLContext
-
+// todo del потому что @JooqTest работает через транзакции с тестами
     @AfterEach
     fun clean() {
         dsl.deleteFrom(SearchContext.SEARCH_CONTEXT).execute()
