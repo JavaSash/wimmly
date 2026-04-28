@@ -26,10 +26,12 @@ class ApplicationListener(
 
     companion object : KLogging()
 
-    /**
-     * Слушаем событие TelegramReceivedMessageEvent
-     */
     inner class Message {
+        /**
+         * Publish [TgStepMessageEvent] if next step is available
+         * @param event consumes data from [ReceiverService]
+         * Consumes [TgReceivedMessageEvent]
+         */
         @EventListener
         fun onApplicationEvent(event: TgReceivedMessageEvent) {
             logger.info { "$$$ ApplicationListener TgReceivedMessageEvent: $event" }
@@ -46,13 +48,12 @@ class ApplicationListener(
         }
     }
 
-    /**
-     * Слушаем событие TelegramStepMessageEvent
-     */
     inner class StepMessage {
         /**
-         * Единая точка изменения шага диалога пользователя
-         * Отправка сообщения в tg-бот
+         * Single point for change user dialogue step
+         * Send msg to tg-bot
+         * @param event consumes data from [ru.telegram.bot.adapter.strategy.command.common.AbstractCommand], [MessageService], [Message], [CallbackMessage]
+         * Consumes [TgStepMessageEvent]
          */
         @EventListener
         fun onApplicationEvent(event: TgStepMessageEvent) {
@@ -64,10 +65,13 @@ class ApplicationListener(
         }
     }
 
-    /**
-     * Слушаем событие TelegramReceivedCallbackEvent
-      */
+
     inner class CallbackMessage {
+        /**
+         * Publish [TgStepMessageEvent] if next step is available
+         * @param event consumes data from [ReceiverService]
+         * Consumes [TgReceivedCallbackEvent]
+         */
         @EventListener
         fun onApplicationEvent(event: TgReceivedCallbackEvent) {
             logger.info { "$$$ ApplicationListener.CallbackMessage TgReceivedCallbackEvent: $event" }

@@ -14,7 +14,7 @@ import ru.telegram.bot.adapter.service.UserService
 import ru.telegram.bot.adapter.utils.CommonUtils.currentStepCode
 
 /**
- * One class for one tg-bot command
+ * One class for one bot command
  * To create new command extend from this class
  */
 abstract class AbstractCommand(
@@ -32,23 +32,20 @@ abstract class AbstractCommand(
 
     override fun execute(telegramClient: TelegramClient, user: User, chat: Chat, arguments: Array<out String>) {
         prepare(user, chat, arguments)
-
         applicationEventPublisher.publishEvent(
             TgStepMessageEvent(chatId = chat.id, stepCode = classStepCode())
         )
     }
 
+    /**
+     * Check is user exist in bot and backend DB and register if not
+     */
     final override fun prepare(user: User, chat: Chat, arguments: Array<out String>) {
         val chatId = chat.id
-
         if (chatId <= 0) {
-            // todo        if (chatId < 0) StepCode.NOT_SUPPORTED
             logger.warn { "$$$ Group chat id $chatId is not supported" }
-            return
+            return // todo throw exc and go to StepCode.NOT_SUPPORTED
         }
-        /**
-         * Check is user exist in bot DB and in backend DB
-         */
         if (chatContextRepository.isUserExist(chatId)) {
             if (!userService.isExist(chatId)) {
                 userService.syncUserToBackend(chatId, user)

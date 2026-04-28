@@ -3,6 +3,9 @@ package ru.telegram.bot.adapter.config
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
 
+/**
+ * Data from @BotFather
+ */
 @Component
 @ConfigurationProperties(prefix = "bot")
 data class BotProperty(

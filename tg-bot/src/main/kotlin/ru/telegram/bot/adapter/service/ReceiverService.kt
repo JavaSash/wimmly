@@ -12,9 +12,11 @@ import ru.telegram.bot.adapter.event.TgReceivedMessageEvent
 import ru.telegram.bot.adapter.repository.ChatContextRepository
 
 /**
- * Принимает текст, введенный пользователем или мета информацию по кнопке
- * если кнопка, то событие для кнопки,
- * если текст, то событие для обработки текста.
+ * Receive user's text or button meta info
+ * If button - publish callback event
+ * If text - publish msg event
+ *
+ * Event-Driven Architecture + State Machine
  */
 @Service
 class ReceiverService(
@@ -24,23 +26,29 @@ class ReceiverService(
 
     companion object : KLogging()
 
-    // выходной метод сервиса
+    /**
+     * Main input method, defines update type
+     * @param update - callbackQuery for button or message
+     */
     fun execute(update: Update) {
         logger.info { "$$$ ReceiverService.execute with update: $update" }
-        if (update.hasCallbackQuery()) { // Выполнить, если это действие по кнопке
+        if (update.hasCallbackQuery()) { // button action
             callbackExecute(update.callbackQuery)
-        } else if (update.hasMessage()) { // Выполнить, если это сообщение пользователя
+        } else if (update.hasMessage()) { // user msg
             messageExecute(update.message)
         } else {
             throw IllegalStateException("Not yet supported")
         }
     }
 
+    /**
+     * Define current step from chat ctx and publish event about chat info, current step and msg
+     */
     private fun messageExecute(message: Message) {
         logger.info { "$$$ ReceiverService.messageExecute with msg: $message" }
         val chatId = message.chatId
-        val stepCode = chatContextRepository.getUser(chatId)!!.stepCode!! // Выбор текущего шага
-        applicationEventPublisher.publishEvent( // Формируем событие TelegramReceivedMessageEvent
+        val stepCode = chatContextRepository.getUser(chatId)!!.stepCode!! // current step
+        applicationEventPublisher.publishEvent(
             TgReceivedMessageEvent(
                 chatId = chatId,
                 stepCode = StepCode.valueOf(stepCode),
@@ -49,11 +57,18 @@ class ReceiverService(
         )
     }
 
+    /**
+     * Define current step from chat ctx and publish event about chat info, current step and button callback
+     */
     private fun callbackExecute(callback: CallbackQuery) {
         val chatId = callback.from.id
-        val stepCode = chatContextRepository.getUser(chatId)!!.stepCode!! // Выбор текущего шага
-        applicationEventPublisher.publishEvent( // Формируем событие TelegramReceivedCallbackEvent
-            TgReceivedCallbackEvent(chatId = chatId, stepCode = StepCode.valueOf(stepCode), callback = callback)
+        val stepCode = chatContextRepository.getUser(chatId)!!.stepCode!! // current step
+        applicationEventPublisher.publishEvent(
+            TgReceivedCallbackEvent(
+                chatId = chatId,
+                stepCode = StepCode.valueOf(stepCode),
+                callback = callback
+            )
         )
     }
 }

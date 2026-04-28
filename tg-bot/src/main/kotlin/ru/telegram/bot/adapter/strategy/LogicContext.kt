@@ -9,6 +9,9 @@ import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.strategy.logic.common.CallbackChooser
 import ru.telegram.bot.adapter.strategy.logic.common.MessageChooser
 
+/**
+ * Main logic
+ */
 @Component
 class LogicContext(
     private val telegramCallbackChooser: Map<StepCode, CallbackChooser>,

@@ -14,8 +14,11 @@ import ru.telegram.bot.adapter.service.ReceiverService
 import ru.telegram.bot.adapter.strategy.command.common.AbstractCommand
 
 /**
- * Базовый класс Телеграм АПИ, который отправляет и принимает сообщения.
- * в примере есть проперти, который нужно задать через BotFather
+ * Consumes updates from Tg
+ * @param botProperty produce bot properties
+ * @param receiverService processing non commands updates
+ * @see [SpringLongPollingBot] - Spring long polling integration
+ * @see [CommandLongPollingTelegramBot] - basic implementation for processing commands by long polling
  */
 @Component
 class TelegramConsumer(
@@ -27,16 +30,25 @@ class TelegramConsumer(
 
     companion object : KLogging()
 
+    /**
+     * Register bot commands
+     */
     init {
         registerAll(*commands.toTypedArray())
     }
 
     override fun getBotToken() = botProperty.token
 
+    /**
+     * This class will process income updates
+     */
     override fun getUpdatesConsumer(): LongPollingUpdateConsumer {
         return this
     }
 
+    /**
+     * For process non commands updates (message or push of button)
+     */
     override fun processNonCommandUpdate(update: Update) {
         receiverService.execute(update)
     }
