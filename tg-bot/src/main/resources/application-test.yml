@@ -1,0 +1,8 @@
+bot:
+  username: wimmly_test_bot
+  token: ${BOT_TOKEN}
+
+logging:
+  level:
+    ru.telegram.bot.adapter: DEBUG
+    org.springframework.web: DEBUG

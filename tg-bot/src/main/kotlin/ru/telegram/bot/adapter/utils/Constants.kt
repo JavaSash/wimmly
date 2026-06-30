@@ -20,8 +20,8 @@ object Constants {
     }
 
     object Button {
-        const val YES = "YES"
-        const val NO = "NO"
+        const val YES = "Да"
+        const val NO = "Нет"
     }
 
     object Date {

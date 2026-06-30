@@ -10,7 +10,7 @@ abstract class YesNoMessage(messageWriter: MessageWriter) : AbstractSendMessage<
         val accept = data!!.accept
         return listOf(
             MarkupDataDto(rowPos = 0, text = accept.first()),
-            MarkupDataDto(rowPos = 1, text = accept.last()),
+            MarkupDataDto(rowPos = 0, text = accept.last()),
         )
     }
 }
