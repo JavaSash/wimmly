@@ -82,6 +82,10 @@ enum class ExpenseCategory(
     COMMUNICATION("Связь"),
     SPORT("Спорт"),
     ENTERTAINMENT("Развлечения"),
+    INVESTMENT("Инвестиции"),
+    GIFTS("Подарки"),
+    TAXI("Такси"),
+    CREDIT("Кредит"),
     OTHER("Прочее");
 
     fun toTransactionCategory(): TransactionCategory.Expense {

@@ -38,7 +38,7 @@ class AskCommentMessageTest {
             { assertEquals(2, result.size) },
             { assertEquals(0, result[0].rowPos) },
             { assertEquals(YES, result[0].text) },
-            { assertEquals(1, result[1].rowPos) },
+            { assertEquals(0, result[1].rowPos) },
             { assertEquals(NO, result[1].text) }
         )
     }

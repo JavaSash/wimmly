@@ -47,6 +47,10 @@ class SelectCategoryRepository(
             CategoryDto("COMMUNICATION", "Связь", EXPENSE),
             CategoryDto("SPORT", "Спорт", EXPENSE),
             CategoryDto("ENTERTAINMENT", "Развлечения", EXPENSE),
+            CategoryDto("INVESTMENT", "Инвестиции", EXPENSE),
+            CategoryDto("GIFTS", "Подарки", EXPENSE),
+            CategoryDto("TAXI", "Такси", EXPENSE),
+            CategoryDto("CREDIT", "Кредит", EXPENSE),
             CategoryDto("OTHER", "Прочее", EXPENSE)
         )
     }
