@@ -5,10 +5,18 @@ Contains business logic
 2. Works with database layer
 3. Works with integrations
 
-## Database
-Postgres start: [docker-compose.yml](docker-compose.yml)
+## Расширение бэкенда
 
-Migrations: [changelog-001-create-tables.xml](src%2Fmain%2Fresources%2Fdb%2Fchangelog%2Fchangelog-001-create-tables.xml)
+### Как добавить категорию транзакций
+
+1. Добавьте значение с описанием в `IncomeCategory` или `ExpenseCategory` в [Category.kt](src/main/kotlin/ru/wimme/logic/model/transaction/Category.kt). [CategoryApi](src/main/kotlin/ru/wimme/logic/api/CategoryApi.kt) выдаёт имена значений как коды. [ReportService](src/main/kotlin/ru/wimme/logic/service/ReportService.kt) подставляет описание по паре «тип транзакции и код».
+2. Синхронизируйте резервный список соответствующего типа в [SelectCategoryRepository](../tg-bot/src/main/kotlin/ru/telegram/bot/adapter/strategy/data/transaction/SelectCategoryRepository.kt). Он используется, если бэкенд не вернул список. В штатном сценарии кнопки строятся по ответу API.
+3. Проверьте выбор новой категории, сохранение и поиск транзакции, а также отображение в отчёте. Код хранится строкой в записи транзакции, поэтому для переименования существующего значения продумайте преобразование ранее сохранённых кодов и совместимость с ботом.
+
+## Database
+Postgres start: [budget-pg-docker-compose.yml](budget-pg-docker-compose.yml)
+
+Migrations: [db.changelog-master.xml](src/main/resources/db/changelog/db.changelog-master.xml)
 
 `docker exec -it {CONTAINER_ID} psql -U {PSQL_USER} -d {DNB_NAME} -c "SELECT * FROM {TABLE};"`
 Transactions count by user

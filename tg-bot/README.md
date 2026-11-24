@@ -6,101 +6,84 @@ Adapter for Telegram API
 3. Send to backend (REST API, events)
 4. Receive responses from back and send it to Tg
 
-## Preparation
-### Create Telegram bot
-1. Generate your telegram bot before use. 
-2. Check bot token:
-```
-https://api.telegram.org/bot{token}/getMe
-```
-3. Change properties bot.username and bot.token in [application.yml](src%2Fmain%2Fresources%2Fapplication.yml)
-```yml
-bot:
-  username: // write your bot username
-  token: // write your bot token
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/bot
-    username: postgres
-    password: postgres
-```
+## Разработка
 
-### Prepare database and POJO
-1. Run Postgres DB with name "bot" ([docker-compose.yml](src%2Fmain%2Fresources%2Fdocker-compose.yml))
-2. Add JDBC URL and credentials in [application.yml](src%2Fmain%2Fresources%2Fapplication.yml) 
-3. Add JDBC URL and credentials in [build.gradle.kts](build.gradle.kts) in case they don't catch up from the app.yml
-4. Run migrations
-```bash
-/gradelw flywayMigrate
-```
-5. Generate POJO classes for DSL with jooq
-```
-./gradlew generateJooq
-```
+### Подготовка локальной базы
 
-## Info
-### Code packages guide
-* api — Классы, которые относятся к непосредственному взаимодействию с Телеграм API (отправка и получение данных)
-* command — Список команд телеграм бота
-* component — Прочие бины
-* config — Конфигурация приложения
-* dto — DTO классы, енамы
-* event — Список классов для формирования ивентов Application Publisher
-* listener — Приём событий Application Publisher
-* repository — Слой взаимодействия с СУБД
-* service — Сервисы приложения
-* strategy — Стратегии. Это те компоненты, которые нужно менять, добавлять и удалять по ходу изменения бизнес процессов
+Запускайте команды из корня проекта с JDK 17. Для генерации jOOQ нужна доступная PostgreSQL с применёнными миграциями.
 
-### Data stream
-```
-Пользователь → Telegram → Бот → [Событие] → [Стратегия] → [Бизнес-логика] → Ответ
-```
-1. Пользователь отправляет сообщение/команду 
-2. [ApplicationListener.kt](src%2Fmain%2Fkotlin%2Fru%2Ftemplate%2Ftelegram%2Fbot%2Fkotlin%2Ftemplate%2Flistener%2FApplicationListener.kt) получает обновление 
-3. Создается событие: 
-* [TgReceivedCallbackEvent.kt](src%2Fmain%2Fkotlin%2Fru%2Ftemplate%2Ftelegram%2Fbot%2Fkotlin%2Ftemplate%2Fevent%2FTgReceivedCallbackEvent.kt)
-* [TgReceivedMessageEvent.kt](src%2Fmain%2Fkotlin%2Fru%2Ftemplate%2Ftelegram%2Fbot%2Fkotlin%2Ftemplate%2Fevent%2FTgReceivedMessageEvent.kt)
-* [TgStepMessageEvent.kt](src%2Fmain%2Fkotlin%2Fru%2Ftemplate%2Ftelegram%2Fbot%2Fkotlin%2Ftemplate%2Fevent%2FTgStepMessageEvent.kt)
-4. ApplicationEventPublisher (Spring) публикует событие 
-5. Соответствующий Listener (из п.2) ловит событие 
-6. Определяется текущая стратегия пользователя (по step_code из БД)
-7. Стратегия выполняет бизнес-логику 
-8. Отправляется ответ через [TelegramConsumer.kt](src%2Fmain%2Fkotlin%2Fru%2Ftemplate%2Ftelegram%2Fbot%2Fkotlin%2Ftemplate%2Fapi%2FTelegramConsumer.kt)
+~~~bash
+docker compose -f tg-bot/bot-pg-docker-compose.yml up -d
+./gradlew :tg-bot:flywayMigrate
+./gradlew :tg-bot:generateJooq
+~~~
 
-### Create new command
-1. Create new class NewCommand extended from AbstractCommand
-2. Add value for new command in BotCommand
-3. Pass new enum value to NewCommand class as first param
-4. Create class for new message in package message
-5. Create .ftl file with response txt
-6. Create new class extended from MessageChooser (only for steps, which needed user's response)<br>
-Name should be with prefix StepCode.value and postfix Chooser<br>
-For example: StepCode.BALANCE and BalanceChooser
-7. Add new class extended from Step and implement method getNextStep()
-8. Add repository class extended from AbstractRepository<T> (type is DTO class) to provide data if needed
-9. Add new command to /help ftl and to bot commands in tg
+В PowerShell используйте `./gradlew.bat` вместо `./gradlew`. Задачи Flyway и jOOQ берут настройки из `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME` и `SPRING_DATASOURCE_PASSWORD`; их значения по умолчанию подходят для указанного compose. Для локального запуска задайте `BOT_TOKEN` и переопределите `bot.username` своим именем бота. Если бэкенд запущен по другому адресу, задайте `BUDGET_URL`. Настройки приложения описаны в [application.yml](src/main/resources/application.yml).
 
-### Create step without button
-1. Create new value in StepCode enum
-2. Create step class and override getNextStep
-3. Create dto extended from DataModel (if custom DTO needed)
-4. Create message class extended from AbstractSendMessage<T> with type from 3.
-5. Create .ftl file with response txt
-6. Create chooser class extended from MessageChooser (only for steps, which needed user's response)
+### Как выполняется диалог
 
-### Create step with button
-1. Create repository extended from AbstractRepository<T> (SelectCategoryRepository, type SelectCategoryDto) (if data needed to form buttons)
-2. Create DTO extended from DataModel for repository (SelectCategoryDto)
-3. Create message class extended from AbstractSendMessage<T> (SelectCategoryMessage, type SelectCategoryDto)
-4. Override in message class methods: message(), inlineButtons(), replyButtons()
-5. Create .ftl template file with same name (as message class without postfix Message)
-6. Create chooser class extended from CallbackChooser (SelectCategoryChooser)
-7. Create step class and override getNextStep
+1. [TelegramConsumer](src/main/kotlin/ru/telegram/bot/adapter/api/TelegramConsumer.kt) получает обновление. Зарегистрированная команда запускает сценарий через `TgStepMessageEvent`. Обычный ответ или нажатие inline-кнопки [ReceiverService](src/main/kotlin/ru/telegram/bot/adapter/service/ReceiverService.kt) привязывает к текущему `step_code` чата и передаёт в `TgReceivedMessageEvent` или `TgReceivedCallbackEvent`.
+2. [ApplicationListener](src/main/kotlin/ru/telegram/bot/adapter/service/ApplicationListener.kt) обрабатывает `TgStepMessageEvent`: сохраняет новый шаг через `ChatContextRepository.updateUserStep` и вызывает `MessageService`. Переходы между шагами оформляйте через событие или возвращаемый `StepCode`.
+3. [MessageService](src/main/kotlin/ru/telegram/bot/adapter/service/MessageService.kt) формирует и отправляет ответ через `MessageContext` и `TelegramClient`. При `botPause = false` после отправки вызывается `StepContext.next`. При `botPause = true` следующий шаг вычисляется после обработки входящего ответа через `LogicContext`.
+4. [StepContext](src/main/kotlin/ru/telegram/bot/adapter/strategy/StepContext.kt) вызывает `getNextStep(chatId)` у подходящего `Step`. Возврат `null` завершает цепочку переходов. Для очистки контекста, черновика транзакции и параметров поиска верните `StepCode.FINAL`, как в `BalanceStep`.
 
-### Add validation error on step with user input
-1. Add new exception extended from [ValidationException.kt](src%2Fmain%2Fkotlin%2Fru%2Ftelegram%2Fbot%2Fadapter%2Fexceptions%2FValidationException.kt)
-2. Add in execute() of Chooser class runCatching block with validation check (it should throw ValidationException) and in onFailure call logError() from [ErrorService.kt](src%2Fmain%2Fkotlin%2Fru%2Ftelegram%2Fbot%2Fadapter%2Fservice%2FErrorService.kt)
-3. Add in getNextStep() call resolveNextStep() of ErrorService class with onSuccessStep (next step on success flow)
+`step_code` хранит текущую точку диалога. `flow_context` хранит сценарий, когда общий шаг используется несколькими командами. Например, `SelectCategoryStep` после выбора категории ведёт либо к вводу суммы, либо к результатам поиска.
+
+### Соглашение об именах
+
+[CommonUtils.currentStepCode](src/main/kotlin/ru/telegram/bot/adapter/utils/CommonUtils.kt) удаляет ожидаемый суффикс имени класса и преобразует остальную часть из PascalCase в имя [StepCode](src/main/kotlin/ru/telegram/bot/adapter/dto/enums/StepCode.kt). Для `EXAMPLE_ACTION` соответствия такие.
+
+| Компонент | Имя | Где разместить |
+| --- | --- | --- |
+| Входная команда | `ExampleActionCommand` | `strategy/command/<область>` |
+| Переход | `ExampleActionStep` | `strategy/stepper/<область>` |
+| Ответ пользователю | `ExampleActionMessage` | `strategy/message/<область>` |
+| Данные ответа | `ExampleActionRepository` | `strategy/data/<область>` |
+| Обработка ввода | `ExampleActionChooser` | `strategy/logic/<область>` |
+| Шаблон FreeMarker | `example_action.ftl` | `src/main/resources/message/template` |
+
+[TelegramConfig](src/main/kotlin/ru/telegram/bot/adapter/config/TelegramConfig.kt) автоматически индексирует Spring-бины сообщений и обработчиков по `StepCode`. Для одного шага используйте по одной реализации каждого вида стратегии. Для шагов и поставщиков данных берётся первое совпадение, а для карт стратегий дублирующий ключ перезаписывается. При переименовании `StepCode` учтите его строковое хранение в `step_code` и `error_step`, а для кодов сценариев также в `flow_context`.
+
+### Как добавить команду
+
+1. Добавьте значение в [BotCommand](src/main/kotlin/ru/telegram/bot/adapter/dto/enums/BotCommand.kt). Поле `command` содержит имя без `/`, поле `desc` — описание. Добавьте соответствующий начальный `StepCode`.
+2. Создайте `@Component` с суффиксом `Command` и наследуйте `AbstractCommand`, передав ему значение `BotCommand`. `TelegramConsumer` зарегистрирует бин при запуске. Пример простой команды — [HelpCommand](src/main/kotlin/ru/telegram/bot/adapter/strategy/command/common/HelpCommand.kt).
+3. Если команде нужны аргументы или начальные данные, переопределите `doPrepare(user, chat, arguments)`. Базовый `prepare` проверяет регистрацию пользователя перед вызовом этого хука, а `execute` затем публикует начальный шаг. Например, [AddIncomeCommand](src/main/kotlin/ru/telegram/bot/adapter/strategy/command/transaction/AddIncomeCommand.kt) очищает предыдущий черновик, задаёт тип транзакции и сохраняет `flow_context`.
+4. Соберите начальный шаг по инструкции ниже. Для публичной команды добавьте запись в [commands.ftl](src/main/resources/message/template/commands.ftl), при необходимости обновите [help.ftl](src/main/resources/message/template/help.ftl) и список команд в меню Telegram, если он ведётся через BotFather.
+
+### Как добавить шаг
+
+1. Добавьте `StepCode` и определите тип и паузу. `SEND_MESSAGE` подходит для текста и текста с кнопками. `SEND_PHOTO` использует стратегию `AbstractSendPhoto`. `NO_MESSAGE` подходит для внутреннего действия. Поставьте `botPause = true`, если нужно дождаться сообщения или callback; для автоматического перехода используйте `false`.
+2. Для текстового ответа добавьте `@Component`, унаследованный от `AbstractSendMessage<T>`. По умолчанию `MessageWriter` загружает `<step_code в нижнем регистре>.ftl`. Если текст динамический и формируется в Kotlin, можно переопределить `message(data)`, как в `SelectCategoryMessage`. Для `NO_MESSAGE` стратегия ответа и шаблон не требуются.
+3. Если для ответа нужны данные, создайте DTO, реализующий `DataModel`, и бин `@Repository` на основе `AbstractRepository<T>` с методом `getData(chatId)`. Он поставляет данные для текста и кнопок. В FreeMarker модель доступна как `data`, например `${data.balance}`. Для статического текста используйте `AbstractSendMessage<DataModel>` и шаблон без обращения к `data`. Пример полного набора — [BalanceRepository](src/main/kotlin/ru/telegram/bot/adapter/strategy/data/report/BalanceRepository.kt), [BalanceMessage](src/main/kotlin/ru/telegram/bot/adapter/strategy/message/report/BalanceMessage.kt) и [balance.ftl](src/main/resources/message/template/balance.ftl).
+4. Для шага с переходом или выполняемым действием добавьте `@Component`, реализующий `Step`. В `getNextStep(chatId)` верните код следующего шага, `FINAL` для очистки диалога или `null` для завершения без очистки. Для статического ответа без следующих действий достаточно стратегии сообщения, как у `HELP`.
+5. Добавьте вход в новый шаг из команды либо из `getNextStep` предыдущего шага. Для шага с паузой добавьте обработчик ввода.
+
+### Как обработать текст, кнопки и ошибки
+
+- Для текста и reply-клавиатуры реализуйте `MessageChooser` в классе `<ИмяШага>Chooser` с `@Component`. Прочитайте нужные поля из объекта Telegram `Message`, проверьте ввод и запишите результат в состояние сценария. Для reply-клавиатуры задайте кнопки через `replyButtons()`; например, текст кнопки приходит как текст сообщения.
+- Для inline-клавиатуры переопределите `inlineButtons()` в стратегии сообщения. `MessageService` группирует кнопки по `rowPos` и использует `MarkupDataDto.text` одновременно как подпись и `callbackData`. Реализуйте `CallbackChooser`, проверьте `callbackQuery.data` относительно допустимых вариантов текущего шага и сохраните выбор. Пример — связка [SelectCategoryMessage](src/main/kotlin/ru/telegram/bot/adapter/strategy/message/transaction/SelectCategoryMessage.kt) и [SelectCategoryChooser](src/main/kotlin/ru/telegram/bot/adapter/strategy/logic/transaction/SelectCategoryChooser.kt).
+- `ExecuteStatus.FINAL` у callback означает, что слушатель может вызвать `getNextStep`. Для `NOTHING` слушатель сейчас выбрасывает исключение. Если ошибочный callback должен показать сообщение и повторить вопрос, запишите ошибку через `ErrorService.logError`, верните `FINAL` и разрешите переход через `ErrorService.resolveNextStep`.
+- Для ошибок ввода используйте подходящий подкласс `ValidationException`. Обработчик сохраняет ошибку и код текущего шага через `ErrorService.logError`, как в [EnterAmountChooser](src/main/kotlin/ru/telegram/bot/adapter/strategy/logic/transaction/EnterAmountChooser.kt). [EnterAmountStep](src/main/kotlin/ru/telegram/bot/adapter/strategy/stepper/transaction/EnterAmountStep.kt) вызывает `resolveNextStep(chatId, onSuccessStep)`. При ошибке бот отправляет сообщение шага `ERROR`, а `ErrorStep` очищает данные ошибки и возвращает пользователя к исходному шагу.
+
+### Пример автоматического шага CreateTransactionStep
+
+1. Пользователь попадает в `CREATE_TRANSACTION` после отказа от комментария в `AskCommentStep` или успешного ввода в `EnterCommentStep`. Категория, сумма и остальные данные к этому моменту находятся в черновике транзакции.
+2. Для `CREATE_TRANSACTION` заданы `SEND_MESSAGE` и `botPause = false`, поэтому сначала отправляется сообщение об успехе из [create_transaction.ftl](src/main/resources/message/template/create_transaction.ftl), затем вызывается [CreateTransactionStep.getNextStep](src/main/kotlin/ru/telegram/bot/adapter/strategy/stepper/transaction/CreateTransactionStep.kt).
+3. `CreateTransactionStep` читает черновик, вызывает `TransactionService.addTransaction` (через `TransactionClient` в `budget`) и возвращает `BALANCE`. После показа баланса `BalanceStep` переводит диалог в `FINAL` для очистки временных данных.
+4. При добавлении автоматического действия, для которого нужен подтверждённый результат, используйте внутренний шаг `NO_MESSAGE` для вызова сервиса и переходите к отдельному сообщению об успехе после успешной операции. Продумайте сценарий ошибки и повторное выполнение, особенно для операций записи. В текущем `CreateTransactionStep` черновик читается через `!!`, а ошибка вызова бэкенда не переводится в `ERROR`.
+
+### Как добавить данные диалога
+
+- Состояние диалога хранится через `repository`, например в `ChatContextRepository`, `TransactionDraftRepository` и `SearchContextRepository`. `strategy/data` поставляет модели для отображения.
+- Для изменения схемы добавьте новую версионную SQL-миграцию в [db/migration](src/main/resources/db/migration). Примените её к локальной базе и заново выполните `:tg-bot:generateJooq`, затем обновите запросы репозитория на сгенерированных типах.
+- Если новый сценарий требует собственной записи на каждый чат, определите момент её создания. `AbstractCommand.prepare` создаёт существующие записи при первой регистрации, поэтому для уже зарегистрированных пользователей понадобится заполнение при миграции или создание записи при первом обращении. Для временных полей предусмотрите очистку при повторном запуске сценария и в `FinalStep`.
+
+### Как проверить изменение
+
+- Используйте тесты в `tg-bot/src/test` как образцы. `AddIncomeCommandTest` проверяет подготовку, `EnterAmountChooserTest` и `EnterAmountStepTest` — ввод и переход, `SelectCategoryMessageTest` — разметку, `CreateTransactionStepTest` — вызов сервиса и переход к балансу. Для выборочной проверки запускайте `./gradlew :tg-bot:test --tests '*CreateTransactionStepTest'`. Для репозиторных тестов нужен Docker с поддержкой Testcontainers.
+- В локальном боте проверьте запуск команды, переходы после текста или кнопки, повтор вопроса при неверном вводе, завершение и повторный запуск сценария. Для команды, которая пишет данные, проверьте результат в бэкенде.
+
 
 ### Users flow
 #### Общее
@@ -109,12 +92,12 @@ For example: StepCode.BALANCE and BalanceChooser
    * пользователь уже зарегистрирован
 
 #### Работа с транзакциями
-1. Добавление транзакции<br>
-   -> выбор типа транзакции<br>
+1. Добавление транзакции через `/add_income` или `/add_expense`<br>
    -> выбор категории<br>
    -> ввод суммы<br>
    -> ввод даты (опционально)<br>
    -> ввод комментария (опционально)<br>
+   -> сохранение транзакции и показ баланса<br>
 
 2. Поиск транзакции<br>
    -> выбор типа транзакции<br>
