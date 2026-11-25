@@ -96,7 +96,7 @@ class TransactionService(
                 userId = rq.userId,
                 type = rq.type!!,
                 category = rq.category!!,
-                PageRequest.of(0, rq.limit, Sort.by("createdAt").descending())
+                PageRequest.of(0, rq.limit, Sort.by(Sort.Direction.ASC, "displayId"))
             ).map { TransactionRs.fromEntity(it) }
 
         return transactions.also { logger.info { "$$$ Found transactions: $it" } }

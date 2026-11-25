@@ -84,7 +84,7 @@ class BasicTest : TestConfig() {
         """
                 .trimIndent(),
             id,
-            1L,
+            displayId,
             type.name,
             userId,
             category.name,

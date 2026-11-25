@@ -540,7 +540,7 @@ class TransactionServiceTest : BasicTest() {
     }
 
     @Test
-    fun `findTransactionsWithFilters - should return filtered transactions with limit`() {
+    fun `findTransactionsWithFilters - should apply limit after sorting matching transactions by displayId`() {
         val user = initUser()
         val user2 = initUser(userId = "1")
 
@@ -552,7 +552,7 @@ class TransactionServiceTest : BasicTest() {
             amount = AMOUNT_100,
             displayId = 1L
         )
-        initTransaction(
+        val tx1 = initTransaction(
             userId = user.tgId,
             type = TransactionType.EXPENSE,
             category = ExpenseCategory.EDUCATION.name,
@@ -581,7 +581,7 @@ class TransactionServiceTest : BasicTest() {
             amount = AMOUNT_250,
             displayId = 4L
         )
-        val tx5 = initTransaction(
+        initTransaction(
             userId = user.tgId,
             type = TransactionType.EXPENSE,
             category = ExpenseCategory.EDUCATION.name,
@@ -609,12 +609,8 @@ class TransactionServiceTest : BasicTest() {
 
         assertAll(
             { assertEquals(3, result.size) },
-            { assertEquals(tx5.amount, result[0].amount) },
-            { assertEquals(tx5.displayId, result[0].displayId) },
-            { assertEquals(tx4.amount, result[1].amount) },
-            { assertEquals(tx4.displayId, result[1].displayId) },
-            { assertEquals(tx2.amount, result[2].amount) },
-            { assertEquals(tx2.displayId, result[2].displayId) }
+            { assertEquals(listOf(tx1.displayId, tx2.displayId, tx4.displayId), result.map { it.displayId }) },
+            { assertEquals(listOf(tx1.amount, tx2.amount, tx4.amount), result.map { it.amount }) }
         )
     }
 
@@ -641,7 +637,7 @@ class TransactionServiceTest : BasicTest() {
     }
 
     @Test
-    fun `findTransactionsWithFilters - should return transactions sorted by createdAt desc`() {
+    fun `findTransactionsWithFilters - should sort by displayId ascending regardless of transaction date`() {
         val user = initUser()
         val now = LocalDateTime.now()
 
@@ -683,9 +679,8 @@ class TransactionServiceTest : BasicTest() {
 
         assertAll(
             { assertEquals(3, result.size) },
-            { assertEquals(AMOUNT_50.money(), result[0].amount) }, // самая новая (tx2)
-            { assertEquals(AMOUNT_150.money(), result[1].amount) }, // tx3
-            { assertEquals(AMOUNT_100.money(), result[2].amount) }  // tx1
+            { assertEquals(listOf(1L, 2L, 3L), result.map { it.displayId }) },
+            { assertEquals(listOf(AMOUNT_100.money(), AMOUNT_50.money(), AMOUNT_150.money()), result.map { it.amount }) }
         )
     }
 
