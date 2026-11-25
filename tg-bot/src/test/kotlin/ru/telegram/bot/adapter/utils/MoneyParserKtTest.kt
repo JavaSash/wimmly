@@ -49,26 +49,8 @@ class MoneyParserKtTest {
     }
 
     @Test
-    fun `parseAmount - should parse valid amount with space`() {
-        val result = parseAmount("1 234.56")
-        assertAll(
-            { assertEquals(BigDecimal("1234.56").setScale(2, RoundingMode.HALF_UP), result) },
-            { assertEquals(2, result.scale()) }
-        )
-    }
-
-    @Test
     fun `parseAmount - should parse valid amount with comma`() {
         val result = parseAmount("1234,56")
-        assertAll(
-            { assertEquals(BigDecimal("1234.56").setScale(2, RoundingMode.HALF_UP), result) },
-            { assertEquals(2, result.scale()) }
-        )
-    }
-
-    @Test
-    fun `parseAmount - should parse valid amount with spaces and comma`() {
-        val result = parseAmount("1 234,56")
         assertAll(
             { assertEquals(BigDecimal("1234.56").setScale(2, RoundingMode.HALF_UP), result) },
             { assertEquals(2, result.scale()) }
@@ -118,7 +100,11 @@ class MoneyParserKtTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = ["abc", "123.45.67", "123a.45", "123.999"])
+    @ValueSource(strings = [
+        "abc", "100 рублей", "100 +", "100 ** 2", "(100 + 200", "100 + 200)", ")100(",
+        "100 + ()", "10.5.2 + 100", "1,2.3", "2^3", "100 + 20%", "1 234.56",
+        "1 234,56", "12 34", "2(3+4)", "1e3",
+    ])
     fun `parseAmount - should throw for invalid format`(amount: String) {
         val exception = assertThrows<InvalidAmountException> {
             parseAmount(amount)
@@ -130,12 +116,69 @@ class MoneyParserKtTest {
     @ValueSource(strings = [
         "0",
         "-100",
-        "-0.00"
+        "-0.00",
+        "1 / 1000",
+        "5 - 10",
     ])
     fun `parseAmount - should throw for more than zero amount`(amount: String) {
         val exception = assertThrows<InvalidAmountException> {
             parseAmount(amount)
         }
-        assertEquals("Сумма должна быть больше нуля", exception.message)
+        assertEquals(BotErrors.AMOUNT_SHOULD_BE_POSITIVE.msg, exception.message)
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "' 100 + 250 + 50 ', 400.00",
+        "1000 - 250 - 50, 700.00",
+        "150 * 3, 450.00",
+        "1000 / 4 / 2, 125.00",
+        "1000 \\ 4, 250.00",
+        "1000 : 4, 250.00",
+        "1+2*5/4, 3.50",
+        "100 + 200 * 3, 700.00",
+        "((100 + 200) * 3) / 2, 450.00",
+        "'100,50 + 200.25', 300.75",
+        "100 - (-50), 150.00",
+        "+100 + -(-50), 150.00",
+        "1 / 3 * 10, 3.33",
+        "1 / 8, 0.13",
+        "123.999, 124.00",
+        "99999999999999999.99, 99999999999999999.99",
+    )
+    fun `parseAmount should evaluate expressions and round only the final amount`(input: String, expected: String) {
+        assertEquals(expected.toBigDecimal(), parseAmount(input))
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["1 / 0", "1 \\ -0", "1 : (2 - 2)"])
+    fun `parseAmount should report division by zero`(input: String) {
+        assertEquals(
+            BotErrors.AMOUNT_DIVISION_BY_ZERO.msg,
+            assertThrows<InvalidAmountException> { parseAmount(input) }.message
+        )
+    }
+
+    @Test
+    fun `parseAmount should enforce expression limits`() {
+        val maxDepth = "(".repeat(10) + "1" + ")".repeat(10)
+        assertEquals(BigDecimal("1.00"), parseAmount(maxDepth))
+        assertEquals(BigDecimal("1.00"), parseAmount(" ".repeat(255) + "1"))
+        assertEquals(BigDecimal("1.00"), parseAmount("0".repeat(31) + "1"))
+
+        listOf("($maxDepth)", " ".repeat(256) + "1", "0".repeat(32) + "1").forEach { input ->
+            assertEquals(
+                BotErrors.AMOUNT_EXPRESSION_TOO_COMPLEX.msg,
+                assertThrows<InvalidAmountException> { parseAmount(input) }.message
+            )
+        }
+    }
+
+    @Test
+    fun `parseAmount should reject results beyond the storage limit after rounding`() {
+        val error = assertThrows<InvalidAmountException> {
+            parseAmount("99999999999999999.99 + 0.005")
+        }
+        assertEquals(BotErrors.AMOUNT_SHOULD_BE_SMALLER.msg, error.message)
     }
 }

@@ -12,7 +12,7 @@ object Constants {
         const val EXPENSE = "EXPENSE"
         const val EXPENSE_RU = "Расход"
         const val COMMENT_MAX_LENGTH = 50
-        const val MAX_AMOUNT = Long.MAX_VALUE
+        val MAX_AMOUNT = "99999999999999999.99".toBigDecimal() // DECIMAL(19, 2)
         const val MAX_TRX_ID = Int.MAX_VALUE
         val DATE_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy")
         val FLEXIBLE_DATE_FORMAT: DateTimeFormatter =

@@ -15,6 +15,7 @@ import ru.telegram.bot.adapter.exceptions.InvalidAmountException
 import ru.telegram.bot.adapter.formMessage
 import ru.telegram.bot.adapter.repository.TransactionDraftRepository
 import ru.telegram.bot.adapter.service.ErrorService
+import ru.telegram.bot.adapter.strategy.dto.BotErrors
 
 @ExtendWith(MockitoExtension::class)
 class EnterAmountChooserTest {
@@ -60,5 +61,22 @@ class EnterAmountChooserTest {
             { verify(errorService).logError(eq(chatId), any<InvalidAmountException>(), eq(amount), eq(StepCode.ENTER_AMOUNT)) },
             { verify(transactionDraftRepository, never()).updateAmount(any(), any()) }
         )
+    }
+
+    @Test
+    fun `execute should report an invalid expression and save only the corrected result`() {
+        val invalidExpression = "100 / 0"
+
+        chooser.execute(chatId, formMessage(invalidExpression))
+
+        val error = argumentCaptor<InvalidAmountException>()
+        verify(errorService).logError(eq(chatId), error.capture(), eq(invalidExpression), eq(StepCode.ENTER_AMOUNT))
+        assertEquals(BotErrors.AMOUNT_DIVISION_BY_ZERO.msg, error.firstValue.message)
+        verifyNoInteractions(transactionDraftRepository)
+
+        chooser.execute(chatId, formMessage("(100 + 200) * 3"))
+
+        verify(transactionDraftRepository).updateAmount(chatId, "900.00".toBigDecimal())
+        verifyNoMoreInteractions(errorService, transactionDraftRepository)
     }
 }

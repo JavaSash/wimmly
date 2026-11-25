@@ -15,9 +15,12 @@ enum class BotErrors(val msg: String) {
     END_BEFORE_START_DATE("Начальная дата должна быть раньше конечной"),
 
     // Number errors
-    INVALID_AMOUNT("Сумма должна быть вида: 1; 1.21; 2,37; 2.01; 5,1; 7.40; 0,99"),
-    AMOUNT_SHOULD_BE_POSITIVE("Сумма должна быть больше нуля"),
-    AMOUNT_SHOULD_BE_SMALLER("Сумма должна быть меньше $MAX_AMOUNT"),
+    INVALID_AMOUNT("❌ Некорректная сумма или выражение. Введите, например, 1500 или (100 + 200) * 3. " +
+        "Доступны +, -, *, /, \\, : и круглые скобки. Попробуйте ещё раз."),
+    AMOUNT_DIVISION_BY_ZERO("На ноль делить нельзя. Исправьте выражение и попробуйте ещё раз."),
+    AMOUNT_EXPRESSION_TOO_COMPLEX("Выражение слишком длинное или сложное. Сократите его и попробуйте ещё раз."),
+    AMOUNT_SHOULD_BE_POSITIVE("Сумма после округления должна быть больше нуля"),
+    AMOUNT_SHOULD_BE_SMALLER("Сумма не должна превышать $MAX_AMOUNT"),
     TRX_ID_NOT_NUMBER("Номер транзакции должен быть числом"),
 
     // String errors
