@@ -5,9 +5,21 @@ import ru.telegram.bot.adapter.strategy.dto.BotErrors
 import ru.telegram.bot.adapter.utils.Constants.Transaction.MAX_AMOUNT
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
-fun BigDecimal.formatMoney(): String {
-    return "${this.setScale(2, RoundingMode.HALF_UP)} ₽"
+fun BigDecimal.formatMoney(groupThousands: Boolean = false): String {
+    val roundedAmount = setScale(2, RoundingMode.HALF_UP)
+    val formattedAmount = if (groupThousands) {
+        val symbols = DecimalFormatSymbols.getInstance(Locale.ROOT).apply {
+            groupingSeparator = '\u00A0'
+        }
+        DecimalFormat("#,##0.00", symbols).format(roundedAmount)
+    } else {
+        roundedAmount.toString()
+    }
+    return "$formattedAmount ₽"
 }
 
 /**

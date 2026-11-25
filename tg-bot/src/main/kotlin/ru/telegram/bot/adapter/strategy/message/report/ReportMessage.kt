@@ -37,9 +37,9 @@ class ReportMessage(
         )
 
         val templateData = mapOf(
-            "balance" to data?.balance?.formatMoney(),
-            "income" to data?.income?.amount?.formatMoney(),
-            "expense" to data?.expense?.amount?.formatMoney(),
+            "balance" to data?.balance?.formatMoney(groupThousands = true),
+            "income" to data?.income?.amount?.formatMoney(groupThousands = true),
+            "expense" to data?.expense?.amount?.formatMoney(groupThousands = true),
             "hasIncomeCategories" to (data?.income?.amountByCategory?.isNotEmpty() == true),
             "incomeCategories" to incomeCategories,
             "hasExpenseCategories" to (data?.expense?.amountByCategory?.isNotEmpty() == true),

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.ValueSource
 import ru.telegram.bot.adapter.exceptions.InvalidAmountException
 import ru.telegram.bot.adapter.strategy.dto.BotErrors
@@ -30,6 +31,21 @@ class MoneyParserKtTest {
         val amount = BigDecimal("1234.5678")
         val result = amount.formatMoney()
         assertEquals("1234.57 ₽", result)
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+        "0, 0.00",
+        "500, 500.00",
+        "-999.99, -999.99",
+        "1000, 1\u00A0000.00",
+        "999.995, 1\u00A0000.00",
+        "-12345.675, -12\u00A0345.68",
+        "1234455, 1\u00A0234\u00A0455.00",
+        "9007199254740993.12, 9\u00A0007\u00A0199\u00A0254\u00A0740\u00A0993.12",
+    )
+    fun `formatMoney should group thousands without losing precision`(input: String, expected: String) {
+        assertEquals("$expected ₽", input.toBigDecimal().formatMoney(groupThousands = true))
     }
 
     @Test

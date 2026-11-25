@@ -23,9 +23,9 @@ class BalanceMessage(messageWriter: MessageWriter) : AbstractSendMessage<Balance
 
         // Формируем данные для шаблона
         val templateData = mapOf(
-            "balance" to data?.balance?.formatMoney() ,
-            "income" to data?.income?.formatMoney(),
-            "expense" to data?.expense?.formatMoney(),
+            "balance" to data?.balance?.formatMoney(groupThousands = true),
+            "income" to data?.income?.formatMoney(groupThousands = true),
+            "expense" to data?.expense?.formatMoney(groupThousands = true),
         )
 
         return messageWriter.process(StepCode.BALANCE, templateData)

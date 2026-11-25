@@ -29,7 +29,7 @@ class CreateTransactionMessage(
                 formattedDate = transaction.createdAt.formatDate(DATE_FORMAT),
                 category = category?.description ?: transaction.category,
                 type = if (transaction.type == INCOME) INCOME_RU else EXPENSE_RU,
-                amount = transaction.amount.formatMoney(),
+                amount = transaction.amount.formatMoney(groupThousands = true),
                 comment = transaction.comment?.takeIf { it.isNotBlank() },
             )
         )

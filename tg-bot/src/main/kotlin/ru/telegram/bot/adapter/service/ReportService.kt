@@ -24,7 +24,7 @@ class ReportService {
                 CategoryInfo(
                     name = cleanCategoryName(categoryName),
                     amount = amount,
-                    formattedAmount = amount.formatMoney(),
+                    formattedAmount = amount.formatMoney(groupThousands = true),
                     percentage = calculatePercentage(totalAmount = totalAmount, amount = amount),
                     isExpense = isExpense
                 )

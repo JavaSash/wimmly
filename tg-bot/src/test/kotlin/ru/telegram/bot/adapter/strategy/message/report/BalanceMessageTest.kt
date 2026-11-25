@@ -9,14 +9,10 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.*
-import ru.telegram.bot.adapter.TestConstants.Tx.AMOUNT_100
-import ru.telegram.bot.adapter.TestConstants.Tx.AMOUNT_150
-import ru.telegram.bot.adapter.TestConstants.Tx.AMOUNT_50
 import ru.telegram.bot.adapter.TestConstants.Tx.FORMATTED_MSG
 import ru.telegram.bot.adapter.dto.enums.StepCode
 import ru.telegram.bot.adapter.service.MessageWriter
 import ru.telegram.bot.adapter.strategy.dto.BalanceDto
-import ru.telegram.bot.adapter.utils.formatMoney
 
 @ExtendWith(MockitoExtension::class)
 class BalanceMessageTest {
@@ -34,9 +30,9 @@ class BalanceMessageTest {
     @Test
     fun `message should map fields and call writer`() {
         val dto = BalanceDto(
-            balance = AMOUNT_150,
-            income = AMOUNT_100,
-            expense = AMOUNT_50
+            balance = "-1234.50".toBigDecimal(),
+            income = "1234567.75".toBigDecimal(),
+            expense = "1235802.25".toBigDecimal()
         )
         whenever(messageWriter.process(eq(StepCode.BALANCE), any())).thenReturn(FORMATTED_MSG)
 
@@ -45,9 +41,9 @@ class BalanceMessageTest {
         val captor = argumentCaptor<Map<String, String?>>()
         assertAll(
             { verify(messageWriter).process(eq(StepCode.BALANCE), captor.capture()) },
-            { assertEquals(AMOUNT_150.formatMoney(), captor.firstValue["balance"]) },
-            { assertEquals(AMOUNT_100.formatMoney(), captor.firstValue["income"]) },
-            { assertEquals(AMOUNT_50.formatMoney(), captor.firstValue["expense"]) },
+            { assertEquals("-1\u00A0234.50 ₽", captor.firstValue["balance"]) },
+            { assertEquals("1\u00A0234\u00A0567.75 ₽", captor.firstValue["income"]) },
+            { assertEquals("1\u00A0235\u00A0802.25 ₽", captor.firstValue["expense"]) },
             { assertEquals(FORMATTED_MSG, result) }
         )
     }

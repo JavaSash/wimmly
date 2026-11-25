@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.*
@@ -17,6 +19,7 @@ import ru.telegram.bot.adapter.TestConstants.Tx.HOME_CATEGORY
 import ru.telegram.bot.adapter.TestConstants.Tx.INVESTMENT_CATEGORY
 import ru.telegram.bot.adapter.TestConstants.Tx.SALARY_CATEGORY
 import ru.telegram.bot.adapter.dto.enums.StepCode
+import ru.telegram.bot.adapter.config.FreemarkerConfig
 import ru.telegram.bot.adapter.dto.view.CategoryInfo
 import ru.telegram.bot.adapter.formCategoryInfo
 import ru.telegram.bot.adapter.formReportDetail
@@ -49,6 +52,30 @@ class ReportMessageTest {
     @BeforeEach
     fun setup() {
         reportMessage = ReportMessage(messageWriter, reportService)
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = [TODAY, WEEK, MONTH, YEAR])
+    fun `message should render grouped totals and categories for every period`(period: String) {
+        val writer = MessageWriter(FreemarkerConfig().freeMarkerConfigurer().apply { afterPropertiesSet() })
+        val income = formReportDetail(mapOf("Зарплата" to "1234.50".toBigDecimal()))
+        val expense = formReportDetail(mapOf("Еда" to "2345.75".toBigDecimal()))
+        val dto = formReportDto().copy(
+            balance = income.amount - expense.amount,
+            income = income,
+            expense = expense,
+            periodName = period,
+        )
+
+        val result = ReportMessage(writer, ReportService()).message(dto)
+
+        assertAll(
+            { assertTrue("Баланс: <b>-1\u00A0111.25 ₽</b>" in result) },
+            { assertTrue("Доходы: <b>1\u00A0234.50 ₽</b>" in result) },
+            { assertTrue("Расходы: <b>2\u00A0345.75 ₽</b>" in result) },
+            { assertTrue("Зарплата: <b>1\u00A0234.50 ₽</b>" in result) },
+            { assertTrue("Еда: <b>2\u00A0345.75 ₽</b>" in result) },
+        )
     }
 
     @Test
