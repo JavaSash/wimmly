@@ -67,18 +67,11 @@ class SelectCategoryRepository(
             StepCode.ADD_INCOME.name, StepCode.ADD_EXPENSE.name -> transactionDraftRepository.getTransactionDraft(chatId)?.type
             else -> INCOME
         } ?: INCOME // impossible
-        return runCatching {
-            SelectCategoryDto(
-                categories = categoryClient.getCategories(txType),
-                txType = txType
-            )
-        }
-            .onFailure { logger.error { "$$$ Can't receive categories for chat: $chatId. Cause: ${it.message}. Return stub" } }
-            .getOrDefault(getCategoriesStub(txType))
+        return SelectCategoryDto(categories = getCategories(txType), txType = txType)
     }
 
-    private fun getCategoriesStub(txType: String): SelectCategoryDto {
-        val categories = if (txType == INCOME) INCOME_CATEGORIES_STUB else EXPENSE_CATEGORIES_STUB
-        return SelectCategoryDto(categories = categories, txType = txType)
-    }
+    fun getCategories(txType: String): List<CategoryDto> =
+        runCatching { categoryClient.getCategories(txType) }
+            .onFailure { logger.error { "$$$ Can't receive categories for type: $txType. Cause: ${it.message}. Return stub" } }
+            .getOrElse { if (txType == INCOME) INCOME_CATEGORIES_STUB else EXPENSE_CATEGORIES_STUB }
 }

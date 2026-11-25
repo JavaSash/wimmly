@@ -8,7 +8,9 @@ object Constants {
 
     object Transaction {
         const val INCOME = "INCOME"
+        const val INCOME_RU = "Доход"
         const val EXPENSE = "EXPENSE"
+        const val EXPENSE_RU = "Расход"
         const val COMMENT_MAX_LENGTH = 50
         const val MAX_AMOUNT = Long.MAX_VALUE
         const val MAX_TRX_ID = Int.MAX_VALUE

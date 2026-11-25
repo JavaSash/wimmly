@@ -10,7 +10,7 @@ import ru.telegram.bot.adapter.dto.budget.TransactionSearchRq
 interface TransactionClient {
 
     @PostMapping("/api/transaction")
-    fun addTransaction(@RequestBody request: TransactionRq): String
+    fun addTransaction(@RequestBody request: TransactionRq): TransactionRs
 
     @PostMapping("/api/transaction/search")
     fun getTransactionsWithFilters(@RequestBody rq: TransactionSearchRq): List<TransactionRs>

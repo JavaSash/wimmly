@@ -12,7 +12,7 @@ class TransactionService(
     private val txClient: TransactionClient
 ) {
 
-    fun addTransaction(trxDraft: TransactionDraft): String = txClient.addTransaction(
+    fun addTransaction(trxDraft: TransactionDraft): TransactionRs = txClient.addTransaction(
         TransactionRq(
             type = trxDraft.type!!,
             userId = trxDraft.chatId.toString(),

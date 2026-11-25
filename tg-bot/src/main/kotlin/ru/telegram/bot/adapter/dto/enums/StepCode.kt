@@ -34,7 +34,7 @@ enum class StepCode(val type: StepType, val botPause: Boolean) {
     ENTER_DATE(StepType.SEND_MESSAGE, true),
     ASK_COMMENT(StepType.SEND_MESSAGE, true),
     ENTER_COMMENT(StepType.SEND_MESSAGE, true), // ожидаем ввода комментария
-    CREATE_TRANSACTION(StepType.SEND_MESSAGE, false),
+    CREATE_TRANSACTION(StepType.NO_MESSAGE, false),
     SEARCH_TRANSACTIONS(StepType.SEND_MESSAGE, false),
     ASK_TRANSACTION_TYPE(StepType.SEND_MESSAGE, true),
     SHOW_TRANSACTIONS(StepType.SEND_MESSAGE, false),

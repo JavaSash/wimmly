@@ -11,4 +11,4 @@ data class TransactionItem(
     val type: String,
     val amount: String,
     val comment: String?
-)
+) : DataModel
