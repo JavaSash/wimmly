@@ -7,7 +7,6 @@ import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.*
 import ru.telegram.bot.adapter.TestConstants.Chat.CHAT_ID
 import ru.telegram.bot.adapter.dto.MarkupDataDto
 import ru.telegram.bot.adapter.service.MessageWriter
@@ -61,40 +60,28 @@ class SelectCategoryMessageTest {
     }
 
     @Test
-    fun `inlineButtons should create buttons with correct row positions for 2 columns`() {
+    fun `inlineButtons should put the remaining income category in its own row`() {
         val categories = INCOME_CATEGORIES_STUB
         val data = SelectCategoryDto(txType = INCOME, categories = categories)
 
         val result = selectCategoryMessage.inlineButtons(CHAT_ID, data)
 
         assertAll(
-            { assertEquals(4, result.size) },
-            { assertEquals(0, result[0].rowPos) },
-            { assertEquals(categories[0].code, result[0].text) },
-            { assertEquals(0, result[1].rowPos) },
-            { assertEquals(categories[1].code, result[1].text) },
-            { assertEquals(1, result[2].rowPos) },
-            { assertEquals(categories[2].code, result[2].text) },
-            { assertEquals(1, result[3].rowPos) },
-            { assertEquals(categories[3].code, result[3].text) }
+            { assertEquals(listOf(0, 0, 0, 1), result.map { it.rowPos }) },
+            { assertEquals(categories.map { it.code }, result.map { it.text }) }
         )
     }
 
     @Test
-    fun `inlineButtons should handle odd number of categories`() {
-        val categories = INCOME_CATEGORIES_STUB.dropLast(1)
-        val data = SelectCategoryDto(txType = INCOME, categories = categories)
+    fun `inlineButtons should put the remaining two expense categories in the last row`() {
+        val categories = EXPENSE_CATEGORIES_STUB.take(8)
+        val data = SelectCategoryDto(txType = EXPENSE, categories = categories)
 
         val result = selectCategoryMessage.inlineButtons(CHAT_ID, data)
 
         assertAll(
-            { assertEquals(3, result.size) },
-            { assertEquals(0, result[0].rowPos) },
-            { assertEquals(categories[0].code, result[0].text) },
-            { assertEquals(0, result[1].rowPos) },
-            { assertEquals(categories[1].code, result[1].text) },
-            { assertEquals(1, result[2].rowPos) },
-            { assertEquals(categories[2].code, result[2].text) }
+            { assertEquals(listOf(0, 0, 0, 1, 1, 1, 2, 2), result.map { it.rowPos }) },
+            { assertEquals(categories.map { it.code }, result.map { it.text }) }
         )
     }
 

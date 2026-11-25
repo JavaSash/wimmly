@@ -30,10 +30,9 @@ class SelectCategoryMessage(messageWriter: MessageWriter) : AbstractSendMessage<
     override fun inlineButtons(chatId: Long, data: SelectCategoryDto?): List<MarkupDataDto> {
         val categories = data?.categories ?: emptyList()
 
-        // Создаем кнопки - по 2 в ряд
         return categories.mapIndexed { index, category ->
             MarkupDataDto(
-                rowPos = index / 2, // 0, 0, 1, 1, 2, 2...
+                rowPos = index / 3,
                 text = category.code
             ).also { logger.info { "$$$ Created MarkupDataDto: text=${it.text}" } }
         }
